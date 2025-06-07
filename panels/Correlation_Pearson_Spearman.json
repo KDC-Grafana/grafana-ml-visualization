@@ -1,0 +1,706 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 24,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "La tabla presenta los detalles de los modelos de correlación disponibles, mostrando para cada uno: el identificador único, de la fuente de datos utilizada se presenta el identificador  el algoritmo de correlación utilizado y la fecha y hora de creación del modelo. El modelo resaltado es el seleccionado actualmente.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 22,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "afterRender": "",
+        "content": "<h3 style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin: 10px auto; color: #444; text-align: center;\">\n    Modelos\n</h3>\n\n<table style=\"font-family: 'Arial', sans-serif; font-size: 16px; margin: 20px auto; border-collapse: collapse; text-align: center; line-height: 1.4; table-layout: fixed;\">\n  <colgroup>\n    <col style=\"width: 4%;\"> <!-- ID -->\n    <col style=\"width: 10%;\"> <!-- Nombre -->\n    <col style=\"width: 10%;\"> <!-- Creador -->\n    <col style=\"width: 30%;\"> <!-- Descripción -->\n    <col style=\"width: 10%;\"> <!-- Algoritmo -->\n    <col style=\"width: 10%;\"> <!-- Fecha -->\n  </colgroup>\n  <thead>\n    <tr style=\"border-bottom: 1px solid #ccc;\">\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">ID</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">Nombre</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">Creador</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">Descripción</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">Algoritmo</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color:{{getColor}};\">Fecha</th>\n    </tr>\n  </thead>\n  <tbody>\n    {{#each data}}\n      {{#isCurrentModel id}}\n        <!-- Efecto 3D con sombras profundas y fondo sólido -->\n        <tr style=\"\n            background: rgba(173, 216, 230, 0.2);  /* Fondo sólido sin degradado */\n            border-left: 4px solid #6ab2f2;\n            box-shadow: \n              3px 0 10px rgba(100, 180, 245, 0.35),   /* Sombra lateral azul intensa */\n              -1px 0 2px rgba(255, 255, 255, 0.4),    /* Reflejo sutil en el lado opuesto */\n              0 3px 8px rgba(0, 0, 0, 0.18);          /* Sombra inferior pronunciada */\n            position: relative;\n            z-index: 1;\n            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); /* Mejor legibilidad */\n            transition: box-shadow 0.2s ease;\n            -webkit-font-smoothing: antialiased;\n            font-smoothing: antialiased;\n          \">\n      {{/isCurrentModel}}\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{id}}</td>\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{name}}</td>\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{creator}}</td>\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{description}}</td>\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{algorithm}}</td>\n          <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{formatDate created_date}}</td>\n        </tr>\n    {{/each}}\n  </tbody>\n</table>\n",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "handlebars"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "context.handlebars.registerHelper('getColor', function () {\n  return '#77bef7' + 50;\n});\n\ncontext.handlebars.registerHelper('formatDate', function (dateString) {\n  const date = new Date(dateString);\n\n  // Métodos UTC para evitar desfases por zona horaria local\n  const year = date.getUTCFullYear();\n  const month = String(date.getUTCMonth() + 1).padStart(2, '0');\n  const day = String(date.getUTCDate()).padStart(2, '0');\n  const hours = String(date.getUTCHours()).padStart(2, '0');\n  const minutes = String(date.getUTCMinutes()).padStart(2, '0');\n\n  return `${year}-${month}-${day} ${hours}:${minutes}`;\n});\n\ncontext.handlebars.registerHelper('isCurrentModel', function (currentId, options) {\n  let modelId = context.grafana.replaceVariables('${case}');\n  if (modelId == currentId) {\n    return options.fn(this);\n  }\n  return options.inverse(this);\n});",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    i.id,\n    s.name,\n    s.creator,\n    s.description,\n    i.algorithm,\n    i.date AS created_date\nFROM grafana_ml_model_source s\nINNER JOIN grafana_ml_model_index i \n    ON s.id = i.id_source AND i.algorithm IN ('c_pearson', 'c_spearman')\nWHERE (\n        ('$date' = 'Hoy' AND i.date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND i.date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 dias' AND i.date >= CURRENT_DATE - INTERVAL '6 days' AND i.date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND i.date >= DATE_TRUNC('month', CURRENT_DATE) AND i.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND i.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND i.date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nGROUP BY s.id, s.name, s.creator, s.description, i.id\nORDER BY i.date DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Muestra la fuerza y dirección de la correlación entre pares de variables mediante una matriz de colores. Cada celda representa un coeficiente de correlación, con tonalidades que indican si la relación es fuerte, débil, positiva o negativa. ",
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 1,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  const fieldsCorrelations = context.panel.data.series[1].fields;\n\n  let nameFeature = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let nameFeatureR = [...nameFeature].reverse();\n  let featureNames1 = (fieldsCorrelations.find(fields => fields.name == 'name_feature1')).values;\n  let featureNames2 = (fieldsCorrelations.find(fields => fields.name == 'name_feature2')).values;\n  let correlation = (fieldsCorrelations.find(fields => fields.name == 'value')).values;\n\n  let correlationList = [];\n\n  // Crear un mapa para asignar índices a los nombres de las características\n  let featureIndexMap = new Map();\n  nameFeature.forEach((name, index) => {\n    featureIndexMap.set(name, index);\n  });\n\n  // Añadir la correlación entre las características iguales\n  for (let i = 0; i < nameFeature.length; i++) {\n    let feature1 = i;\n    let invertedFeature2 = (nameFeature.length - 1) - feature1;\n    correlationList.push([feature1, invertedFeature2, 1]);\n  }\n\n  // Formar lista de correlación\n  for (let i = 0; i < featureNames1.length; i++) {\n    let feature1Name = featureNames1[i];\n    let feature2Name = featureNames2[i];\n\n    // Obtener los índices de las características por su nombre\n    let feature1Index = featureIndexMap.get(feature1Name);\n    let feature2Index = featureIndexMap.get(feature2Name);\n\n    // Correlación para estas características\n    let corr = correlation[i];\n    corr = parseFloat(corr.toPrecision(3));\n\n    // Invertir las características para la visualización\n    let invertedFeature2 = (nameFeature.length - 1) - feature2Index;\n    let invertedFeature1 = (nameFeature.length - 1) - feature1Index;\n\n    correlationList.push([feature1Index, invertedFeature2, corr]);\n    correlationList.push([feature2Index, invertedFeature1, corr]);\n  }\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Matriz de correlación',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22,\n      },\n    },\n    tooltip: {\n      position: 'top',\n      formatter: function (params) {\n        const feature1 = nameFeature[params.data[0]]; // Nombre de la característica 1\n        const feature2 = nameFeatureR[params.data[1]]; // Nombre de la característica 2\n        const corr = params.data[2]; // Correlación entre las características\n        return `\n        ${feature1}<br>\n        ${feature2}<br>\n        <strong>Correlación:</strong> ${corr}`;\n      }\n    },\n    grid: {\n      height: '90%',\n      containLabel: true,\n      left: \"3\",\n      right: \"7%\",\n      top: \"10%\"\n    },\n    xAxis: {\n      type: 'category',\n      data: nameFeature,\n      splitArea: {\n        show: true\n      },\n      axisLabel: {\n        show: true,\n        fontSize: 14,\n        color: '#444444',\n        rotate: 26\n      }\n    },\n    yAxis: {\n      type: 'category',\n      data: nameFeatureR,\n      splitArea: {\n        show: true,\n      },\n      axisLabel: {\n        show: true,\n        fontSize: 14,\n        color: '#444444',\n        rotate: 0\n      }\n    },\n    visualMap: {\n      min: -1,\n      max: 1,\n      type: 'continuous',\n      calculable: true,\n      orient: 'vertical',\n      left: 'right',\n      left: '94%',\n      bottom: '4%',\n      top: '14%',\n      itemHeight: '430',\n      inRange: {\n        color: getPalete(context.grafana.replaceVariables('${color}'))\n      }\n    },\n    series: [\n      {\n        name: 'Correlación',\n        type: 'heatmap',\n        data: correlationList,\n        label: {\n          show: true\n        },\n        emphasis: {\n          itemStyle: {\n            shadowBlur: 10,\n            shadowColor: 'rgba(0, 0, 0, 0.5)'\n          }\n        }\n      }\n    ]\n  };\n\n  return option;\n}\n\n// Paleta de colores\nfunction getPalete(palete) {\n  let seLectedPaleteValue = ['#00539a', '#fff1f1', '#a2191f'];\n\n  if (palete == 'Paleta 1') {\n    seLectedPaleteValue = ['#00539a', '#fff1f1', '#a2191f'];\n  } else if (palete == 'Paleta 2') {\n    seLectedPaleteValue = ['#005d5d', '#f6f2ff', '#6929c4'];\n  } else if (palete == 'Paleta 3') {\n    seLectedPaleteValue = ['#e5f6ff', '#1192e8', '#003a6d'];\n  }\n\n  return seLectedPaleteValue;\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Nombres de las características\n\nSELECT DISTINCT f.id, f.name\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f ON g.id_feature1 = f.id OR g.id_feature2 = f.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE g.id_model = $case\n  AND f.id_source = i.id_source\n  AND f.name IN ($features)\nORDER BY f.id;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Correlaciones\n\nSELECT \n    f1.name AS name_feature1,\n    f2.name AS name_feature2,\n    g.value\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f1 ON g.id_feature1 = f1.id\nINNER JOIN grafana_ml_model_feature f2 ON g.id_feature2 = f2.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE \n    g.id_model = $case\n    AND f1.id_source = i.id_source\n    AND f2.id_source = i.id_source\n    AND f1.name IN ($features)\n    AND f2.name IN ($features)\nORDER BY f1.id;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de dispersión muestra la relación entre dos variables seleccionadas por el usuario, representadas en los ejes X y Y. Cada punto en el gráfico representa un dato individual, y su color indica la intensidad de la correlación, para diferenciar entre relaciones fuertes o débiles. Los menús desplegables permiten elegir las variables a analizar.",
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  const fieldsPoints = context.panel.data.series[2].fields;\n\n  // Obtener los valores de las características, correlaciones y puntos\n  let featureNames = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  let pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n\n  // Asignación inicial para las características seleccionadas\n  var selectedFeatureX = featureNames[0];\n  var selectedFeatureY = featureNames[1] ? featureNames[1] : featureNames[0];\n\n  let parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const pointSeriesData = createSeriesData(parsedValuesPoints, selectedFeatureX, selectedFeatureY);\n\n  // Lógica para la selección\n  if (context.grafana.replaceVariables('${case}') || context.grafana.replaceVariables('${typeCor}') || context.grafana.replaceVariables('${features}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.flexDirection = \"row\";\n    container.style.width = \"100%\";\n\n    const leftContainer = document.createElement(\"div\");\n    leftContainer.style.display = \"flex\";\n    leftContainer.style.flexDirection = \"column\";\n    leftContainer.style.flexGrow = \"1\";\n\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Diagrama de dispersión\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.marginLeft = \"20px\";\n    title.style.marginTop = \"15px\";\n    title.style.color = \"#444\";\n\n    // Label de Correlación\n    const correlationLabel = document.createElement(\"div\");\n    correlationLabel.id = \"correlationLabel\";\n    correlationLabel.style.fontFamily = \"'Arial', sans-serif\";\n    correlationLabel.style.fontWeight = \"normal\";\n    correlationLabel.style.fontSize = \"24px\";\n    correlationLabel.style.marginTop = \"10px\";\n    correlationLabel.style.textAlign = \"center\";\n\n    let correlationValueInitial = getCorrelation(selectedFeatureX, selectedFeatureY);\n    correlationValueInitial = parseFloat(correlationValueInitial.toPrecision(3));\n    correlationLabel.innerHTML = `Correlación: ${correlationValueInitial}`;\n\n    // Añadir título y correlación al contenedor de la izquierda\n    leftContainer.appendChild(title);\n    leftContainer.appendChild(correlationLabel);\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.flexDirection = \"column\";\n    rightContainer.style.alignItems = \"flex-end\";\n    rightContainer.style.marginLeft = \"10px\";\n\n    // Eje X\n    const xAxisContainer = document.createElement(\"div\");\n    xAxisContainer.style.display = \"flex\";\n    xAxisContainer.style.alignItems = \"center\";\n    xAxisContainer.style.marginBottom = \"2px\";\n\n    const xAxisLabel = document.createElement(\"span\");\n    xAxisLabel.innerHTML = \"Eje x:\";\n    xAxisLabel.style.marginRight = \"6px\";\n    xAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    xAxisLabel.style.fontWeight = \"bold\";\n    xAxisLabel.style.fontSize = \"18px\";\n    xAxisLabel.style.marginTop = \"20px\";\n    xAxisLabel.style.color = \"#444\";\n\n    const selectListX = document.createElement(\"select\");\n    selectListX.id = \"selectX\";\n    selectListX.style.fontFamily = \"'Arial', sans-serif\";\n    selectListX.style.border = \"1px solid gray\";\n    selectListX.style.borderRadius = \"8px\";\n    selectListX.style.padding = \"5px\";\n    selectListX.style.minWidth = \"120px\";\n    selectListX.style.marginTop = \"20px\";\n    selectListX.style.marginRight = \"10px\";\n\n    // Eje Y\n    const yAxisContainer = document.createElement(\"div\");\n    yAxisContainer.style.display = \"flex\";\n    yAxisContainer.style.alignItems = \"center\";\n    yAxisContainer.style.marginBottom = \"2px\";\n\n    const yAxisLabel = document.createElement(\"span\");\n    yAxisLabel.innerHTML = \"Eje y:\";\n    yAxisLabel.style.marginRight = \"6px\";\n    yAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    yAxisLabel.style.fontWeight = \"bold\";\n    yAxisLabel.style.fontSize = \"18px\";\n    yAxisLabel.style.color = \"#444\";\n\n    const selectListY = document.createElement(\"select\");\n    selectListY.id = \"selectY\";\n    selectListY.style.fontFamily = \"'Arial', sans-serif\";\n    selectListY.style.border = \"1px solid gray\";\n    selectListY.style.borderRadius = \"8px\";\n    selectListY.style.padding = \"5px\";\n    selectListY.style.minWidth = \"120px\";\n    selectListY.style.marginRight = \"10px\";\n\n    featureNames.forEach((value) => {\n      const optionX = document.createElement(\"option\");\n      optionX.value = value;\n      optionX.text = value;\n      selectListX.appendChild(optionX);\n\n      const optionY = document.createElement(\"option\");\n      optionY.value = value;\n      optionY.text = value;\n      selectListY.appendChild(optionY);\n    });\n    selectListY.value = selectedFeatureY;\n\n    selectListX.addEventListener(\"change\", () => {\n      selectedFeatureX = selectListX.value; // Actualizar con el nombre de la característica\n      updateChartData();\n\n      let correlationValue = getCorrelation(selectedFeatureX, selectedFeatureY);\n      correlationValue = parseFloat(correlationValue.toPrecision(3));\n      correlationLabel.innerHTML = `Correlación: ${correlationValue}`;\n    });\n\n    selectListY.addEventListener(\"change\", () => {\n      selectedFeatureY = selectListY.value; // Actualizar con el nombre de la característica\n      updateChartData();\n\n      let correlationValue = getCorrelation(selectedFeatureX, selectedFeatureY);\n      correlationValue = parseFloat(correlationValue.toPrecision(3));\n      correlationLabel.innerHTML = `Correlación: ${correlationValue}`;\n    });\n\n    // Añadir los selectores al rightContainer\n    xAxisContainer.appendChild(xAxisLabel);\n    xAxisContainer.appendChild(selectListX);\n    yAxisContainer.appendChild(yAxisLabel);\n    yAxisContainer.appendChild(selectListY);\n\n    rightContainer.appendChild(xAxisContainer);\n    rightContainer.appendChild(yAxisContainer);\n\n    // Añadir el contenido completo al contenedor principal\n    container.appendChild(leftContainer);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Función para actualizar el gráfico después de un cambio en la selección\n  function updateChartData() {\n    const pointSeriesData = createSeriesData(parsedValuesPoints, selectedFeatureX, selectedFeatureY);\n\n    context.panel.chart.setOption({\n      xAxis: {\n        name: selectedFeatureX,\n        min: () => calculateMargin(pointValues, featureNames.indexOf(selectedFeatureX))\n      },\n      yAxis: {\n        name: selectedFeatureY,\n        min: () => calculateMargin(pointValues, featureNames.indexOf(selectedFeatureY))\n      },\n      series: [\n        {\n          name: 'Puntos',\n          data: pointSeriesData,\n          symbolSize: context.grafana.replaceVariables('${sizeS}'),\n          symbol: getShape(context.grafana.replaceVariables('${shape}')),\n          itemStyle: {\n            color: '#888',\n            borderColor: '#555',\n          }\n        }\n      ]\n    });\n  }\n\n  option = {\n    tooltip: {\n      position: 'top',\n      formatter: function (params) {\n        const dataIndex = params.dataIndex;\n\n        let featureValues = (parsedValuesPoints)[dataIndex];\n        const pointName = (pointNames)[dataIndex];\n        const featureX = featureValues[featureNames.indexOf(selectedFeatureX)];\n        const featureY = featureValues[featureNames.indexOf(selectedFeatureY)];\n\n        return `\n        <div><strong>${pointName}</strong></div>\n        <div>${selectedFeatureX}: ${parseFloat(featureX.toFixed(3))}</div>\n        <div>${selectedFeatureY}: ${parseFloat(featureY.toFixed(3))}</div>\n      `;\n      }\n    },\n    grid: {\n      bottom: \"25%\",\n      containLabel: true,\n      left: \"30\",\n      right: \"4%\",\n      top: \"3%\"\n    },\n    xAxis: {\n      type: 'value',\n      name: selectedFeatureX,\n      nameLocation: 'middle',\n      nameGap: 20,\n      min: () => calculateMargin(pointValues, featureNames.indexOf(selectedFeatureX)),\n      axisLabel: {\n        fontSize: 14,\n        color: ' #333'\n      },\n      nameTextStyle: {\n        fontSize: 18,\n        color: ' #333'\n      }\n    },\n    yAxis: {\n      type: 'value',\n      name: selectedFeatureY,\n      nameLocation: 'middle',\n      nameGap: 33,\n      min: () => calculateMargin(pointValues, featureNames.indexOf(selectedFeatureY)),\n      axisLabel: {\n        fontSize: 14,\n        color: ' #333'\n      },\n      nameTextStyle: {\n        fontSize: 18,\n        color: ' #333'\n      }\n\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'scatter',\n        encode: { tooltip: [0, 1] },\n        symbolSize: context.grafana.replaceVariables('${sizeS}'),\n        symbol: getShape(context.grafana.replaceVariables('${shape}')),\n        itemStyle: {\n          color: '#888',\n          borderColor: '#555',\n        },\n        data: pointSeriesData,\n      }\n    ]\n  };\n\n  return option;\n}\n\n// Función para crear los datos de la serie para el gráfico de dispersión\nfunction createSeriesData(parsedValuesPoints, selectedFeatureX, selectedFeatureY) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  let featureNames = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let seriesData = [];\n\n  // Obtener el índice correspondiente al nombre de la característica X\n  let xIndex = featureNames.indexOf(selectedFeatureX);\n  let yIndex = featureNames.indexOf(selectedFeatureY);\n\n  // Verificar si los índices existen (no son -1)\n  if (xIndex === -1 || yIndex === -1) {\n    console.error(`Característica no encontrada. X: ${selectedFeatureX}, Y: ${selectedFeatureY}`);\n    return [];\n  }\n\n  let correlation = getCorrelation(selectedFeatureX, selectedFeatureY);\n\n  parsedValuesPoints.forEach(point => {\n    // Extraer los valores de las características seleccionadas (X e Y) usando sus índices\n    let xValue = point[xIndex]; // Usar el índice para obtener el valor de X\n    let yValue = point[yIndex]; // Usar el índice para obtener el valor de Y\n\n    let color = getColorForCorrelation(correlation);\n\n    // Añadir el punto de datos con las coordenadas X, Y y el color usando itemStyle\n    seriesData.push({\n      value: [xValue, yValue],  // Las coordenadas del punto\n      itemStyle: {\n        color: color  // Asignar el color calculado al punto\n      }\n    });\n  });\n\n  return seriesData;\n}\n\n// Función para obtener la correlación entre las características\nfunction getCorrelation(featureX, featureY) {\n  const fieldsCorrelations = context.panel.data.series[1].fields;\n\n  let featureNames1 = fieldsCorrelations.find(fields => fields.name === 'name_feature1');\n  let featureNames2 = fieldsCorrelations.find(fields => fields.name === 'name_feature2');\n  let correlationValues = fieldsCorrelations.find(fields => fields.name === 'value');\n\n  featureNames1 = featureNames1.values;\n  featureNames2 = featureNames2.values;\n  correlationValues = correlationValues.values;\n\n  // Buscar la correlación con los nombres de las características\n  for (let i = 0; i < featureNames1.length; i++) {\n    if ((featureNames1[i] === featureX && featureNames2[i] === featureY) ||\n      (featureNames1[i] === featureY && featureNames2[i] === featureX)) {\n      return correlationValues[i];\n    }\n  }\n\n  // Correlación perfecta consigo misma\n  if (featureX === featureY) {\n    return 1;\n  }\n\n  // Si no se encuentra la correlación\n  return -2;\n}\n\n// Función para obtener el color basado en la correlación\nfunction getColorForCorrelation(correlation) {\n  if (context.grafana.replaceVariables('${color}') == 'Paleta 1') {\n    if (correlation >= 0.8) {\n      return '#a2191f'; // Alta correlación positiva \n    } else if (correlation >= 0.4) {\n      return '#fa4d56'; // Correlación positiva moderada \n    } else if (correlation >= -0.2) {\n      return '#ffd7d9'; // Correlación débil o neutra \n    } else if (correlation >= -0.8) {\n      return '#82cfff'; // Correlación negativa moderada \n    } else {\n      return '#00539a'; // Alta correlación negativa \n    }\n  } else if (context.grafana.replaceVariables('${color}') == 'Paleta 2') {\n    if (correlation >= 0.8) {\n      return '#6929c4'; // Alta correlación positiva \n    } else if (correlation >= 0.4) {\n      return '#a56eff'; // Correlación positiva moderada\n    } else if (correlation >= -0.2) {\n      return '#d9fbfb'; // Correlación débil o neutra \n    } else if (correlation >= -0.8) {\n      return '#009d9a'; // Correlación negativa moderada \n    } else {\n      return '#005d5d'; // Alta correlación negativa \n    }\n  } else if (context.grafana.replaceVariables('${color}') == 'Paleta 3') {\n    if (correlation >= 0.8) {\n      return '#001d6c'; // Alta correlación positiva \n    } else if (correlation >= 0.4) {\n      return '#0043ce'; // Correlación positiva moderada \n    } else if (correlation >= -0.2) {\n      return '#78a9ff'; // Correlación débil o neutra \n    } else if (correlation >= -0.8) {\n      return '#d0e2ff'; // Correlación negativa moderada \n    } else {\n      return '#edf5ff'; // Alta correlación negativa \n    }\n  }\n\n}\n\n// Calcular el margen del 5% basado en el rango de los datos\nfunction calculateMargin(values, axisIndex) {\n  const axisValues = values.map(value => JSON.parse(value)[axisIndex]);\n\n  // Encontrar el valor mínimo y máximo de los datos\n  const minValue = Math.min(...axisValues);\n  const maxValue = Math.max(...axisValues);\n\n  // Calcular el margen basado en el rango\n  const range = maxValue - minValue;\n  const margin = range * 0.04; // 4% de margen para los ejes\n\n  let result = minValue - margin;\n  result = parseFloat(result.toFixed(3));\n\n  return parseFloat(result); // Redondear\n}\n\n// Símbolo para los puntos\nfunction getShape(shape) {\n  let seLectedShapeValue = 'circle';\n\n  if (shape == 'Círculo') {\n    seLectedShapeValue = 'circle';\n  } else if (shape == 'Triángulo') {\n    seLectedShapeValue = 'triangle';\n  } else if (shape == 'Rectángulo') {\n    seLectedShapeValue = 'rect';\n  } else if (shape == 'Pin') {\n    seLectedShapeValue = 'pin';\n  }\n\n  return seLectedShapeValue;\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Nombres de las características\n\nSELECT DISTINCT f.id, f.name\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f ON g.id_feature1 = f.id OR g.id_feature2 = f.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE g.id_model = $case\n  AND f.id_source = i.id_source\n  AND f.name IN ($features)\nORDER BY f.id;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Correlaciones\n\nSELECT \n    f1.name AS name_feature1,\n    f2.name AS name_feature2,\n    g.value\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f1 ON g.id_feature1 = f1.id\nINNER JOIN grafana_ml_model_feature f2 ON g.id_feature2 = f2.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE \n    g.id_model = $case\n    AND f1.id_source = i.id_source\n    AND f2.id_source = i.id_source\n    AND f1.name IN ($features)\n    AND f2.name IN ($features)\nORDER BY f1.id;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Puntos\n\nSELECT p.name AS point_name,\n       array_to_json(array_agg(pv.numeric_value ORDER BY f.id)) AS feature_values\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $case)\n  AND pv.numeric_value IS NOT NULL\n  AND f.name IN ($features)\nGROUP BY p.id, p.name\nORDER BY RANDOM()\nLIMIT (\n  SELECT CEIL(COUNT(*) * $numInstances)\n  FROM grafana_ml_model_point\n  WHERE id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $case)\n);\n",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de barras se utiliza para visualizar la correlación entre diversas variables y una variable principal, seleccionada a través de un menú desplegable. El eje Y muestra las características a comparar, mientras que el eje X presenta los coeficientes de correlación. Las barras reflejan la correlación entre la variable principal y cada característica. ",
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 6,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  const uniqueNamesFeature = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n\n  let selectedFeature = uniqueNamesFeature[0];\n  let data = getCorrelation(selectedFeature);\n\n  // Lógica para la selección\n  if (context.grafana.replaceVariables('${case}') || context.grafana.replaceVariables('${typeCor}') || context.grafana.replaceVariables('${features}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length >= 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.justifyContent = \"space-between\";\n    container.style.alignItems = \"center\";\n    container.style.marginTop = \"10px\";\n\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Correlación entre una característica y todas las variables\";\n    title.style.marginLeft = \"20px\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.alignItems = \"center\";\n\n    const characteristicLabel = document.createElement(\"span\");\n    characteristicLabel.innerHTML = \"Característica:\";\n    characteristicLabel.style.marginRight = \"6px\";\n    characteristicLabel.style.fontFamily = \"'Arial', sans-serif\";\n    characteristicLabel.style.fontWeight = \"bold\";\n    characteristicLabel.style.fontSize = \"20px\";\n    characteristicLabel.style.color = \"#444\";\n\n    const selectList = document.createElement(\"select\");\n    selectList.id = \"mySelect\";\n    selectList.style.fontFamily = \"'Arial', sans-serif\";\n\n    selectList.style.border = \"1px solid gray\";\n    selectList.style.borderRadius = \"8px\";\n    selectList.style.padding = \"5px\";\n    selectList.style.marginRight = \"10px\";\n\n    uniqueNamesFeature.forEach((value) => {\n      const option = document.createElement(\"option\");\n      option.value = value;\n      option.text = value;\n      selectList.appendChild(option);\n    });\n\n    selectList.addEventListener(\"change\", () => {\n      selectedFeature = selectList.value;\n      let result = getCorrelation(selectedFeature);\n\n      context.panel.chart.setOption({\n        dataset: {\n          source: result\n        },\n        yAxis: {\n          type: 'category',\n\n        },\n        series: [\n          {\n            type: 'bar',\n            encode: {\n              x: 'Correlación',\n              y: 'Característica'\n            }\n          }\n        ]\n      });\n    });\n\n    rightContainer.appendChild(characteristicLabel);\n    rightContainer.appendChild(selectList);\n\n    container.appendChild(title);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  option = {\n    dataset: {\n      source: data\n    },\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        let correlationValue = params.data[0]; // Correlación\n        correlationValue = parseFloat(correlationValue.toPrecision(3))\n        const featureName = params.data[1]; // Nombre de la característica\n        return `\n      ${featureName}<br>\n      <strong>Correlación:</strong> ${correlationValue}\n    `;\n      }\n    },\n    grid: {\n      containLabel: true,\n      top: '4%',\n      left: '1%',\n      right: '10%'\n    },\n    xAxis: {\n      max: 1,\n      axisLabel: {\n        fontSize: 14,\n        color: '#444444'\n      }\n    },\n    yAxis: {\n      type: 'category',\n      axisLabel: {\n        fontSize: 14,\n        color: '#444444'\n      }\n\n    },\n    visualMap: {\n      orient: 'vertical',\n      left: 'right',\n      left: '92%',\n      bottom: '40%',\n      top: '10%',\n      itemHeight: '400',\n      min: -1,\n      max: 1,\n      dimension: 0,\n      inRange: {\n        color: getPalete(context.grafana.replaceVariables('${color}'))\n      },\n      calculable: true\n    },\n    series: [\n      {\n        type: 'bar',\n        encode: {\n          x: 'Correlación',\n          y: 'Característica'\n        },\n\n      }\n    ]\n  };\n\n  return option;\n}\n\n\nfunction getCorrelation(selectedFeatureName) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  const fieldsCorrelations = context.panel.data.series[1].fields;\n\n  let uniqueNamesFeature = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let featureNames1 = (fieldsCorrelations.find(fields => fields.name == 'name_feature1')).values;\n  let featureNames2 = (fieldsCorrelations.find(fields => fields.name == 'name_feature2')).values;\n  let correlation = (fieldsCorrelations.find(fields => fields.name == 'value')).values;\n\n  let result = [\n    ['Correlación', 'Característica']\n  ];\n\n  for (let i = 0; i < uniqueNamesFeature.length; i++) {\n    let currentFeature = uniqueNamesFeature[i];\n    let currentCorrelation = 0;\n\n    // Si la característica seleccionada es la misma que la actual, se asigna correlación 1\n    if (currentFeature === selectedFeatureName) {\n      currentCorrelation = 1;\n    } else {\n      // Si no es la misma, se busca la correlación en los arrays featureNames1 y featureNames2\n      for (let j = 0; j < featureNames1.length; j++) {\n        if ((featureNames1[j] === currentFeature && featureNames2[j] === selectedFeatureName) ||\n          (featureNames2[j] === currentFeature && featureNames1[j] === selectedFeatureName)) {\n          currentCorrelation = correlation[j];\n          break;\n        }\n      }\n    }\n\n    result.push([currentCorrelation, currentFeature]);\n  }\n\n  // Ordena el arreglo de correlaciones de menor a mayor (por la primera posición del array)\n  result.sort((a, b) => a[0] - b[0]);\n\n  return result;\n}\n\nfunction getPalete(palete) {\n  let seLectedPaleteValue = ['#00539a', '#fff1f1', '#a2191f'];\n\n  if (palete == 'Paleta 1') {\n    seLectedPaleteValue = ['#00539a', '#fff1f1', '#a2191f'];\n  } else if (palete == 'Paleta 2') {\n    seLectedPaleteValue = ['#005d5d', '#f6f2ff', '#6929c4'];\n  } else if (palete == 'Paleta 3') {\n    seLectedPaleteValue = ['#e5f6ff', '#1192e8', '#003a6d'];\n  }\n\n  return seLectedPaleteValue;\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de radar permite comparar visualmente múltiples variables mediante un diagrama circular con ejes radiales, donde cada eje representa una característica. Los vértices del polígono marcan los valores de correlación entre las variables. Los colores permiten diferenciar entre las diferentes características.",
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 8,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeatures = context.panel.data.series[0].fields;\n  const fieldsCorrelations = context.panel.data.series[1].fields;\n\n  let uniqueNamesFeature = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let featureNames1 = (fieldsCorrelations.find(fields => fields.name == 'name_feature1')).values;\n  let featureNames2 = (fieldsCorrelations.find(fields => fields.name == 'name_feature2')).values;\n  let correlation = (fieldsCorrelations.find(fields => fields.name == 'value')).values;\n\n  // Crear un objeto de correlaciones que asegura las correlaciones recíprocas\n  let correlationMatrix = {};\n\n  // Inicializar las correlaciones con 1 para cada característica consigo misma\n  uniqueNamesFeature.forEach(name => {\n    correlationMatrix[name] = {};\n    uniqueNamesFeature.forEach(otherName => {\n      correlationMatrix[name][otherName] = name === otherName ? 1 : null;\n    });\n  });\n\n  // Llenar correlaciones \n  featureNames1.forEach((f1, i) => {\n    const f2 = featureNames2[i];\n    const corrValue = correlation[i];\n\n    if (uniqueNamesFeature.includes(f1) && uniqueNamesFeature.includes(f2)) {\n      correlationMatrix[f1][f2] = corrValue;\n      correlationMatrix[f2][f1] = corrValue;\n    }\n  });\n\n  let data = uniqueNamesFeature.map(name => {\n    let correlationsForFeature = uniqueNamesFeature.map(otherName => correlationMatrix[name][otherName]);\n    return {\n      name: name,\n      value: correlationsForFeature\n    };\n  });\n\n  let indicator = uniqueNamesFeature.map(name => ({\n    name: name,\n    max: 1,\n    min: -1\n  }));\n\n  // Configución del gráfico\n  option = {\n    grid: {\n      top: '75%',\n    },\n    title: {\n      text: 'Correlación. Diagrama de radar',\n      top: \"2%\",\n      left: '1%',\n      textStyle: {\n        fontSize: 22,\n      },\n    },\n    legend: {\n      data: uniqueNamesFeature,\n      top: \"2%\",\n      left: \"83%\",\n      orient: 'vertical',\n      textStyle: {\n        color: '#333333',\n        fontSize: 14\n      },\n      itemStyle: {\n        opacity: 1\n      },\n    },\n    radar: {\n      indicator: indicator,\n      name: {\n        textStyle: {\n          color: '#333333',\n          fontSize: 15\n        }\n      },\n    },\n    series: [\n      {\n        name: 'Budget vs spending',\n        type: 'radar',\n        data: data,\n        symbolSize: 5,\n        itemStyle: {\n          opacity: 0.3\n        },\n        emphasis: {\n          focus: 'self',\n          blurScope: 'global',\n        }\n      },\n    ]\n  };\n\n  return option;\n}\n\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Todos",
+          "value": "Todos"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Fecha",
+        "multi": false,
+        "name": "date",
+        "options": [],
+        "query": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('c_pearson', 'c_spearman') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "3",
+          "value": "3"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('c_pearson', 'c_spearman')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Modelo",
+        "multi": false,
+        "name": "case",
+        "options": [],
+        "query": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('c_pearson', 'c_spearman')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "100%",
+          "value": "1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instancias",
+        "multi": false,
+        "name": "numInstances",
+        "options": [
+          {
+            "selected": false,
+            "text": "20%",
+            "value": "0.2"
+          },
+          {
+            "selected": false,
+            "text": "40%",
+            "value": "0.4"
+          },
+          {
+            "selected": false,
+            "text": "60%",
+            "value": "0.6"
+          },
+          {
+            "selected": false,
+            "text": "80%",
+            "value": "0.8"
+          },
+          {
+            "selected": true,
+            "text": "100%",
+            "value": "1"
+          }
+        ],
+        "query": "20% : 0.2, 40% : 0.4, 60% : 0.6, 80% : 0.8, 100% : 1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Paleta 1",
+          "value": "Paleta 1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Color ",
+        "multi": false,
+        "name": "color",
+        "options": [
+          {
+            "selected": true,
+            "text": "Paleta 1",
+            "value": "Paleta 1"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 2",
+            "value": "Paleta 2"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 3",
+            "value": "Paleta 3"
+          }
+        ],
+        "query": "Paleta 1, Paleta 2, Paleta 3",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Círculo",
+          "value": "Círculo"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Símbolo",
+        "multi": false,
+        "name": "shape",
+        "options": [
+          {
+            "selected": true,
+            "text": "Círculo",
+            "value": "Círculo"
+          },
+          {
+            "selected": false,
+            "text": "Triángulo",
+            "value": "Triángulo"
+          },
+          {
+            "selected": false,
+            "text": "Rectángulo",
+            "value": "Rectángulo"
+          },
+          {
+            "selected": false,
+            "text": "Pin",
+            "value": "Pin"
+          }
+        ],
+        "query": "Círculo, Triángulo, Rectángulo, Pin",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "10",
+          "value": "10"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Tamaño símbolo",
+        "multi": false,
+        "name": "sizeS",
+        "options": [
+          {
+            "selected": true,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "15",
+            "value": "15"
+          },
+          {
+            "selected": false,
+            "text": "20",
+            "value": "20"
+          }
+        ],
+        "query": "10, 15, 20",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT DISTINCT  f.name\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f ON g.id_feature1 = f.id OR g.id_feature2 = f.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE g.id_model = $case\n  AND f.id_source = i.id_source\n",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Características",
+        "multi": true,
+        "name": "features",
+        "options": [],
+        "query": "SELECT DISTINCT  f.name\nFROM grafana_ml_model_correlation g\nINNER JOIN grafana_ml_model_feature f ON g.id_feature1 = f.id OR g.id_feature2 = f.id\nINNER JOIN grafana_ml_model_index i ON g.id_model = i.id\nWHERE g.id_model = $case\n  AND f.id_source = i.id_source\n",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "correlation pearson/spearman",
+  "uid": "ce5x9ukdpr8cgd",
+  "version": 435,
+  "weekStart": ""
+}

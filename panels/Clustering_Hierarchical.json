@@ -1,0 +1,1120 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 40,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "La tabla presenta un registro de los modelos de agrupamiento jerárquico organizados por fuente de datos. Para cada fuente, se incluye el nombre, el creador y una descripción. Adicionalmente, por cada modelo asociado a la fuente, se especifica su identificador (ID), los parámetros  empleados durante la ejecución del algoritmo, junto con la fecha y hora de creación. ",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "afterRender": "",
+        "content": "<div style=\"color: #444; max-width: 1100px; margin: 0 auto;\">\n\n<div style=\"font-size: 24px; font-weight: bold; font-family: 'Arial', sans-serif; color: #444; margin-bottom: 20px; margin-left: 10px\">\n  Modelos\n</div>\n\n{{#each (groupByDataset data)}}\n\n<div style=\"\n  font-family: 'Arial', sans-serif;\n  border: 2px solid rgba(0, 50, 255, 0.3); \n  background-color: transparent;\n  border-radius: 8px;\n  padding: 16px;\n  margin-bottom: 24px;\n\">\n\n  <h2 style=\"font-weight: bold; font-size: 20px; margin-top: 0;\">{{this.dataset.source_name}}</h2>\n\n  <p style=\"font-size: 18px; margin-bottom: 16px;\">\n    <strong style=\"font-weight: bold;\"> Creador:</strong> {{this.dataset.creator}}<br>\n    {{this.dataset.description}}\n  </p>\n\n  <h3 style=\"font-size: 18.5px; font-weight: bold; margin-bottom: 10px; color: #444;\">Detalles de los Modelos</h3>\n\n  <table border=\"1\" cellpadding=\"8\" cellspacing=\"0\"\n         style=\"text-align: center; border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 10px;\">\n    <thead style=\"font-size: 18px;\">\n      <tr>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255, 0.1);  font-weight: bold;\">ID</th>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255,  0.1);  font-weight: bold;\">Parámetros</th>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255, 0.1);  font-weight: bold;\">Fecha</th>\n      </tr>\n    </thead>\n    <tbody style=\"font-size: 17px;\">\n      {{#each this.models}}\n      <tr>\n        <td>{{model_id}}</td>\n        <td>{{parameters}}</td>\n        <td>{{created_date}}</td>\n      </tr>\n      {{/each}}\n    </tbody>\n  </table>\n\n</div>\n\n{{/each}}\n\n</div>",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "// Helper para agrupar los datos por dataset\ncontext.handlebars.registerHelper(\"groupByDataset\", function (data) {\n  const grouped = [];\n  let currentGroup = null;\n\n  data.forEach((item, index) => {\n    const itemAnterior = data[index - 1];\n\n    if (index === 0 || item.source_id !== itemAnterior.source_id) {\n      currentGroup = {\n        dataset: {\n          source_name: item.source_name,\n          creator: item.creator,\n          description: item.description\n        },\n        models: []\n      };\n      grouped.push(currentGroup);\n    }\n\n    // Procesar 'parameters' para mostrarlo de forma más limpia\n    let paramStr = '';\n    try {\n      const paramsObj = JSON.parse(item.parameters);\n      paramStr = Object.entries(paramsObj)\n        .map(([key, val]) => `${key}: ${val === null ? 'null' : val}`)\n        .join(', ');\n    } catch (e) {\n      paramStr = item.parameters; // fallback por si no es JSON\n    }\n\n    currentGroup.models.push({\n      model_id: item.model_id,\n      parameters: paramStr,\n      created_date: formatDate(item.created_date)\n    });\n  });\n\n  return grouped;\n});\n\nfunction formatDate(dateString) {\n  const date = new Date(dateString);\n\n  const year = date.getFullYear();\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const day = String(date.getDate()).padStart(2, '0');\n\n  const hours = String(date.getHours()).padStart(2, '0');\n  const minutes = String(date.getMinutes()).padStart(2, '0');\n\n  return `${year}-${month}-${day} ${hours}:${minutes}`;\n}\n",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    s.id AS source_id,\n    s.name AS source_name,\n    s.creator,\n    s.description,\n    i.id AS model_id,\n    i.parameters,\n    i.date AS created_date\nFROM grafana_ml_model_source s\nINNER JOIN grafana_ml_model_index i \n    ON s.id = i.id_source\nWHERE i.algorithm IN ('a_jerarquico')\n    AND (\n        ('$date' = 'Hoy' AND i.date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND i.date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND i.date >= CURRENT_DATE - INTERVAL '6 days' AND i.date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND i.date >= DATE_TRUNC('month', CURRENT_DATE) AND i.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND i.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND i.date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY s.id, i.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Dendrograma resultante de un agrupamiento jerárquico, donde las ramas representan la relación de similitud entre los elementos agrupados. Los colores representan los cústeres.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": []
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 10,
+        "x": 0,
+        "y": 21
+      },
+      "id": 10,
+      "options": {
+        "afterRender": "import(\"https://esm.sh/d3@7.9.0\").then((d3) => {\n\n  function dendrogram(data, options = {}) {\n    const {\n      width = 750,\n      height = 700,\n      hideLabels = true, // Ocultar labels\n      paddingBottom = hideLabels ? 20 : 120,\n      innerHeight = height - paddingBottom,\n      paddingLeft = 30,\n      cutHeight = undefined,\n      yLabel = \"↑ altura\",\n      colors = ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n      fontFamily = \"Arial, sans-serif\",\n      linkColor = \"grey\",\n      fontSize = 13,\n      strokeWidth = 2.5\n    } = options;\n\n    const svg = d3\n      .create(\"svg\")\n      .attr(\"width\", width)\n      .attr(\"height\", height)\n      .attr(\"viewBox\", [0, 0, width, innerHeight])\n      .attr(\"style\", \"max-width: 100%; height: auto; height: intrinsic;\");\n\n    var clusterLayout = d3.cluster().size([width - paddingLeft * 2, innerHeight]);\n\n    const root = d3.hierarchy(data);\n    const maxHeight = root.data.height;\n\n    clusterLayout(root);\n\n    const yScaleLinear = d3\n      .scaleLinear()\n      .domain([0, maxHeight])\n      .range([hideLabels ? innerHeight - 35 : innerHeight, 0]);\n\n    const yAxisLinear = d3.axisLeft(yScaleLinear).tickSize(5);\n\n    function transformY(data) {\n      const height = hideLabels ? innerHeight - 15 : innerHeight;\n      return height - (data.data.height / maxHeight) * height;\n    }\n\n    // Recorre los hijos de primer orden y asigna colores\n    let curIndex = -1;\n    if (cutHeight) {\n      curIndex = -1;\n      root.each((child) => {\n        if (\n          child.data.height <= cutHeight &&\n          //child.data.height > 0 &&\n          child.parent &&\n          !child.parent.color\n        ) {\n          curIndex++;\n          child.color = colors[curIndex % colors.length];\n        } else if (child.parent && child.parent.color) {\n          child.color = child.parent.color;\n        }\n      });\n    }\n\n    clusterLayout(root);\n\n    // y-axis\n    svg\n      .append(\"g\")\n      .attr(\"transform\", `translate(0, ${hideLabels ? 20 : 0})`)\n      .append(\"g\")\n      .attr(\"class\", \"axis\")\n      .attr(\"transform\", `translate(${paddingLeft},${hideLabels ? 20 : 0})`)\n      .call(yAxisLinear)\n      .call((g) => g.select(\".domain\").remove())\n      .call((g) =>\n        g\n          .append(\"text\")\n          .attr(\"x\", -paddingLeft)\n          .attr(\"y\", -20)\n          .attr(\"fill\", \"currentColor\")\n          .attr(\"text-anchor\", \"start\")\n          .style(\"font-family\", fontFamily)\n          .style(\"font-size\", `14px`)\n          .text(yLabel)\n      )\n      .selectAll(\".tick\")\n      .classed(\"baseline\", (d) => d == 0)\n      .style(\"font-size\", `${fontSize}px`)\n      .style(\"font-family\", fontFamily);\n\n    // Enlaces\n    root.links().forEach((link) => {\n      svg\n        .append(\"path\")\n        .attr(\"class\", \"link\")\n        .attr(\"stroke\", link.source.color || linkColor)\n        .attr(\"stroke-width\", `${strokeWidth}px`)\n        .attr(\"fill\", \"none\")\n        .attr(\"transform\", `translate(${paddingLeft}, ${hideLabels ? 20 : 0})`)\n        .attr(\"d\", elbow(link));\n    });\n\n    // Nodos\n    root.descendants().forEach((desc) => {\n      if (desc.height == 0 && !hideLabels) {\n        svg\n          .append(\"text\")\n          .attr(\"dx\", 62)\n          .attr(\"dy\", 3)\n          .attr(\"text-anchor\", \"end\")\n          .style(\"font-size\", `${fontSize}px`)\n          .style(\"font-family\", fontFamily)\n          .attr(\n            \"transform\",\n            `translate(${desc.x + paddingLeft},${transformY(desc)}) rotate(90)`\n          )\n          .text(desc.data.name);\n      }\n    });\n\n    // Custom path generator\n    function elbow(d) {\n      return (\n        \"M\" +\n        d.source.x +\n        \",\" +\n        transformY(d.source) +\n        \"H\" +\n        d.target.x +\n        \"V\" +\n        transformY(d.target)\n      );\n    }\n\n    // Leyenda en la parte superior derecha\n    const legendWidth = 120;\n    const legendHeight = curIndex * 26 + 25;\n    const legendGroup = svg.append(\"g\").attr(\"transform\", `translate(${width - legendWidth + 0}, 0)`);\n\n    // Añadir el contenedor de la leyenda\n    legendGroup\n      .append(\"rect\")\n      .attr(\"x\", 0)\n      .attr(\"y\", -2)\n      .attr(\"width\", legendWidth)\n      .attr(\"height\", legendHeight)\n      .style(\"fill\", \"white\")\n      .style(\"stroke\", \"#999\")\n      .style(\"stroke-width\", 0.5);\n\n    // Rectángulos de colores en la leyenda\n    legendGroup\n      .selectAll(\"rect.colorRect\")\n      .data(d3.range(curIndex + 1))\n      .enter()\n      .append(\"rect\")\n      .attr(\"x\", 10)\n      .attr(\"y\", (d, i) => i * 25 + 5)\n      .attr(\"width\", 20)\n      .attr(\"height\", 15)\n      .attr(\"rx\", 5)\n      .attr(\"ry\", 5)\n      .style(\"fill\", (d) => colors[d % colors.length]);\n\n    // Texto de la leyenda\n    legendGroup\n      .selectAll(\"text\")\n      .data(d3.range(curIndex + 1))\n      .enter()\n      .append(\"text\")\n      .attr(\"x\", 40)\n      .attr(\"y\", (d, i) => i * 25 + 17)\n      .style(\"font-size\", \"16px\")\n      .text((d) => `clúster ${d}`);\n\n    return svg.node();\n  }\n\n  function trimToLevel(node, maxLevel, currentLevel = 0) {\n    if (currentLevel >= maxLevel) {\n      // Si el nivel actual es igual o mayor al máximo, eliminar hijos\n      return { ...node, height: 0, children: undefined };\n    }\n    if (!node.children) return node;\n    // Recorrer recursivamente los hijos aumentando el nivel actual\n    return {\n      ...node,\n      children: node.children\n        .map(child => trimToLevel(child, maxLevel, currentLevel + 1))\n        .filter(Boolean)\n    };\n  }\n\n  // Eliminar cualquier gráfico previo en el contenedor\n  const container = document.getElementById(\"dendrogram-container\");\n  container.innerHTML = '';  // Limpia el contenido del contenedor\n\n  let nodes = context.data[0];\n  const rootNode = nodes.find(node => node.id_parent === null || node.id_parent === undefined);\n\n  // Función recursiva para construir el árbol\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.id_parent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      name: child.name,\n      height: child.height,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    name: rootNode.name,\n    height: rootNode.height,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Obtener las 8 alturas mayores \n  let heights = nodes.map(node => node.height);  // Obtener todas las alturas\n  let top8Heights = heights\n    .slice()  // Crear una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordenar las alturas de mayor a menor\n    .slice(0, 10);  // Tomar las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  const COLOR_PALETTES = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Obtener la paleta seleccionada o usar la predeterminada\n  const selectedPalette = context.grafana.replaceVariables('${color}');\n  let COLOR_ALL = COLOR_PALETTES[selectedPalette] || COLOR_PALETTES['Paleta 2'];\n\n  let level = context.grafana.replaceVariables('${level}');\n\n  if (level != -1) {\n    data = trimToLevel(data, level);\n  }\n\n  let hideName = nodes.length / 2 < 50 ? false : true;\n  hideName = level < 6 && level != -1 ? false : true;\n\n  const svgElement = dendrogram(data, { cutHeight: cut, colors: COLOR_ALL, hideLabels: hideName });\n  container.appendChild(svgElement);\n});",
+        "content": "<!DOCTYPE html>\n<html lang=\"es\">\n\n<body>\n  <h3\n    style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin-left: 18px; margin-top: 4px; color: #444\">\n    Dendrograma\n  </h3>\n\n  <div id=\"dendrogram-container\" style=\"margin-left: 28px;\"></div>\n</body>\n\n</html>",
+        "contentPartials": [],
+        "defaultContent": "",
+        "editor": {
+          "format": "auto",
+          "language": "html"
+        },
+        "editors": [
+          "afterRender"
+        ],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "data",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- nodos\n\nSELECT * \nFROM grafana_ml_model_clustering_hierarchical\nWHERE id_model=$index \nORDER BY id_parent, id\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Dendrograma resultante de un agrupamiento jerárquico, donde las ramas representan la relación de similitud entre los elementos agrupados. Los nodos son interactivos, pueden expandirse y contraerse. Los colores representan los cústeres.",
+      "gridPos": {
+        "h": 21,
+        "w": 14,
+        "x": 10,
+        "y": 21
+      },
+      "id": 9,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n\n  const colorOption = context.grafana.replaceVariables('${color}');\n  const id = fields.find(field => field.name === 'id').values;\n  const idParent = fields.find(field => field.name === 'id_parent').values;\n  const name = fields.find(field => field.name === 'name').values;\n  const height = fields.find(field => field.name === 'height').values;\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  // Función recursiva para construir la jerarquía \n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Paleta de colores\n  var colors = getPalette();\n  let curIndex = -1; // Índice de color \n\n  // Asignar colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = colors[curIndex % colors.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  // Crear elementos de la leyenda para clústeres\n  var clusterLegend = [];\n  for (var i = 0; i <= curIndex; i++) {\n    clusterLegend.push({\n      type: 'rect',\n      left: 10,\n      top: 10 + i * 30,\n      shape: {\n        width: 20,\n        height: 15,\n        r: 4\n      },\n      style: {\n        fill: colors[i % colors.length]\n      }\n    });\n    clusterLegend.push({\n      type: 'text',\n      left: 40,\n      top: 10 + i * 30,\n      style: {\n        text: `clúster ${i}`,\n        fill: '#000',\n        font: '18px Arial'\n      }\n    });\n  }\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Dendrograma',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    tooltip: {\n      trigger: \"item\",\n      triggerOn: \"mousemove\",\n      formatter: function (params) {\n        let tooltipText = `Nombre: ${params.data.name} <br> Altura: ${params.data.height} <br> Clúster: ${params.data.cluster}`;\n        return tooltipText;\n      }\n    },\n    series: [\n      {\n        type: \"tree\",\n        data: [data],\n        left: \"2%\",\n        right: \"2%\",\n        top: \"8%\",\n        bottom: \"14%\",\n        symbol: \"emptyCircle\",\n        symbolSize: 12,\n        edgeShape: 'polyline',\n        orient: \"vertical\",\n        expandAndCollapse: true,\n        initialTreeDepth: context.grafana.replaceVariables('${level}'),\n        label: {\n          show: false,\n          position: \"top\",\n          rotate: -90,\n          verticalAlign: \"middle\",\n          align: \"right\",\n          fontSize: 14,\n        },\n        leaves: {\n          label: {\n            show: true,\n            position: \"bottom\",\n            rotate: -90,\n            verticalAlign: \"middle\",\n            align: \"left\",\n          },\n        },\n        animationDurationUpdate: 750,\n      },\n    ],\n    graphic: [\n      {\n        type: 'group',\n        left: '88%',\n        top: '2%',\n        children: [\n          {\n            type: 'rect',\n            left: '0',\n            top: '0',\n            shape: {\n              width: 120,\n              height: (curIndex + 1) * 30 + 10\n            },\n            style: {\n              fill: '#fff',\n              stroke: '#999',\n              lineWidth: 1\n            }\n          },\n          ...clusterLegend\n        ]\n      }\n    ]\n  };\n\n  return option;\n}\n\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 2'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 10,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Dendrograma en formato radial resultante de un agrupamiento jerárquico, donde las ramas representan la relación de similitud entre los elementos agrupados. Los colores representan los cústeres.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 19,
+        "w": 10,
+        "x": 0,
+        "y": 42
+      },
+      "id": 11,
+      "options": {
+        "afterRender": "import(\"https://esm.sh/d3@7.9.0\").then((d3) => {\n  let width = 620;\n  let height = 620;\n  let radius = width / 2;\n\n  let svgContainer = d3.select(\"#my_dataviz_radial\");\n  svgContainer.selectAll(\"*\").remove();\n\n  let svg = svgContainer\n    .append(\"svg\")\n    .attr(\"width\", width)\n    .attr(\"height\", height)\n    .append(\"g\")\n    .attr(\"transform\", \"translate(\" + radius + \",\" + radius + \")\");\n\n  let nodes = context.data[0];\n\n  const rootNode = nodes.find(node => node.id_parent === null || node.id_parent === undefined);\n\n  function buildHierarchy(nodes, parentId = null, level = 0, maxLevel = 7) {\n    if (level >= maxLevel) return null; // Detener si se alcanza el nivel máximo\n    const children = nodes.filter(node => node.id_parent === parentId);\n    if (children.length === 0) return null;\n    return children.map(child => ({\n      name: child.name,\n      value: child.height,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id, level + 1, maxLevel) // Incrementar el nivel\n    }));\n  }\n\n  // Generar la jerarquía limitando los niveles\n  let data = {\n    name: rootNode.name,\n    value: rootNode.height,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id, 0, 6)\n  };\n\n  const COLOR_PALETTES = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Obtener la paleta seleccionada o usar la predeterminada\n  const selectedPalette = context.grafana.replaceVariables('${color}');\n  let colors = COLOR_PALETTES[selectedPalette] || COLOR_PALETTES['Paleta 2'];\n\n  // Obtener las 8 alturas mayores \n  let heights = nodes.map(node => node.height);  // Obtener todas las alturas\n  let top8Heights = heights\n    .slice()  // Crear una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordenar las alturas de mayor a menor\n    .slice(0, 10);  // Tomar las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cutThreshold = top8Heights[numClusters - 1];\n\n  let curIndex = -1;\n\n  function assignDynamicClusters(node, parentCluster = -1) {\n    if (node.value <= cutThreshold && parentCluster == -1) {\n      curIndex++;\n      node.cluster = curIndex;\n    } else if (parentCluster != -1) {\n      node.cluster = parentCluster;\n    }\n    if (node.children) {\n      node.children.forEach(child => assignDynamicClusters(child, node.cluster));\n    }\n  }\n\n  function trimToLevel(node, maxLevel, currentLevel = 0) {\n    if (currentLevel >= maxLevel) {\n      // Si el nivel actual es igual o mayor al máximo, eliminar hijos\n      return { ...node, children: undefined };\n    }\n    if (!node.children) return node;\n    // Recorrer recursivamente los hijos aumentando el nivel actual\n    return {\n      ...node,\n      children: node.children\n        .map(child => trimToLevel(child, maxLevel, currentLevel + 1))\n        .filter(Boolean)\n    };\n  }\n\n  assignDynamicClusters(data);\n  let level = context.grafana.replaceVariables('${level}');\n\n  if (level != -1) {\n    data = trimToLevel(data, level);\n  }\n\n  let cluster = d3.cluster().size([360, radius - 100]);\n  let root = d3.hierarchy(data, function (d) {\n    return d.children;\n  });\n\n  cluster(root);\n\n  let linksGenerator = d3.linkRadial()\n    .angle(d => d.x / 180 * Math.PI)\n    .radius(d => d.y);\n\n  svg.selectAll('path')\n    .data(root.links())\n    .enter()\n    .append('path')\n    .attr(\"d\", linksGenerator)\n    .style(\"fill\", 'none')\n    .attr(\"stroke\", '#ccc');\n\n  let colorScale = d3.scaleOrdinal().domain(d3.range(colors.length)).range(colors);\n\n  svg.selectAll(\"g\")\n    .data(root.descendants())\n    .enter()\n    .append(\"g\")\n    .attr(\"transform\", function (d) {\n      return \"rotate(\" + (d.x - 90) + \")translate(\" + d.y + \")\";\n    })\n    .each(function (d) {\n      let circle = d3.select(this).append(\"circle\")\n        .attr(\"r\", !d.children ? 8 : 7)\n        .attr(\"stroke\", \"black\")\n        .style(\"stroke-width\", 1);\n\n      if (d.data.cluster != -1) {\n        circle.style(\"fill\", colorScale(d.data.cluster));\n      } else {\n        circle.style(\"fill\", \"#ccc\");\n      }\n      if (!d.children) {\n        d3.select(this).append(\"text\")\n          .attr(\"x\", 12)\n          .attr(\"y\", 3)\n          .style(\"font-size\", \"14px\")\n          .text(d.data.name);\n      }\n\n    });\n});",
+        "content": "<!DOCTYPE html>\n<html lang=\"es\">\n\n<head>\n  <meta charset=\"utf-8\">\n</head>\n\n<body>\n  <h3\n    style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin-left: 20px; margin-top: 4px; color:#444\">\n    Dendrograma radial\n  </h3>\n\n  <!-- Este es el contenedor donde se mostrará el gráfico -->\n  <div id=\"my_dataviz_radial\" style=\"margin-left: 80px;\"></div>\n</body>\n\n</html>",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [
+          "afterRender"
+        ],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "data",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 10,
+          "refId": "A"
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de dispersión muestra cómo se distribuyen los datos según los clústeres. Incluye menús desplegables que permiten escoger las características a visualizar. Cada punto representa un dato con color que indica su clúster. Además, se muestran los centroides mediante cruces.",
+      "gridPos": {
+        "h": 19,
+        "w": 14,
+        "x": 10,
+        "y": 42
+      },
+      "id": 13,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsPoints = context.panel.data.series[0].fields;\n  const fieldsNodes = context.panel.data.series[1].fields;\n  const fieldsFeatures = context.panel.data.series[2].fields;\n  const fieldsPointsF = context.panel.data.series[3].fields;\n\n  const pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  const pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  const id = fieldsNodes.find(field => field.name === 'id').values;\n  const idParent = fieldsNodes.find(field => field.name === 'id_parent').values;\n  const name = fieldsNodes.find(field => field.name === 'name').values;\n  const height = fieldsNodes.find(field => field.name === 'height').values;\n  const featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  const pointNamesF = (fieldsPointsF.find(fields => fields.name == 'point_name')).values;\n  const pointValuesF = (fieldsPointsF.find(fields => fields.name == 'feature_values')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const parsedValuesPointsF = pointValuesF.map(value => JSON.parse(value));\n\n  // Paleta \n  var COLOR_ALL = getPalette();\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Función recursiva para construir la jerarquía de datos\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      id: child.id,\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    id: rootNode.id,\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  let curIndex = -1; // Índice de color \n\n  // Asigna colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = COLOR_ALL[curIndex % COLOR_ALL.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  const CLUSTER_COUNT = curIndex + 1;\n  const DIENSIION_CLUSTER_INDEX = 2;\n  let selectedFeatureX = 0;\n  let selectedFeatureY = featuresName.length > 1 ? 1 : 0;\n\n  // Visual map\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  // Extraer nodos hoja\n  function extractLeafNodes(hierarchy, leafNodes = []) {\n    if (!hierarchy.children || hierarchy.children.length === 0) {\n      leafNodes.push({ name: hierarchy.name, cluster: hierarchy.cluster });\n    } else {\n      hierarchy.children.forEach(child => extractLeafNodes(child, leafNodes));\n    }\n    return leafNodes;\n  }\n\n  function getClusterArrayByName(hierarchy, pointNames) {\n    const leafNodes = extractLeafNodes(hierarchy);\n\n    // Crear un mapa de point_name -> cluster\n    const nameToClusterMap = new Map(leafNodes.map(node => [node.name, node.cluster]));\n\n    // Asignar el cluster directamente por nombre\n    const result = pointNames.map(name => {\n      const cluster = nameToClusterMap.get(name);\n      return cluster;\n    });\n\n    return result;\n  }\n\n  let pointClustersF = getClusterArrayByName(data, pointNamesF);\n  let pointClusters = getClusterArrayByName(data, pointNames);\n  const pointSeriesData = createSeriesData(parsedValuesPointsF, pointClustersF, selectedFeatureX, selectedFeatureY);\n  const centroidSeriesData = createSeriesCentroidData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY);\n\n  // Lógica para la selección\n  if (context.grafana.replaceVariables('${index}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.flexDirection = \"row\";\n    container.style.width = \"100%\";\n\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Diagrama de dispersión\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.color = \"#444\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.flexGrow = \"1\";\n    title.style.marginLeft = \"20px\";\n    title.style.marginTop = \"10px\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.flexDirection = \"column\";\n    rightContainer.style.alignItems = \"flex-end\";\n    rightContainer.style.marginLeft = \"10px\";\n\n    // Eje X\n    const xAxisContainer = document.createElement(\"div\");\n    xAxisContainer.style.display = \"flex\";\n    xAxisContainer.style.alignItems = \"center\";\n    xAxisContainer.style.marginBottom = \"2px\";\n\n    const xAxisLabel = document.createElement(\"span\");\n    xAxisLabel.innerHTML = \"Eje x:\";\n    xAxisLabel.style.marginRight = \"6px\";\n    xAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    xAxisLabel.style.fontWeight = \"bold\";\n    xAxisLabel.style.fontSize = \"19px\";\n    xAxisLabel.style.color = \"#444\";\n    xAxisLabel.style.marginTop = \"10px\";\n\n    const selectListX = document.createElement(\"select\");\n    selectListX.id = \"selectX\";\n    selectListX.style.fontFamily = \"'Arial', sans-serif\";\n    selectListX.style.fontSize = \"16px\";\n    selectListX.style.border = \"1px solid gray\";\n    selectListX.style.borderRadius = \"8px\";\n    selectListX.style.padding = \"5px\";\n    selectListX.style.minWidth = \"120px\";\n    selectListX.style.marginTop = \"10px\";\n    selectListX.style.marginRight = \"10px\";\n\n    // Eje Y\n    const yAxisContainer = document.createElement(\"div\");\n    yAxisContainer.style.display = \"flex\";\n    yAxisContainer.style.alignItems = \"center\";\n    yAxisContainer.style.marginBottom = \"2px\";\n\n    const yAxisLabel = document.createElement(\"span\");\n    yAxisLabel.innerHTML = \"Eje y:\";\n    yAxisLabel.style.marginRight = \"6px\";\n    yAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    yAxisLabel.style.fontWeight = \"bold\";\n    yAxisLabel.style.fontSize = \"19px\";\n    yAxisLabel.style.color = \"#444\";\n\n    const selectListY = document.createElement(\"select\");\n    selectListY.id = \"selectY\";\n    selectListY.style.fontFamily = \"'Arial', sans-serif\";\n    selectListY.style.fontSize = \"16px\";\n    selectListY.style.border = \"1px solid gray\";\n    selectListY.style.borderRadius = \"8px\";\n    selectListY.style.padding = \"5px\";\n    selectListY.style.minWidth = \"120px\";\n    selectListY.style.marginRight = \"10px\";\n\n    featuresName.forEach((value, index) => {\n      const optionX = document.createElement(\"option\");\n      optionX.value = index;\n      optionX.text = value;\n      selectListX.appendChild(optionX);\n\n      const optionY = document.createElement(\"option\");\n      optionY.value = index;\n      optionY.text = value;\n      selectListY.appendChild(optionY);\n    });\n\n    selectListY.value = selectedFeatureY;\n\n    selectListX.addEventListener(\"change\", () => {\n      selectedFeatureX = parseInt(selectListX.value);\n      updateChartData();\n    });\n\n    selectListY.addEventListener(\"change\", () => {\n      selectedFeatureY = parseInt(selectListY.value);\n      updateChartData();\n    });\n\n    // Añadir todo a rightContainer\n    xAxisContainer.appendChild(xAxisLabel);\n    xAxisContainer.appendChild(selectListX);\n    yAxisContainer.appendChild(yAxisLabel);\n    yAxisContainer.appendChild(selectListY);\n\n    rightContainer.appendChild(xAxisContainer);\n    rightContainer.appendChild(yAxisContainer);\n\n    // Añadir todo al container\n    container.appendChild(title);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Actualizar el gráfico después de un cambio en la selección\n  function updateChartData() {\n    const pointSeriesData = createSeriesData(parsedValuesPointsF, pointClustersF, selectedFeatureX, selectedFeatureY);\n    const centroidSeriesData = createSeriesCentroidData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY);\n\n    context.panel.chart.setOption({\n      xAxis: {\n        name: featuresName[selectedFeatureX],\n        min: () => calculateMargin(pointValues, selectedFeatureX)\n      },\n      yAxis: {\n        name: featuresName[selectedFeatureY],\n        min: () => calculateMargin(pointValues, selectedFeatureY)\n      },\n      series: [\n        {\n          name: 'Puntos',\n          data: pointSeriesData\n        },\n        {\n          name: 'Centroides',\n          data: centroidSeriesData\n        }\n      ]\n    });\n  }\n\n  option = {\n    tooltip: {\n      position: 'top',\n      formatter: function (params) {\n        const seriesIndex = params.seriesIndex;\n        const dataIndex = params.dataIndex;\n\n        // Determinar si es un punto o un centroide\n        let featureValues, clusterId, pointName;\n\n        // Si es un punto\n        if (seriesIndex === 0) {\n          featureValues = parsedValuesPointsF[dataIndex];\n          clusterId = pointClustersF[dataIndex];\n          pointName = pointNamesF[dataIndex];\n        }\n        // Si es un centroide\n        else if (seriesIndex === 1) {\n          featureValues = centroidSeriesData[dataIndex].value;\n          clusterId = centroidSeriesData[dataIndex].value[2];\n          pointName = `Centroide ${clusterId}`;\n        }\n\n        const featureName1 = featuresName[selectedFeatureX];\n        const featureName2 = featuresName[selectedFeatureY];\n\n        return `\n        <div><strong>${pointName}</strong></div>\n        <div><strong>Cluster: ${clusterId}</strong></div>\n        <div>${featureName1}: ${parseFloat(featureValues[selectedFeatureX].toFixed(4))}</div>\n        <div>${featureName2}: ${parseFloat(featureValues[selectedFeatureY].toFixed(4))}</div>\n      `;\n      }\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '22%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      textStyle: {\n        fontSize: 17\n      },\n      inRange: {\n        color: COLOR_ALL\n      }\n    },\n    grid: {\n      bottom: \"23%\",\n      containLabel: true,\n      left: \"135\",\n      right: \"4%\",\n      top: \"3%\"\n    },\n    xAxis: {\n      type: 'value',\n      name: featuresName[selectedFeatureX],\n      nameLocation: 'middle',\n      nameGap: 25,\n      min: () => calculateMargin(pointValues, selectedFeatureX),\n      nameTextStyle: {\n        fontSize: 17,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n    },\n    yAxis: {\n      type: 'value',\n      name: featuresName[selectedFeatureY],\n      nameLocation: 'middle',\n      nameGap: 30,\n      min: () => calculateMargin(pointValues, selectedFeatureY),\n      nameTextStyle: {\n        fontSize: 17,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n    },\n    legend: {\n      data: ['Puntos', 'Centroides'],\n      top: '8%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 17\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#000',\n        borderWidth: 1.5\n      }\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'scatter',\n        encode: { tooltip: [0, 1] },\n        symbolSize: 15,\n        symbol: getShape(context.grafana.replaceVariables('${shape}')),\n        itemStyle: {\n          color: '#888',\n          borderColor: '#555',\n        },\n        data: pointSeriesData,\n      },\n      {\n        name: 'Centroides',\n        type: 'effectScatter',\n        encode: { tooltip: [0, 1] },\n        symbol: `path://${getSvgPathCentroid()}`,\n        symbolSize: 25,\n        itemStyle: {\n          color: '#888',\n          borderColor: '#111',\n        },\n        data: centroidSeriesData,\n      }\n    ]\n  };\n  return option;\n}\n\n//Array de 2 dimensiones y el clúster \nfunction createSeriesData(values, clusters, dim1Index, dim2Index) {\n  return values.map((value, index) => {\n    const dim1 = value[dim1Index];\n    const dim2 = value[dim2Index];\n    const cluster = clusters[index];\n    const color = COLOR_ALL[cluster % COLOR_ALL];\n\n    return {\n      value: [dim1, dim2, cluster],\n      itemStyle: {\n        color: color\n      }\n    };\n  });\n}\n\nfunction createSeriesCentroidData(values, clusters, dim1Index, dim2Index) {\n  const clusterMap = {};\n\n  // Agrupar puntos por clúster\n  values.forEach((value, index) => {\n    const cluster = clusters[index];\n    if (!clusterMap[cluster]) {\n      clusterMap[cluster] = [];\n    }\n    clusterMap[cluster].push(value);\n  });\n\n  // Calcular centroides\n  return Object.keys(clusterMap).map(cluster => {\n    const clusterPoints = clusterMap[cluster];\n    const dim1Sum = clusterPoints.reduce((sum, point) => sum + point[dim1Index], 0);\n    const dim2Sum = clusterPoints.reduce((sum, point) => sum + point[dim2Index], 0);\n    const count = clusterPoints.length;\n\n    return {\n      value: [dim1Sum / count, dim2Sum / count, parseInt(cluster)],\n      itemStyle: {\n        color: COLOR_ALL[cluster % COLOR_ALL],\n        borderColor: \"#000\" // Resaltar los centroides\n      },\n    };\n  });\n}\n\n// Calcular el margen del 5% basado en el rango de los datos\nfunction calculateMargin(values, axisIndex) {\n  const axisValues = values.map(value => JSON.parse(value)[axisIndex]);\n  const minValue = Math.min(...axisValues);\n  const maxValue = Math.max(...axisValues);\n  const range = maxValue - minValue;\n  const margin = range * 0.04;\n  const result = minValue - margin;\n\n  return parseFloat(result.toFixed(4));\n}\n\n// Símbolo de los centroides\nfunction getSvgPathCentroid() {\n  return \"M2750 12751 c-116 -26 -186 -52 -295 -110 -299 -157 -485 -326 -1104 \" +\n    \"-1004 -79 -86 -271 -277 -427 -422 -320 -301 -448 -431 -570 -584 -148 -183 \" +\n    \"-238 -344 -290 -517 -24 -78 -28 -106 -28 -234 -1 -176 13 -238 89 -395 133 \" +\n    \"-276 388 -564 1000 -1130 276 -255 599 -572 1175 -1154 437 -441 795 -808 795 \" +\n    \"-814 0 -12 -1837 -1835 -2267 -2250 -525 -506 -711 -761 -804 -1098 -13 -46 \" +\n    \"-18 -101 -18 -194 0 -152 19 -236 87 -375 60 -123 147 -232 362 -457 105 -109 \" +\n    \"323 -340 485 -513 580 -622 785 -826 1149 -1146 240 -212 346 -280 509 -326 \" +\n    \"111 -32 292 -31 417 1 355 92 700 348 1234 916 410 436 1057 1110 1286 1340 \" +\n    \"444 446 749 702 869 730 33 7 53 -13 1756 -1730 698 -703 847 -844 1040 -981 \" +\n    \"419 -297 777 -346 1153 -158 203 101 279 166 802 683 595 589 869 857 1067 \" +\n    \"1044 373 352 518 591 535 882 12 221 -66 463 -232 717 -184 281 -425 535 -985 \" +\n    \"1039 -219 197 -451 424 -900 879 -333 337 -656 658 -719 714 -155 137 -176 \" +\n    \"165 -175 227 0 38 8 59 35 99 19 27 463 474 987 992 1735 1716 1773 1755 1841 \" +\n    \"1853 79 114 132 225 162 340 20 75 23 114 23 230 -1 162 -19 243 -83 381 -83 \" +\n    \"177 -180 299 -487 614 -116 118 -334 357 -486 531 -456 523 -681 753 -933 954 \" +\n    \"-162 130 -277 205 -420 275 -404 199 -747 166 -1087 -104 -58 -47 -211 -190 \" +\n    \"-340 -319 -262 -263 -2071 -2052 -2303 -2278 -161 -156 -197 -182 -261 -183 \" +\n    \"-57 -1 -98 30 -200 149 -47 55 -208 224 -358 375 -1608 1625 -2172 2191 -2240 \" +\n    \"2249 -224 189 -409 268 -646 277 -89 3 -134 0 -200 -15z\";\n}\n\n// Símbolo de los puntos\nfunction getShape(shape) {\n  let seLectedShapeValue = 'circle';\n\n  if (shape == 'Círculo') {\n    seLectedShapeValue = 'circle';\n  } else if (shape == 'Triángulo') {\n    seLectedShapeValue = 'triangle';\n  } else if (shape == 'Rectángulo') {\n    seLectedShapeValue = 'rect';\n  } else if (shape == 'Pin') {\n    seLectedShapeValue = 'pin';\n  }\n\n  return seLectedShapeValue;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "amap",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Puntos (todos)\n\nSELECT\n  p.id, \n  p.name AS point_name, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (\n    SELECT id_source \n    FROM grafana_ml_model_index \n    WHERE id = $index\n) \nAND pv.numeric_value IS NOT NULL  -- Solo valores numéricos válidos\nAND f.name IN ($features)\nGROUP BY p.id\nORDER BY p.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Nodos\n\nSELECT id, id_parent, name, height\nFROM grafana_ml_model_clustering_hierarchical \nWHERE id_model=$index",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "--Características\n\nSELECT DISTINCT \n  f.id, f.name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n    )\n  AND f.name IN ($features)\nORDER BY f.id;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Puntos (filtrados por %)\n\nSELECT\n  p.id, \n  p.name AS point_name, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (\n    SELECT id_source \n    FROM grafana_ml_model_index \n    WHERE id = $index\n) \nAND pv.numeric_value IS NOT NULL  -- Solo valores numéricos válidos\nAND f.name IN ($features)\nGROUP BY p.id\nORDER BY RANDOM()\nLIMIT (\n  SELECT CEIL(COUNT(*) * $numInstances)\n  FROM grafana_ml_model_point\n  WHERE id_source = (\n    SELECT id_source\n    FROM grafana_ml_model_index\n    WHERE id = $index\n  )\n);\n",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de radar muestra una comparación de múltiples variables en diferentes clústeres. Los ejes radiales representan variables, los polígonos formados muestran la distribución de los datos, los centroides o medoides se representan con líneas discontinuas, y los colores  diferencian los clústeres.",
+      "gridPos": {
+        "h": 16,
+        "w": 10,
+        "x": 0,
+        "y": 61
+      },
+      "id": 16,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsPoints = context.panel.data.series[0].fields;\n  const fieldsNodes = context.panel.data.series[1].fields;\n  const fieldsFeatures = context.panel.data.series[2].fields;\n  const fieldsPointsF = context.panel.data.series[3].fields;\n\n  const pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  const pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  const id = fieldsNodes.find(field => field.name === 'id').values;\n  const idParent = fieldsNodes.find(field => field.name === 'id_parent').values;\n  const name = fieldsNodes.find(field => field.name === 'name').values;\n  const height = fieldsNodes.find(field => field.name === 'height').values;\n  const featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  const pointNamesF = (fieldsPointsF.find(fields => fields.name == 'point_name')).values;\n  const pointValuesF = (fieldsPointsF.find(fields => fields.name == 'feature_values')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const parsedValuesPointsF = pointValuesF.map(value => JSON.parse(value));\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Función recursiva para construir la jerarquía de datos\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      id: child.id,\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    id: rootNode.id,\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Paleta \n  var COLOR_ALL = getPalette();\n  let curIndex = -1; // Índice de color \n\n  // Asignar colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = COLOR_ALL[curIndex % COLOR_ALL.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  // Extraer nodos hoja\n  function extractLeafNodes(hierarchy, leafNodes = []) {\n    if (!hierarchy.children || hierarchy.children.length === 0) {\n      leafNodes.push({ name: hierarchy.name, cluster: hierarchy.cluster });\n    } else {\n      hierarchy.children.forEach(child => extractLeafNodes(child, leafNodes));\n    }\n    return leafNodes;\n  }\n\n  function getClusterArrayByName(hierarchy, pointNames) {\n    const leafNodes = extractLeafNodes(hierarchy);\n\n    // Crear un mapa de point_name -> cluster\n    const nameToClusterMap = new Map(leafNodes.map(node => [node.name, node.cluster]));\n\n    // Asignar el cluster directamente por nombre\n    const result = pointNames.map(name => {\n      const cluster = nameToClusterMap.get(name);\n      return cluster;\n    });\n\n    return result;\n  }\n\n  let pointClustersF = getClusterArrayByName(data, pointNamesF);\n  let pointClusters = getClusterArrayByName(data, pointNames);\n\n  // Series\n  const pointSeriesData = createSeriesData(parsedValuesPointsF, pointClustersF);\n  const centroidSeriesData = createSeriesCentroidData(parsedValuesPoints, pointClusters);\n\n  const percentageIncrease = 0.05;  // 5%\n\n  let radarIndicatorsPoints = featuresName.map((feature, featureIndex) => {\n    let maxFeatureValue = Math.max(...parsedValuesPoints.map(value => value[featureIndex]));\n    let minFeatureValue = Math.min(...parsedValuesPoints.map(value => value[featureIndex]));\n    let adjustedMax = maxFeatureValue * (1 + percentageIncrease);\n    let adjustedMin = minFeatureValue * (1 - percentageIncrease);\n\n    return {\n      name: feature,\n      max: adjustedMax,\n      min: adjustedMin\n    };\n  });\n\n  const CLUSTER_COUNT = curIndex + 1;\n  const DIENSIION_CLUSTER_INDEX = featuresName.length;\n\n  // Visual map\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Características de los clústeres',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '40%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      splitNumber: CLUSTER_COUNT,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length];\n        }\n      },\n      textStyle: {\n        fontSize: 17\n      },\n    },\n    radar: {\n      center: ['55%', '50%'],\n      indicator: radarIndicatorsPoints,\n      name: {\n        textStyle: {\n          color: '#333',\n          fontSize: 17\n        }\n      },\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'radar',\n        symbol: 'none',\n        lineStyle: {\n          width: 1,\n          opacity: 0.2\n        },\n        data: pointSeriesData\n      },\n      {\n        name: 'Centroides',\n        type: 'radar',\n        symbol: `path://${getSvgPathCentroid()}`,\n        symbolSize: 12,\n        lineStyle: {\n          width: 1.5,\n          type: 'dashed',\n          opacity: 1,\n        },\n        data: centroidSeriesData\n      },\n    ],\n    legend: {\n      data: ['Puntos', 'Centroides'],\n      top: '25%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 17\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#999',\n        borderWidth: 1,\n      },\n      itemWidth: 12,\n      itemHeight: 12\n    },\n  };\n\n  return option;\n}\n\n// Crear los datos de la serie incluyendo todas las características y el clúster\nfunction createSeriesData(values, clusters) {\n  return values.map((value, index) => {\n    const cluster = clusters[index];\n    const color = COLOR_ALL[cluster % COLOR_ALL.length];\n\n    return {\n      value: [...value, cluster], // Incluye todas las características y el clúster\n      itemStyle: {\n        color: color\n      }\n    };\n  });\n}\n\nfunction createSeriesCentroidData(values, clusters) {\n  const clusterMap = {};\n\n  // Agrupar puntos por clúster\n  values.forEach((value, index) => {\n    const cluster = clusters[index];\n    if (!clusterMap[cluster]) {\n      clusterMap[cluster] = [];\n    }\n    clusterMap[cluster].push(value);\n  });\n\n  // Calcular centroides\n  const centroids = Object.keys(clusterMap).map(cluster => {\n    const points = clusterMap[cluster];\n\n    // Calcular el promedio de cada característica\n    const centroid = points[0].map((_, featureIndex) => {\n      const featureValues = points.map(point => point[featureIndex]);\n      return featureValues.reduce((sum, val) => sum + val, 0) / featureValues.length;\n    });\n\n    return {\n      value: [...centroid, parseInt(cluster)], // Incluye todas las características y el clúster\n      itemStyle: {\n        color: COLOR_ALL[cluster % COLOR_ALL.length]\n      }\n    };\n  });\n\n  return centroids;\n}\n\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}\n\n// Símbolo de los centroides\nfunction getSvgPathCentroid() {\n  return \"M2750 12751 c-116 -26 -186 -52 -295 -110 -299 -157 -485 -326 -1104 \" +\n    \"-1004 -79 -86 -271 -277 -427 -422 -320 -301 -448 -431 -570 -584 -148 -183 \" +\n    \"-238 -344 -290 -517 -24 -78 -28 -106 -28 -234 -1 -176 13 -238 89 -395 133 \" +\n    \"-276 388 -564 1000 -1130 276 -255 599 -572 1175 -1154 437 -441 795 -808 795 \" +\n    \"-814 0 -12 -1837 -1835 -2267 -2250 -525 -506 -711 -761 -804 -1098 -13 -46 \" +\n    \"-18 -101 -18 -194 0 -152 19 -236 87 -375 60 -123 147 -232 362 -457 105 -109 \" +\n    \"323 -340 485 -513 580 -622 785 -826 1149 -1146 240 -212 346 -280 509 -326 \" +\n    \"111 -32 292 -31 417 1 355 92 700 348 1234 916 410 436 1057 1110 1286 1340 \" +\n    \"444 446 749 702 869 730 33 7 53 -13 1756 -1730 698 -703 847 -844 1040 -981 \" +\n    \"419 -297 777 -346 1153 -158 203 101 279 166 802 683 595 589 869 857 1067 \" +\n    \"1044 373 352 518 591 535 882 12 221 -66 463 -232 717 -184 281 -425 535 -985 \" +\n    \"1039 -219 197 -451 424 -900 879 -333 337 -656 658 -719 714 -155 137 -176 \" +\n    \"165 -175 227 0 38 8 59 35 99 19 27 463 474 987 992 1735 1716 1773 1755 1841 \" +\n    \"1853 79 114 132 225 162 340 20 75 23 114 23 230 -1 162 -19 243 -83 381 -83 \" +\n    \"177 -180 299 -487 614 -116 118 -334 357 -486 531 -456 523 -681 753 -933 954 \" +\n    \"-162 130 -277 205 -420 275 -404 199 -747 166 -1087 -104 -58 -47 -211 -190 \" +\n    \"-340 -319 -262 -263 -2071 -2052 -2303 -2278 -161 -156 -197 -182 -261 -183 \" +\n    \"-57 -1 -98 30 -200 149 -47 55 -208 224 -358 375 -1608 1625 -2172 2191 -2240 \" +\n    \"2249 -224 189 -409 268 -646 277 -89 3 -134 0 -200 -15z\";\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 13,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de coordenadas paralelas permite comparar múltiples variables simultáneamente, se compone de ejes verticales paralelos que representan cada variable con escalas independientes. Las observaciones se muestran como líneas que conectan sus valores en los distintos ejes. Se emplean líneas discontinuas para marcar centroides como referencia, y colores distintos para diferenciar visualmente los clústeres.",
+      "gridPos": {
+        "h": 16,
+        "w": 14,
+        "x": 10,
+        "y": 61
+      },
+      "id": 15,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsPoints = context.panel.data.series[0].fields;\n  const fieldsNodes = context.panel.data.series[1].fields;\n  const fieldsFeatures = context.panel.data.series[2].fields;\n  const fieldsPointsF = context.panel.data.series[3].fields;\n\n  const pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  const pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  const id = fieldsNodes.find(field => field.name === 'id').values;\n  const idParent = fieldsNodes.find(field => field.name === 'id_parent').values;\n  const name = fieldsNodes.find(field => field.name === 'name').values;\n  const height = fieldsNodes.find(field => field.name === 'height').values;\n  const featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  const pointNamesF = (fieldsPointsF.find(fields => fields.name == 'point_name')).values;\n  const pointValuesF = (fieldsPointsF.find(fields => fields.name == 'feature_values')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const parsedValuesPointsF = pointValuesF.map(value => JSON.parse(value));\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Función recursiva para construir la jerarquía de datos\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      id: child.id,\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    id: rootNode.id,\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Paleta \n  var COLOR_ALL = getPalette();\n  let curIndex = -1; // Índice de color \n\n  // Asignar colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = COLOR_ALL[curIndex % COLOR_ALL.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  // Extraer nodos hoja\n  function extractLeafNodes(hierarchy, leafNodes = []) {\n    if (!hierarchy.children || hierarchy.children.length === 0) {\n      leafNodes.push({ name: hierarchy.name, cluster: hierarchy.cluster });\n    } else {\n      hierarchy.children.forEach(child => extractLeafNodes(child, leafNodes));\n    }\n    return leafNodes;\n  }\n\n  function getClusterArrayByName(hierarchy, pointNames) {\n    const leafNodes = extractLeafNodes(hierarchy);\n\n    // Crear un mapa de point_name -> cluster\n    const nameToClusterMap = new Map(leafNodes.map(node => [node.name, node.cluster]));\n\n    // Asignar el cluster directamente por nombre\n    const result = pointNames.map(name => {\n      const cluster = nameToClusterMap.get(name);\n      return cluster;\n    });\n\n    return result;\n  }\n\n  let pointClustersF = getClusterArrayByName(data, pointNamesF);\n  let pointClusters = getClusterArrayByName(data, pointNames);\n\n  // Series\n  const pointSeriesData = createSeriesData(parsedValuesPointsF, pointClustersF);\n  const centroidSeriesData = createSeriesCentroidData(parsedValuesPoints, pointClusters);\n\n  const allValues = pointSeriesData\n    .concat(centroidSeriesData)\n    .map(serie => serie.value.slice(0, -1)); // Excluir el clúster\n\n  const dimensions = featuresName.map((name, index) => {\n    const valuesForDimension = allValues.map(row => row[index]);\n    const minRaw = Math.min(...valuesForDimension);\n    const maxRaw = Math.max(...valuesForDimension);\n    const range = maxRaw - minRaw;\n    const padding = range * 0.02; // 10% de margen\n\n    const min = +(minRaw - padding).toFixed(2);\n    const max = +(maxRaw + padding).toFixed(2);\n\n    return {\n      dim: index,\n      name: name,\n      min: min,\n      max: max,\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n      nameTextStyle: {\n        fontSize: 14,\n        color: '#333'\n      }\n    };\n  });\n\n  const CLUSTER_COUNT = curIndex + 1;\n  const DIENSIION_CLUSTER_INDEX = featuresName.length;\n\n  // Visual map\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  option = {\n    title: {\n      text: 'Características de los clústeres',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    parallelAxis: dimensions,\n    series: [\n      {\n        name: 'Puntos',\n        type: 'parallel',\n        lineStyle: {\n          width: 1.5,\n          opacity: 0.4\n        },\n        data: pointSeriesData\n      },\n      {\n        name: 'Centroides',\n        type: 'parallel',\n        lineStyle: {\n          width: 2.5,\n          type: 'dashed',\n          opacity: 1\n        },\n        data: centroidSeriesData\n      }\n    ]\n    , parallel: {\n      bottom: \"4%\",\n      left: \"130\",\n      right: \"7%\",\n      top: \"15%\"\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '40%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      splitNumber: CLUSTER_COUNT,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length]; // Repite los colores usando el módulo\n        }\n      },\n      textStyle: {\n        fontSize: 16\n      },\n    },\n    legend: {\n      data: ['Puntos', 'Centroides'],\n      top: '25%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 16\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#999',\n        borderWidth: 1\n      },\n      itemWidth: 12,\n      itemHeight: 12\n    },\n  };\n\n  return option;\n}\n\n// Crear los datos de la serie incluyendo todas las características y el clúster\nfunction createSeriesData(values, clusters) {\n  return values.map((value, index) => {\n    const cluster = clusters[index];\n    const color = COLOR_ALL[cluster % COLOR_ALL.length];\n\n    return {\n      value: [...value, cluster], // Incluye todas las características y el clúster\n      itemStyle: {\n        color: color\n      }\n    };\n  });\n}\n\nfunction createSeriesCentroidData(values, clusters) {\n  const clusterMap = {};\n\n  // Agrupar puntos por clúster\n  values.forEach((value, index) => {\n    const cluster = clusters[index];\n    if (!clusterMap[cluster]) {\n      clusterMap[cluster] = [];\n    }\n    clusterMap[cluster].push(value);\n  });\n\n  // Calcular centroides\n  const centroids = Object.keys(clusterMap).map(cluster => {\n    const points = clusterMap[cluster];\n\n    // Calcular el promedio de cada característica\n    const centroid = points[0].map((_, featureIndex) => {\n      const featureValues = points.map(point => point[featureIndex]);\n      return featureValues.reduce((sum, val) => sum + val, 0) / featureValues.length;\n    });\n\n    return {\n      value: [...centroid, parseInt(cluster)], // Incluye todas las características y el clúster\n      itemStyle: {\n        color: COLOR_ALL[cluster % COLOR_ALL.length]\n      }\n    };\n  });\n\n  return centroids;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 13,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "Representa la proporción de datos en cada clúster como sectores de un círculo. El tamaño de cada porción refleja la cantidad de observaciones en ese grupo, con etiquetas de porcentaje. Se utilizan colores distintos para cada clúster.",
+      "gridPos": {
+        "h": 16,
+        "w": 10,
+        "x": 0,
+        "y": 77
+      },
+      "id": 17,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsNodes = context.panel.data.series[0].fields;\n\n  const id = fieldsNodes.find(field => field.name === 'id').values;\n  const idParent = fieldsNodes.find(field => field.name === 'id_parent').values;\n  const name = fieldsNodes.find(field => field.name === 'name').values;\n  const height = fieldsNodes.find(field => field.name === 'height').values;\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Función recursiva para construir la jerarquía de datos\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      id: child.id,\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    id: rootNode.id,\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Paleta \n  var COLOR_ALL = getPalette();\n  let curIndex = -1; // Índice de color \n\n  // Asignar colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = COLOR_ALL[curIndex % COLOR_ALL.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  // Extraer nodos hoja\n  function extractLeafNodes(hierarchy, leafNodes = []) {\n    if (!hierarchy.children || hierarchy.children.length === 0) {\n      leafNodes.push({ name: hierarchy.name, cluster: hierarchy.cluster });\n    } else {\n      hierarchy.children.forEach(child => extractLeafNodes(child, leafNodes));\n    }\n    return leafNodes;\n  }\n\n  let points = extractLeafNodes(data);\n  const clusters = Object.values(\n    points.reduce((acc, point) => {\n      const key = point.cluster;\n      if (!acc[key]) {\n        acc[key] = { value: 0, name: `clúster ${key}` };\n      }\n      acc[key].value += 1;\n      return acc;\n    }, {})\n  );\n\n  let clusterColors = clusters.map((_, index) => COLOR_ALL[index % COLOR_ALL.length]);\n\n  // Sumar el total de puntos para calcular los porcentajes\n  let totalPoints = clusters.reduce((acc, cluster) => acc + cluster.value, 0);\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Cantidad de puntos por clúster',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        let percent = ((params.value / totalPoints) * 100).toFixed(2); // Calcula el porcentaje\n        return `${params.name}<br/>Cantidad: ${params.value}<br/>${percent}%`;\n      }\n    },\n    legend: {\n      orient: 'vertical',\n      left: 'right',\n      top: \"15%\",\n      left: '2%',\n      textStyle: {\n        fontSize: 16\n      },\n    },\n    series: [\n      {\n        type: 'pie',\n        radius: ['0%', '55%'],\n        itemStyle: {\n          borderRadius: 10,\n          borderColor: '#fff',\n          borderWidth: 2\n        },\n        data: clusters.map((cluster, index) => ({\n          value: cluster.value,\n          name: cluster.name,\n          itemStyle: {\n            color: clusterColors[index]  // Aplica el color correspondiente\n          },\n          label: {\n            show: true,\n            formatter: function (params) {\n              let percent = ((params.value / totalPoints) * 100).toFixed(2); // Calcula el porcentaje\n              return `${params.name}\\n${params.value} (${percent}%)`; // Muestra la cantidad y el porcentaje en el gráfico\n            },\n            fontSize: 16,\n          }\n        })),\n        emphasis: {\n          itemStyle: {\n            shadowBlur: 10,\n            shadowOffsetX: 0,\n            shadowColor: 'rgba(0, 0, 0, 0.5)'\n          },\n          label: {\n            fontSize: 20,\n            fontWeight: 'bold'\n          }\n        }\n      }\n    ]\n  };\n\n  return option;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 10,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Permite ingresar manualmente los valores de las características para una nueva instancia e identifica el grupo al que pertenece. Además, muestra la distancia entre la instancia y el centroide del clúster asignado.",
+      "gridPos": {
+        "h": 16,
+        "w": 14,
+        "x": 10,
+        "y": 77
+      },
+      "id": 18,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsPoints = context.panel.data.series[0].fields;\n  const fieldsNodes = context.panel.data.series[1].fields;\n  const fieldsFeatures = context.panel.data.series[2].fields;\n\n  const pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  const pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  const id = fieldsNodes.find(field => field.name === 'id').values;\n  const idParent = fieldsNodes.find(field => field.name === 'id_parent').values;\n  const name = fieldsNodes.find(field => field.name === 'name').values;\n  const height = fieldsNodes.find(field => field.name === 'height').values;\n  const featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n\n  // Obtener las 10 alturas mayores \n  let top8Heights = height\n    .slice()  // Crea una copia del array de alturas\n    .sort((a, b) => b - a)  // Ordena las alturas de mayor a menor\n    .slice(0, 10);  // Toma las primeras 10 alturas\n\n  let numClusters = parseFloat(context.grafana.replaceVariables('${numClusters}'));\n  let cut = top8Heights[numClusters - 1];\n\n  let nodes = id.map((item, index) => ({\n    id: id[index],\n    idParent: idParent[index],\n    name: name[index],\n    height: height[index],\n    visited: false,\n  }));\n\n  let rootNode = nodes.find(node => node.idParent === null || node.idParent === undefined);\n\n  // Función recursiva para construir la jerarquía de datos\n  function buildHierarchy(nodes, parentId = null) {\n    const children = nodes.filter(node => node.idParent === parentId);\n\n    if (children.length === 0) return null;\n\n    return children.map(child => ({\n      id: child.id,\n      name: child.name,\n      height: child.height,\n      color: null,\n      cluster: -1,\n      children: buildHierarchy(nodes, child.id)\n    }));\n  }\n\n  let data = {\n    id: rootNode.id,\n    name: rootNode.name,\n    height: rootNode.height,\n    color: null,\n    cluster: -1,\n    children: buildHierarchy(nodes, rootNode.id)\n  };\n\n  // Paleta \n  var COLOR_ALL = getPalette();\n  let curIndex = -1; // Índice de color \n\n  // Asignar colores de acuerdo con el corte\n  function assignColors(node, parentColor = null, parentIndex = -1) {\n    if (node.height <= cut && !parentColor) {\n      curIndex++;\n      node.color = COLOR_ALL[curIndex % COLOR_ALL.length];\n      node.cluster = curIndex;\n      node.itemStyle = {\n        color: node.color\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    } else if (node.height <= cut && parentColor) {\n      node.color = parentColor;\n      node.cluster = parentIndex;\n\n      node.itemStyle = {\n        color: node.color,\n      };\n      node.lineStyle = {\n        color: node.color,\n      };\n    }\n\n    // Recorre los hijos de forma recursiva\n    if (node.children) {\n      node.children.forEach(child => assignColors(child, node.color, node.cluster));\n    }\n  }\n\n  assignColors(data);\n\n  // Extraer nodos hoja\n  function extractLeafNodes(hierarchy, leafNodes = []) {\n    if (!hierarchy.children || hierarchy.children.length === 0) {\n      leafNodes.push({ name: hierarchy.name, cluster: hierarchy.cluster });\n    } else {\n      hierarchy.children.forEach(child => extractLeafNodes(child, leafNodes));\n    }\n    return leafNodes;\n  }\n\n  function getClusterArrayByName(hierarchy, pointNames) {\n    const leafNodes = extractLeafNodes(hierarchy);\n\n    // Crear un mapa de point_name -> cluster\n    const nameToClusterMap = new Map(leafNodes.map(node => [node.name, node.cluster]));\n\n    // Asignar el cluster directamente por nombre\n    const result = pointNames.map(name => {\n      const cluster = nameToClusterMap.get(name);\n      return cluster;\n    });\n\n    return result;\n  }\n\n  let pointClusters = getClusterArrayByName(data, pointNames);\n  const clusters = createSeriesCentroidData(parsedValuesPoints, pointClusters);\n\n  const dom = context.panel.chart.getDom();\n  dom.innerHTML = \"\";\n\n  const container = document.createElement(\"div\");\n  container.style.display = \"flex\";\n  container.style.flexDirection = \"column\";\n  container.style.gap = \"10px\";\n  container.style.padding = \"20px\";\n  container.style.fontFamily = \"'Arial', sans-serif\";\n\n  const inputValues = {};\n  const inputsPerPage = 25;\n  let currentPage = 0;\n\n  const title = document.createElement(\"h2\");\n  title.innerText = \"Asignar nueva instancia a un clúster\";\n  title.style.marginLeft = \"10px\";\n  title.style.fontWeight = \"bold\";\n  title.style.fontSize = \"20px\";\n  title.style.color = \"#444\";\n  title.style.marginBottom = \"20px\";\n  container.appendChild(title);\n\n  const inputsWrapper = document.createElement(\"div\");\n  inputsWrapper.style.display = \"flex\";\n  inputsWrapper.style.flexWrap = \"wrap\";\n  inputsWrapper.style.gap = \"12px\";\n  inputsWrapper.style.marginLeft = \"60px\";\n  inputsWrapper.style.maxWidth = \"100%\";\n  inputsWrapper.style.marginBottom = \"20px\";\n\n  function loadInputs(page) {\n    inputsWrapper.innerHTML = \"\";\n\n    const startIdx = page * inputsPerPage;\n    const endIdx = Math.min((page + 1) * inputsPerPage, featuresName.length);\n\n    for (let i = startIdx; i < endIdx; i++) {\n      const name = featuresName[i];\n\n      const inputContainer = document.createElement(\"div\");\n      inputContainer.style.display = \"flex\";\n      inputContainer.style.flexDirection = \"column\";\n      inputContainer.style.minWidth = \"200px\";\n\n      const label = document.createElement(\"label\");\n      label.innerText = name;\n      label.style.fontSize = \"16px\";\n      label.style.marginBottom = \"4px\";\n\n      const input = document.createElement(\"input\");\n      input.type = \"number\";\n      input.value = inputValues[name] ?? \"0\";\n      input.step = \"0.01\";\n      input.style.padding = \"6px\";\n      input.style.borderRadius = \"6px\";\n      input.style.border = \"1px solid #888\";\n      input.style.width = \"170px\";\n\n      input.addEventListener(\"input\", () => {\n        inputValues[name] = parseFloat(input.value) || 0;\n      });\n\n      inputContainer.appendChild(label);\n      inputContainer.appendChild(input);\n      inputsWrapper.appendChild(inputContainer);\n    }\n  }\n\n  loadInputs(currentPage);\n  container.appendChild(inputsWrapper);\n\n  const resultDiv = document.createElement(\"div\");\n  resultDiv.style.fontSize = \"19px\";\n  resultDiv.style.fontWeight = \"bold\";\n\n  const actionRow = document.createElement(\"div\");\n  actionRow.style.display = \"flex\";\n  actionRow.style.alignItems = \"center\";\n  actionRow.style.gap = \"12px\";\n  actionRow.style.marginTop = \"18px\";\n\n  const assignButton = document.createElement(\"button\");\n  assignButton.innerText = \"Calcular\";\n  assignButton.style.padding = \"5px 10px\";\n  assignButton.style.fontSize = \"18px\";\n  assignButton.style.borderRadius = \"6px\";\n  assignButton.style.border = \"none\";\n  assignButton.style.backgroundColor = '#888';\n  assignButton.style.color = \"white\";\n  assignButton.style.cursor = \"pointer\";\n  assignButton.style.width = \"180px\";\n  assignButton.style.marginLeft = \"60px\";\n\n  assignButton.addEventListener(\"click\", () => {\n    const inputVector = featuresName.map(name => parseFloat(inputValues[name] ?? 0));\n    let minDistance = Infinity;\n    let assignedClusterIndex = null;\n\n    clusters.forEach((cluster, idx) => {\n      const centroid = cluster.value;\n      console.log(centroid)\n      let distance = 0;\n\n      for (let i = 0; i < centroid.length; i++) {\n        const diff = centroid[i] - inputVector[i];\n        distance += diff * diff;\n      }\n      distance = Math.sqrt(distance);\n\n      if (distance < minDistance) {\n        minDistance = distance;\n        assignedClusterIndex = idx;\n      }\n    });\n\n    // Obtener color correspondiente según el clúster\n    const palette = getPalette();\n    const color = palette[assignedClusterIndex % palette.length];\n\n    // Establecer texto y color del borde\n    resultDiv.innerHTML = `Clúster: ${assignedClusterIndex} → Distancia: ${minDistance.toFixed(4)}`;\n    resultDiv.style.border = `3px solid ${color}`;\n    resultDiv.style.padding = \"10px\";\n    resultDiv.style.borderRadius = \"8px\";\n    resultDiv.style.marginLeft = \"60px\";\n    resultDiv.style.backgroundColor = \"#f9f9f9\";\n  });\n\n  actionRow.appendChild(assignButton);\n  actionRow.appendChild(resultDiv);\n  container.appendChild(actionRow);\n\n  // Paginación\n  const paginationContainer = document.createElement(\"div\");\n  paginationContainer.style.position = \"fixed\";\n  paginationContainer.style.bottom = \"20px\";\n  paginationContainer.style.right = \"20px\";\n  paginationContainer.style.display = \"flex\";\n  paginationContainer.style.gap = \"10px\";\n\n  const prevButton = document.createElement(\"button\");\n  prevButton.innerText = \"<\";\n  prevButton.style.padding = \"5px 10px\";\n  prevButton.style.fontSize = \"14px\";\n  prevButton.style.borderRadius = \"50%\";\n  prevButton.style.border = \"none\";\n  prevButton.style.backgroundColor = \"#ccc\";\n  prevButton.style.color = \"white\";\n  prevButton.style.cursor = \"pointer\";\n  prevButton.disabled = currentPage === 0;\n\n  prevButton.addEventListener(\"click\", () => {\n    if (currentPage > 0) {\n      currentPage--;\n      loadInputs(currentPage);\n      nextButton.disabled = false;\n      prevButton.disabled = currentPage === 0;\n    }\n  });\n\n  const nextButton = document.createElement(\"button\");\n  nextButton.innerText = \">\";\n  nextButton.style.padding = \"5px 10px\";\n  nextButton.style.fontSize = \"14px\";\n  nextButton.style.borderRadius = \"50%\";\n  nextButton.style.border = \"none\";\n  nextButton.style.backgroundColor = \"#ccc\";\n  nextButton.style.color = \"white\";\n  nextButton.style.cursor = \"pointer\";\n  nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresName.length;\n\n  nextButton.addEventListener(\"click\", () => {\n    if ((currentPage + 1) * inputsPerPage < featuresName.length) {\n      currentPage++;\n      loadInputs(currentPage);\n      prevButton.disabled = false;\n      nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresName.length;\n    }\n  });\n\n  paginationContainer.appendChild(prevButton);\n  paginationContainer.appendChild(nextButton);\n\n  container.appendChild(paginationContainer);\n  dom.appendChild(container);\n}\n\nfunction createSeriesCentroidData(values, clusters) {\n  const clusterMap = {};\n\n  // Agrupar puntos por clúster\n  values.forEach((value, index) => {\n    const cluster = clusters[index];\n    if (!clusterMap[cluster]) {\n      clusterMap[cluster] = [];\n    }\n    clusterMap[cluster].push(value);\n  });\n\n  // Calcular centroides\n  const centroids = Object.keys(clusterMap).map(cluster => {\n    const points = clusterMap[cluster];\n\n    // Calcular el promedio de cada característica\n    const centroid = points[0].map((_, featureIndex) => {\n      const featureValues = points.map(point => point[featureIndex]);\n      return featureValues.reduce((sum, val) => sum + val, 0) / featureValues.length;\n    });\n\n    return {\n      value: [...centroid],\n      itemStyle: {\n        color: COLOR_ALL[cluster % COLOR_ALL.length]\n      }\n    };\n  });\n\n  return centroids;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Puntos (todos)\n\nSELECT\n  p.id, \n  p.name AS point_name, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (\n    SELECT id_source \n    FROM grafana_ml_model_index \n    WHERE id = $index\n) \nAND pv.numeric_value IS NOT NULL  -- Solo valores numéricos válidos\nAND f.name IN ($features)\nGROUP BY p.id\nORDER BY p.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Nodos\n\nSELECT id, id_parent, name, height\nFROM grafana_ml_model_clustering_hierarchical \nWHERE id_model=$index",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "--Características\n\nSELECT DISTINCT \n  f.id, f.name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n    )\nORDER BY f.id;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Todos",
+          "value": "Todos"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Fecha",
+        "multi": false,
+        "name": "date",
+        "options": [],
+        "query": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_jerarquico') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2",
+          "value": "2"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('a_jerarquico')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "description": "Caso para los cuales se desea mostrar las visualizaciones",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Modelo",
+        "multi": false,
+        "name": "index",
+        "options": [],
+        "query": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('a_jerarquico')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT DISTINCT  f.name\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n    );",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Características",
+        "multi": true,
+        "name": "features",
+        "options": [],
+        "query": "SELECT DISTINCT  f.name\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n    );",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "3",
+          "value": "3"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Número de clústeres",
+        "multi": false,
+        "name": "numClusters",
+        "options": [
+          {
+            "selected": false,
+            "text": "2",
+            "value": "2"
+          },
+          {
+            "selected": true,
+            "text": "3",
+            "value": "3"
+          },
+          {
+            "selected": false,
+            "text": "4",
+            "value": "4"
+          },
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": false,
+            "text": "6",
+            "value": "6"
+          },
+          {
+            "selected": false,
+            "text": "7",
+            "value": "7"
+          },
+          {
+            "selected": false,
+            "text": "8",
+            "value": "8"
+          },
+          {
+            "selected": false,
+            "text": "9",
+            "value": "9"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          }
+        ],
+        "query": "2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "100%",
+          "value": "1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instancias",
+        "multi": false,
+        "name": "numInstances",
+        "options": [
+          {
+            "selected": false,
+            "text": "20%",
+            "value": "0.2"
+          },
+          {
+            "selected": false,
+            "text": "40%",
+            "value": "0.4"
+          },
+          {
+            "selected": false,
+            "text": "60%",
+            "value": "0.6"
+          },
+          {
+            "selected": false,
+            "text": "80%",
+            "value": "0.8"
+          },
+          {
+            "selected": true,
+            "text": "100%",
+            "value": "1"
+          }
+        ],
+        "query": "20% : 0.2, 40% : 0.4, 60% : 0.6, 80% : 0.8, 100% : 1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "6",
+          "value": "6"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Nivel",
+        "multi": false,
+        "name": "level",
+        "options": [
+          {
+            "selected": false,
+            "text": "3",
+            "value": "3"
+          },
+          {
+            "selected": false,
+            "text": "4",
+            "value": "4"
+          },
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": true,
+            "text": "6",
+            "value": "6"
+          },
+          {
+            "selected": false,
+            "text": "8",
+            "value": "8"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "15",
+            "value": "15"
+          },
+          {
+            "selected": false,
+            "text": "20",
+            "value": "20"
+          },
+          {
+            "selected": false,
+            "text": "todo",
+            "value": "-1"
+          }
+        ],
+        "query": "3, 4, 5, 6, 8, 10, 15, 20, todo : -1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Paleta 1",
+          "value": "Paleta 1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Color",
+        "multi": false,
+        "name": "color",
+        "options": [
+          {
+            "selected": true,
+            "text": "Paleta 1",
+            "value": "Paleta 1"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 2",
+            "value": "Paleta 2"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 3",
+            "value": "Paleta 3"
+          }
+        ],
+        "query": "Paleta 1, Paleta 2, Paleta 3",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Círculo",
+          "value": "Círculo"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Símbolo",
+        "multi": false,
+        "name": "shape",
+        "options": [
+          {
+            "selected": true,
+            "text": "Círculo",
+            "value": "Círculo"
+          },
+          {
+            "selected": false,
+            "text": "Triángulo",
+            "value": "Triángulo"
+          },
+          {
+            "selected": false,
+            "text": "Rectángulo",
+            "value": "Rectángulo"
+          },
+          {
+            "selected": false,
+            "text": "Pin",
+            "value": "Pin"
+          }
+        ],
+        "query": "Círculo, Triángulo, Rectángulo, Pin",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "clustering hierarchical",
+  "uid": "bekqc36ojwdmof",
+  "version": 218,
+  "weekStart": ""
+}

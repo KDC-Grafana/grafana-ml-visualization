@@ -1,0 +1,824 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 11,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": true,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eemkjpe5dqrr4d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 5,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "nestedObjects": [],
+        "tables": [
+          {
+            "addRow": {
+              "enabled": false,
+              "permission": {
+                "mode": "",
+                "userRole": []
+              },
+              "request": {
+                "datasource": "",
+                "payload": {}
+              }
+            },
+            "deleteRow": {
+              "enabled": false,
+              "permission": {
+                "mode": "",
+                "userRole": []
+              },
+              "request": {
+                "datasource": "",
+                "payload": {}
+              }
+            },
+            "expanded": false,
+            "items": [
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": false,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "id",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": true,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Id",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "nombre",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Nombre",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "descripcion",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Descripción",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "parametros",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Parámetros",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": true
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "creador",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Creador",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "fecha_creacion",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": true,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Fecha",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              }
+            ],
+            "name": "Modelos",
+            "pagination": {
+              "defaultPageSize": 10,
+              "enabled": true,
+              "mode": "client"
+            },
+            "showHeader": true,
+            "update": {
+              "datasource": "",
+              "payload": {}
+            }
+          }
+        ],
+        "toolbar": {
+          "export": false
+        }
+      },
+      "pluginVersion": "1.9.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be1w9io4ze7eod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n  i.id,\r\n  s.name AS nombre,\r\n  s.description AS descripcion,\r\n  i.parameters AS parametros,\r\n  s.creator AS creador,\r\n  TO_CHAR(i.date, 'YYYY-MM-DD HH24:MI') AS fecha_creacion\r\nFROM \r\n  grafana_ml_model_index AS i\r\nINNER JOIN \r\n  grafana_ml_model_source AS s ON i.id_source = s.id\r\nWHERE \r\n  i.algorithm = 'arbol_decision'\r\nORDER BY \r\n  i.id ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-table-panel"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eemkjpe5dqrr4d"
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 20,
+        "x": 2,
+        "y": 9
+      },
+      "id": 1,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "// Función para guardar el estado de los nodos\nfunction saveNodeState(nodeId, isCollapsed) {\n  const states = JSON.parse(localStorage.getItem('grafanaTreeStates') || '{}');\n  states[nodeId] = isCollapsed;\n  localStorage.setItem('grafanaTreeStates', JSON.stringify(states));\n}\n\n// Función para cargar el estado de los nodos\nfunction loadNodeState(nodeId) {\n  const states = JSON.parse(localStorage.getItem('grafanaTreeStates') || '{}');\n  return states[nodeId] ?? true;\n}\n\nif (context.panel.data && context.panel.data.series.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n\n  context.panel.chart.off(\"click\");\n  context.panel.chart.on(\"click\", (params) => {\n    // Verificar si es un nodo interno (que puede expandirse/colapsarse)\n    if (params.data.children && params.data.children.length > 0) {\n      // Alternar estado (toggle)\n      const newState = !params.data.collapsed;\n      // Guardar el estado\n      saveNodeState(params.data.id, newState);\n      // Actualizar visualización \n      params.data.collapsed = newState;\n    }\n  });\n\n  // Extraer valores de la consulta SQL\n  const caracteristicas = fields.find(field => field.name === 'caracteristica').values;\n  const nodos_izquierdos = fields.find(field => field.name === 'nodo_izquierdo').values;\n  const nodos_derechos = fields.find(field => field.name === 'nodo_derecho').values;\n  const umbrales = fields.find(field => field.name === 'umbral').values;\n  const valores_prediccion = fields.find(field => field.name === 'valor_prediccion').values;\n  const arboles_ids = fields.find(field => field.name === 'modelo_id').values; // Identificador del árbol\n  const nodos_ids = fields.find(field => field.name === 'nodo_id').values; // Identificador del nodo\n\n  // Obtener valor de la variable para el filtro\n  let mode = context.grafana.replaceVariables('${Visualizaciones_Arboles_Decision}'); // Variable dinámica\n\n  // Obtener el valor de la variable para el modo\n  let theme = context.grafana.replaceVariables('${Modo_Visualizacion_Arbol}'); // Variable dinámica que define el modo (claro u oscuro)\n\n  // Obtener el valor de la variable para el tamaño\n  let tamanno = context.grafana.replaceVariables('${Tamanno_Etiqueta_Arbol_Decision}'); // Variable dinámica que define el tamaño de las etiquetas\n\n  // Definir los tamaños de las etiquetas\n  let fontSize;\n  if (tamanno === \"Pequeño\") {\n    fontSize = 12;\n  } else if (tamanno === \"Mediano\") {\n    fontSize = 14;\n  } else if (tamanno === \"Grande\") {\n    fontSize = 18;\n  }\n\n  // Obtener el valor de la variable para el grosor\n  let grosor = context.grafana.replaceVariables('${Grosor_Arista_Arbol_Decision}'); // Variable dinámica que define el grosor de las aristas\n\n  // Definir el grosor de las aristas\n  let width;\n  if (grosor === \"Fino\") {\n    width = 2;\n  } else if (grosor === \"Grueso\") {\n    width = 5;\n  }\n\n  // Lógica de selección según el valor del filtro\n  if (mode === \"Horizontal\") {\n    // Lógica para el primer panel\n    option = getPanelOption1(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width);\n  } else if (mode === \"Vertical\") {\n    // Lógica para el segundo panel\n    option = getPanelOption2(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width);\n  } else if (mode === \"Circular\") {\n    // Lógica para el tercer panel\n    option = getPanelOption3(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width);\n  } else if (mode === \"Doble\") {\n    // Lógica para el cuarto panel\n    option = getPanelOption4(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, arboles_ids, nodos_ids, theme, fontSize, width);\n  } else {\n    // Si el valor no coincide con ninguno, muestra un gráfico vacío o un mensaje\n    option = {\n      graphic: [\n        {\n          type: 'text',\n          left: 'center', // Posición fija en la esquina superior izquierda\n          top: '45%', // Posición fija en la esquina superior izquierda\n          style: {\n            text: 'Visualización no disponible', // Título personalizado\n            fontSize: 45,\n            fontWeight: 'bold',\n            fill: theme === 'Oscuro' ? 'white' : 'red', // Ajuste según el tema\n          },\n        },\n      ],\n      backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n    };\n  }\n\n  // Devuelve la configuración seleccionada\n  return option;\n}\n\n// Función para configurar el primer panel\nfunction getPanelOption1(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width) {\n  const nodos = caracteristicas.map((caracteristica, i) => ({\n    id: nodos_ids[i],\n    name: caracteristica,\n    leftChild: nodos_izquierdos[i],\n    rightChild: nodos_derechos[i],\n    threshold: umbrales[i],\n    prediction: valores_prediccion[i],\n    children: [],\n    collapsed: loadNodeState(nodos_ids[i]),\n    label: nodos_izquierdos[i] !== null && nodos_derechos[i] !== null\n      ? `${caracteristica} <= ${umbrales[i].toFixed(2)}` // Solo nodos internos muestran la comparación\n      : `Clase = ${valores_prediccion[i]}`               // Nodos hoja muestran la clase predicha\n  }));\n\n  const idToNode = Object.fromEntries(nodos.map(node => [node.id, node]));\n\n  // Crear nodos etiquetas\n  const nodoTrue = {\n    id: 'nodoTrue',\n    name: 'True',\n    children: [],\n    label: 'True',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'True',\n      fontSize: fontSize,\n      color: 'green'\n    }\n  };\n\n  const nodoFalse = {\n    id: 'nodoFalse',\n    name: 'False',\n    children: [],\n    label: 'False',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'False',\n      fontSize: fontSize,\n      color: 'red'\n    }\n  };\n\n  // Obtener el nodo raíz y los hijos izquierdo y derecho\n  const nodoRaiz = idToNode[nodos_ids[0]];\n  const leftChild = idToNode[nodoRaiz.leftChild];\n  const rightChild = idToNode[nodoRaiz.rightChild];\n\n  // Definir el nodo raiz como nodo ya expandido\n  nodoRaiz.collapsed = false;\n\n  // Conectar el nodo raíz con los nodos etiquetas\n  nodoRaiz.children.push(nodoTrue);\n  nodoRaiz.children.push(nodoFalse);\n\n  // Conectar los nodos etiquetas con los hijos reales\n  if (leftChild) nodoTrue.children.push(leftChild);\n  if (rightChild) nodoFalse.children.push(rightChild);\n\n  // Construcción de conexiones entre los demás nodos\n  nodos.forEach(nodo => {\n    if (nodo.leftChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const leftNode = idToNode[nodo.leftChild];\n      if (leftNode) nodo.children.push(leftNode);\n    }\n    if (nodo.rightChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const rightNode = idToNode[nodo.rightChild];\n      if (rightNode) nodo.children.push(rightNode);\n    }\n  });\n\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      triggerOn: 'mousemove',\n      formatter: params => {\n        const { name, data } = params;\n        if (data.children && data.children.length > 0) {\n          return `\n            <b>Característica:</b> ${name}<br>\n            <b>Umbral:</b> ${data.threshold.toFixed(2)}<br>\n          `;\n        } else {\n          return `<b>Clase:</b> ${data.prediction}`;\n        }\n      }\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: 'center', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Árbol de Decisión ( Horizontal )', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto según el tema\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'tree',\n        data: [nodoRaiz],\n        top: '1%',\n        left: '17%',\n        bottom: '1%',\n        right: '20%',\n        symbolSize: 7,\n        label: {\n          position: 'left',\n          verticalAlign: 'middle',\n          align: 'right',\n          fontSize: fontSize,\n          color: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Color de las etiquetas\n          formatter: node => node.data.label\n        },\n        leaves: {\n          label: {\n            position: 'right',\n            verticalAlign: 'middle',\n            align: 'left',\n            fontSize: fontSize,\n            color: theme === 'Oscuro' ? '#E0E0E0' : undefined // Color de las hojas\n          }\n        },\n        emphasis: {\n          focus: 'descendant'\n        },\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : '#cccccc', // Color de las líneas del árbol\n          width: width,\n        },\n        itemStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : undefined, // Fondo de los nodos\n          borderColor: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Borde de los nodos\n          borderWidth: 1,\n        },\n        expandAndCollapse: true,\n        animationDuration: 550,\n        animationDurationUpdate: 750,\n      }\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n  };\n  return option;\n}\n\n// Función para configurar el segundo panel\nfunction getPanelOption2(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width) {\n  const nodos = caracteristicas.map((caracteristica, i) => ({\n    id: nodos_ids[i],\n    name: caracteristica,\n    leftChild: nodos_izquierdos[i],\n    rightChild: nodos_derechos[i],\n    threshold: umbrales[i],\n    prediction: valores_prediccion[i],\n    children: [],\n    collapsed: loadNodeState(nodos_ids[i]),\n    label: nodos_izquierdos[i] !== null && nodos_derechos[i] !== null\n      ? `${caracteristica} <= ${umbrales[i].toFixed(2)}` // Solo nodos internos muestran la comparación\n      : `Clase = ${valores_prediccion[i]}`               // Nodos hoja muestran la clase predicha\n  }));\n\n  const idToNode = Object.fromEntries(nodos.map(node => [node.id, node]));\n\n  // Crear nodos etiquetas\n  const nodoTrue = {\n    id: 'nodoTrue',\n    name: 'True',\n    children: [],\n    label: 'True',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'True',\n      fontSize: fontSize,\n      color: 'green'\n    }\n  };\n\n  const nodoFalse = {\n    id: 'nodoFalse',\n    name: 'False',\n    children: [],\n    label: 'False',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'False',\n      fontSize: fontSize,\n      color: 'red'\n    }\n  };\n\n  // Obtener el nodo raíz y los hijos izquierdo y derecho\n  const nodoRaiz = idToNode[nodos_ids[0]];\n  const leftChild = idToNode[nodoRaiz.leftChild];\n  const rightChild = idToNode[nodoRaiz.rightChild];\n\n  // Definir el nodo raiz como nodo ya expandido\n  nodoRaiz.collapsed = false;\n\n  // Conectar el nodo raíz con los nodos etiquetas\n  nodoRaiz.children.push(nodoTrue);\n  nodoRaiz.children.push(nodoFalse);\n\n  // Conectar los nodos etiquetas con los hijos reales\n  if (leftChild) nodoTrue.children.push(leftChild);\n  if (rightChild) nodoFalse.children.push(rightChild);\n\n  // Construcción de conexiones entre los demás nodos\n  nodos.forEach(nodo => {\n    if (nodo.leftChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const leftNode = idToNode[nodo.leftChild];\n      if (leftNode) nodo.children.push(leftNode);\n    }\n    if (nodo.rightChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const rightNode = idToNode[nodo.rightChild];\n      if (rightNode) nodo.children.push(rightNode);\n    }\n  });\n\n  // Configuración del gráfico orientado de arriba hacia abajo\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      triggerOn: 'mousemove',\n      formatter: params => {\n        const { name, data } = params;\n        if (data.children && data.children.length > 0) {\n          return `\n            <b>Característica:</b> ${name}<br>\n            <b>Umbral:</b> ${data.threshold.toFixed(2)}<br>\n          `;\n        } else {\n          return `<b>Clase:</b> ${data.prediction}`;\n        }\n      }\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: '2%', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Árbol de Decisión ( Vertical )', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto según el tema\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'tree',\n        data: [nodoRaiz],\n        left: '2%',\n        right: '2%',\n        top: '8%',\n        bottom: '20%',\n        orient: 'vertical', // Orientación del árbol: de arriba hacia abajo\n        symbol: 'emptyCircle', // Cambiar si deseas otro estilo de nodo\n        label: {\n          position: 'top',\n          verticalAlign: 'middle',\n          align: 'center',\n          fontSize: fontSize,\n          color: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Color de las etiquetas\n          formatter: node => node.data.label\n        },\n        leaves: {\n          label: {\n            position: 'bottom',\n            verticalAlign: 'middle',\n            align: 'center',\n            fontSize: fontSize,\n            color: theme === 'Oscuro' ? '#E0E0E0' : undefined // Color de las hojas\n          }\n        },\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : '#cccccc', // Color de las líneas del árbol\n          width: width,\n        },\n        itemStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : undefined, // Fondo de los nodos\n          borderColor: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Borde de los nodos\n          borderWidth: 1,\n        },\n        expandAndCollapse: true,\n        animationDurationUpdate: 750\n      }\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n  };\n  return option;\n}\n\n// Función para configurar el tercer panel\nfunction getPanelOption3(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, nodos_ids, theme, fontSize, width) {\n  const nodos = caracteristicas.map((caracteristica, i) => ({\n    id: nodos_ids[i],\n    name: caracteristica,\n    leftChild: nodos_izquierdos[i],\n    rightChild: nodos_derechos[i],\n    threshold: umbrales[i],\n    prediction: valores_prediccion[i],\n    children: [],\n    collapsed: loadNodeState(nodos_ids[i]),\n    label: nodos_izquierdos[i] !== null && nodos_derechos[i] !== null\n      ? `${caracteristica} <= ${umbrales[i].toFixed(2)}`\n      : `Clase = ${valores_prediccion[i]}` // Etiqueta para hojas\n  }));\n\n  const idToNode = Object.fromEntries(nodos.map(node => [node.id, node]));\n\n  // Crear nodos etiquetas\n  const nodoTrue = {\n    id: 'nodoTrue',\n    name: 'True',\n    children: [],\n    label: 'True',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'True',\n      fontSize: fontSize,\n      color: 'green'\n    }\n  };\n\n  const nodoFalse = {\n    id: 'nodoFalse',\n    name: 'False',\n    children: [],\n    label: 'False',\n    symbolSize: 0,\n    label: {\n      show: true,\n      position: 'middle',\n      formatter: () => 'False',\n      fontSize: fontSize,\n      color: 'red'\n    }\n  };\n\n  // Obtener el nodo raíz y los hijos izquierdo y derecho\n  const nodoRaiz = idToNode[nodos_ids[0]];\n  const leftChild = idToNode[nodoRaiz.leftChild];\n  const rightChild = idToNode[nodoRaiz.rightChild];\n\n  // Definir el nodo raiz como nodo ya expandido\n  nodoRaiz.collapsed = false;\n\n  // Conectar el nodo raíz con los nodos etiquetas\n  nodoRaiz.children.push(nodoTrue);\n  nodoRaiz.children.push(nodoFalse);\n\n  // Conectar los nodos etiquetas con los hijos reales\n  if (leftChild) nodoTrue.children.push(leftChild);\n  if (rightChild) nodoFalse.children.push(rightChild);\n\n  // Construcción de conexiones entre los demás nodos\n  nodos.forEach(nodo => {\n    if (nodo.leftChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const leftNode = idToNode[nodo.leftChild];\n      if (leftNode) nodo.children.push(leftNode);\n    }\n    if (nodo.rightChild !== undefined && nodo.id !== nodoRaiz.id) {\n      const rightNode = idToNode[nodo.rightChild];\n      if (rightNode) nodo.children.push(rightNode);\n    }\n  });\n\n  // Configuración del gráfico radial\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      triggerOn: 'mousemove',\n      formatter: params => {\n        const { name, data } = params;\n        if (data.children && data.children.length > 0) {\n          return `\n          <b>Característica:</b> ${name}<br>\n          <b>Umbral:</b> ${data.threshold.toFixed(2)}<br>\n        `;\n        } else {\n          return `<b>Clase:</b> ${data.prediction}`;\n        }\n      }\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: 'center', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Árbol de Decisión ( Circular )', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000' // Color del texto según el tema\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'tree',\n        data: [nodoRaiz],\n        top: '5%', // Aumentar este valor para más espacio vertical\n        bottom: '5%',\n        left: '5%', // Aumentar este valor para más espacio horizontal\n        right: '5%',\n        layout: 'radial', // Disposición radial\n        symbol: 'emptyCircle',\n        symbolSize: 10, // Incrementar el tamaño del símbolo para mejorar visibilidad\n        label: {\n          position: 'middle',\n          rotate: 0,\n          verticalAlign: 'middle',\n          align: 'center',\n          fontSize: fontSize,\n          color: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Color de las etiquetas\n          formatter: node => node.data.label\n        },\n        leaves: {\n          label: {\n            position: 'middle',\n            rotate: 0,\n            verticalAlign: 'middle',\n            align: 'center',\n            fontSize: fontSize,\n            color: theme === 'Oscuro' ? '#E0E0E0' : undefined // Color de las hojas\n          }\n        },\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : '#cccccc', // Color de las líneas del árbol\n          width: width,\n        },\n        itemStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : undefined, // Fondo de los nodos\n          borderColor: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Borde de los nodos\n          borderWidth: 1,\n        },\n        animationDurationUpdate: 750,\n        emphasis: {\n          focus: 'descendant'\n        },\n        roam: true, // Permite hacer zoom y desplazarse para observar mejor el diseño\n      }\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n  };\n  return option;\n}\n\n// Función para configurar el cuarto panel\nfunction getPanelOption4(caracteristicas, nodos_izquierdos, nodos_derechos, umbrales, valores_prediccion, arboles_ids, nodos_ids, theme, fontSize, width) {\n  // Agrupar nodos por árbol\n  const arboles = {};\n  for (let i = 0; i < caracteristicas.length; i++) {\n    const arbolId = arboles_ids[i];\n    if (!arboles[arbolId]) {\n      arboles[arbolId] = [];\n    }\n    if (arboles_ids[i] === arbolId) {\n      arboles[arbolId].push({\n        id: nodos_ids[i],\n        name: caracteristicas[i],\n        leftChild: nodos_izquierdos[i],\n        rightChild: nodos_derechos[i],\n        threshold: umbrales[i],\n        prediction: valores_prediccion[i],\n        children: [],\n        collapsed: loadNodeState(nodos_ids[i]),\n        label: nodos_izquierdos[i] !== null && nodos_derechos[i] !== null\n          ? `${caracteristicas[i]} <= ${umbrales[i].toFixed(2)}`\n          : `Clase = ${valores_prediccion[i]}`\n      });\n    }\n  }\n\n  // Construir nodos para cada árbol\n  const opcionesArboles = Object.entries(arboles).map(([arbolId, nodos], index) => {\n    // Generar IDs únicos para cada nodo dentro del árbol\n    const idToNode = Object.fromEntries(nodos.map(node => [node.id, node]));\n    const nodoRaiz = nodos.find(node => arboles_ids[nodos_ids.indexOf(node.id)] === parseInt(arbolId));\n\n    // Crear nodos etiquetas\n    const nodoTrue = {\n      id: `nodoTrue_${arbolId}`,\n      name: 'True',\n      children: [],\n      label: 'True',\n      symbolSize: 0,\n      label: {\n        show: true,\n        position: 'middle',\n        formatter: () => 'True',\n        fontSize: fontSize,\n        color: 'green'\n      },\n      tooltip: { // Deshabilita el tooltip para este nodo\n        show: false\n      },\n      emphasis: {\n        focus: 'none', // Evitar el sobresalto\n        scale: false, // Evitar cambios de tamaño\n        itemStyle: {\n          opacity: 1 // Mantener el nodo visible\n        },\n        label: {\n          show: true // Mantener la etiqueta visible\n        }\n      },\n    };\n\n    const nodoFalse = {\n      id: `nodoFalse_${arbolId}`,\n      name: 'False',\n      children: [],\n      label: 'False',\n      symbolSize: 0,\n      label: {\n        show: true,\n        position: 'middle',\n        formatter: () => 'False',\n        fontSize: fontSize,\n        color: 'red'\n      },\n      tooltip: { // Deshabilita el tooltip para este nodo\n        show: false\n      },\n      emphasis: {\n        focus: 'none', // Evitar el sobresalto\n        scale: false, // Evitar cambios de tamaño\n        itemStyle: {\n          opacity: 1 // Mantener el nodo visible\n        },\n        label: {\n          show: true // Mantener la etiqueta visible\n        }\n      },\n    };\n\n    // Conectar el nodo raíz con los nodos etiquetas\n    nodoRaiz.children.push(nodoTrue);\n    nodoRaiz.children.push(nodoFalse);\n\n    // Definir el nodo raiz como nodo ya expandido\n    nodoRaiz.collapsed = false;\n\n    // Conectar los nodos etiquetas con los hijos reales\n    const leftChild = idToNode[nodoRaiz.leftChild];\n    const rightChild = idToNode[nodoRaiz.rightChild];\n    if (leftChild) nodoTrue.children.push(leftChild);\n    if (rightChild) nodoFalse.children.push(rightChild);\n\n    // Conectar nodos restantes\n    nodos.forEach(nodo => {\n      if (nodo.leftChild !== undefined && nodo.id !== nodoRaiz.id) {\n        const leftNode = idToNode[nodo.leftChild];\n        if (leftNode) nodo.children.push(leftNode);\n      }\n      if (nodo.rightChild !== undefined && nodo.id !== nodoRaiz.id) {\n        const rightNode = idToNode[nodo.rightChild];\n        if (rightNode) nodo.children.push(rightNode);\n      }\n    });\n\n    // Configuración dinámica de posiciones\n    const left = `${19 + index * 48.1}%`;\n    const right = `${65 - index * 48}%`;\n\n    return {\n      type: 'tree',\n      name: `Modelo ${arbolId}`,\n      data: [nodoRaiz],\n      top: '10%',\n      left,\n      bottom: '10%',\n      right,\n      symbolSize: 7,\n      label: {\n        position: 'left',\n        verticalAlign: 'middle',\n        align: 'right',\n        fontSize: fontSize,\n        color: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Color de las etiquetas\n        formatter: node => node.data.label\n      },\n      leaves: {\n        label: {\n          position: 'right',\n          verticalAlign: 'middle',\n          align: 'left',\n          fontSize: fontSize,\n          color: theme === 'Oscuro' ? '#E0E0E0' : undefined, // Color de las hojas\n        }\n      },\n      emphasis: {\n        focus: 'descendant'\n      },\n      lineStyle: {\n        color: theme === 'Oscuro' ? '#2E2E2E' : '#cccccc', // Color de las líneas del árbol\n        width: width,\n      },\n      itemStyle: {\n        color: theme === 'Oscuro' ? '#2E2E2E' : \"#5470C6\", // Fondo de los nodos\n        borderColor: theme === 'Oscuro' ? '#E0E0E0' : \"#5470C6\", // Borde de los nodos\n        borderWidth: 1,\n      },\n      expandAndCollapse: true,\n      animationDuration: 350,\n      animationDurationUpdate: 500\n    };\n  });\n\n  // Configuración final de ECharts\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      triggerOn: 'mousemove',\n      formatter: params => {\n        const { name, data } = params;\n        if (data.children && data.children.length > 0) {\n          return `\n            <b>Característica:</b> ${name}<br>\n            <b>Umbral:</b> ${data.threshold?.toFixed(2) || 'N/A'}<br>\n          `;\n        } else {\n          return `<b>Clase:</b> ${data.prediction}`;\n        }\n      }\n    },\n    legend: {\n      top: '8%',\n      left: '5%',\n      orient: 'vertical',\n      data: opcionesArboles.map(op => ({\n        name: op.name,\n        icon: 'rectangle',\n        itemStyle: {\n          color: theme === 'Oscuro' ? '#2E2E2E' : \"#5470C6\", // Colores fijos para Modelos\n        },\n      })),\n      textStyle: {\n        fontSize: fontSize,\n        color: theme === 'Oscuro' ? '#E0E0E0' : '#000000', // Color del texto según el tema\n      },\n      backgroundColor: theme === 'Oscuro' ? '#2E2E2E' : '#ffffff', // Fondo de la leyenda\n      borderColor: theme === 'Oscuro' ? '#444444' : '#c23531', // Borde de la leyenda según el tema\n      borderWidth: 1, // Espesor del borde\n      padding: 10, // Espaciado interno\n      itemGap: 10 // Espaciado entre elementos\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: 'center', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Árbol de Decisión ( Doble )', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000' // Color del texto según el tema\n        },\n      },\n    ],\n    series: opcionesArboles,\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n  };\n\n  return option;\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be1w9io4ze7eod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  f.name AS caracteristica,\r\n  dt.left_node AS nodo_izquierdo,\r\n  dt.right_node AS nodo_derecho,\r\n  dt.threshold AS umbral,\r\n  pv.class_name AS valor_prediccion,\r\n  dt.id_model AS modelo_id,\r\n  dt.id_node AS nodo_id\r\nFROM\r\n  grafana_ml_model_decision_tree AS dt\r\nLEFT JOIN\r\n  grafana_ml_model_feature AS f ON dt.feature = f.id\r\nLEFT JOIN\r\n  grafana_ml_model_prediction_values AS pv ON dt.prediction_value = pv.id_prediction\r\nWHERE\r\n  dt.id_model IN ($Modelos_Arbol_Decision)\r\nORDER BY\r\n  dt.id_node ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "nodo_izquierdo",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "nodo_derecho",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "arbol_decision"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eemkjpe5dqrr4d"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 6,
+        "y": 27
+      },
+      "id": 4,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const data = context.panel.data.series[0].fields;\n  const length = context.panel.data.series[0].length;\n\n  // Obtener el primer modelo_id válido \n  const modelo_id_field = data.find(f => f.name === 'modelo_id');\n  let primerModelo = null;\n  for (let i = 0; i < length; i++) {\n    const mid = modelo_id_field.values[i];\n    if (mid !== null && mid !== undefined) {\n      primerModelo = mid;\n      break;\n    }\n  }\n\n  if (primerModelo === null) {\n    // No hay datos o modelo válido\n    console.warn(\"No se encontró modelo válido en los datos.\");\n    return;\n  }\n\n  // Estructuras de datos\n  const nodes = {};\n  const featuresSet = new Set();\n\n  // Parsear los datos\n  for (let i = 0; i < length; i++) {\n    const mid = modelo_id_field.values[i];\n    if (mid !== primerModelo) continue;\n\n    const id = data.find(f => f.name === 'nodo_id').values[i];\n    const parent = data.find(f => f.name === 'padre').values[i];\n    const feature = data.find(f => f.name === 'caracteristica').values[i];\n    const threshold = data.find(f => f.name === 'umbral').values[i];\n    const left = data.find(f => f.name === 'nodo_izquierdo').values[i];\n    const right = data.find(f => f.name === 'nodo_derecho').values[i];\n    const pred = data.find(f => f.name === 'valor_prediccion').values[i];\n\n    if (feature) featuresSet.add(feature);\n\n    nodes[id] = {\n      id,\n      parent,\n      feature,\n      threshold,\n      left,\n      right,\n      prediction: pred\n    };\n  }\n\n  // Encontrar el nodo raíz\n  const root = Object.values(nodes).find(n => n.parent == null);\n  if (!root) {\n    console.warn(\"No se encontró nodo raíz.\");\n    return;\n  }\n\n  // Limpiar DOM\n  const dom = context.panel.chart.getDom();\n  dom.innerHTML = \"\";\n\n  const container = document.createElement(\"div\");\n  container.style.position = \"relative\";\n  container.style.minHeight = \"298px\";\n  container.style.display = \"flex\";\n  container.style.flexDirection = \"column\";\n  container.style.padding = \"20px\";\n  container.style.fontFamily = \"'Arial', sans-serif\";\n  container.style.gap = \"16px\";\n\n  // Título\n  const title = document.createElement(\"h2\");\n  title.innerText = \"Predicción para una nueva instancia\";\n  title.style.fontSize = \"22px\";\n  title.style.color = \"#000000\";\n  title.style.fontWeight = \"bold\";\n  title.style.marginBottom = \"10px\";\n  container.appendChild(title);\n\n  // Variables para paginación de inputs\n  const featuresArray = [...featuresSet];\n  const inputsPerPage = 10;\n  let currentPage = 0;\n  const inputRefs = {};\n\n  const inputWrapper = document.createElement(\"div\");\n  inputWrapper.style.display = \"flex\";\n  inputWrapper.style.flexWrap = \"wrap\";\n  inputWrapper.style.gap = \"12px\";\n  inputWrapper.style.marginBottom = \"10px\";\n  inputWrapper.style.justifyContent = \"center\";\n  inputWrapper.style.maxWidth = \"100%\";\n  container.appendChild(inputWrapper);\n\n  // Función para cargar inputs por página\n  function loadInputs(page) {\n    inputWrapper.innerHTML = \"\";\n    const startIdx = page * inputsPerPage;\n    const endIdx = Math.min(startIdx + inputsPerPage, featuresArray.length);\n\n    for (let i = startIdx; i < endIdx; i++) {\n      const feature = featuresArray[i];\n      const inputContainer = document.createElement(\"div\");\n      inputContainer.style.display = \"flex\";\n      inputContainer.style.flexDirection = \"column\";\n      inputContainer.style.minWidth = \"180px\";\n\n      const label = document.createElement(\"label\");\n      label.innerText = feature;\n      label.style.marginBottom = \"4px\";\n\n      const input = document.createElement(\"input\");\n      input.type = \"number\";\n      input.step = \"0.01\";\n      input.value = inputRefs[feature]?.value || \"0\";\n      input.style.padding = \"6px\";\n      input.style.border = \"1px solid #999\";\n      input.style.borderRadius = \"5px\";\n      input.style.width = \"160px\";\n\n      inputRefs[feature] = input;\n\n      inputContainer.appendChild(label);\n      inputContainer.appendChild(input);\n      inputWrapper.appendChild(inputContainer);\n    }\n  }\n\n  loadInputs(currentPage);\n\n  function updatePaginationStyles() {\n    // Si hay una página anterior disponible\n    if (currentPage > 0) {\n      prevButton.style.backgroundColor = \"#5783db\";\n    } else {\n      prevButton.style.backgroundColor = \"#ccc\";\n    }\n\n    // Si hay una página siguiente disponible\n    if ((currentPage + 1) * inputsPerPage < featuresArray.length) {\n      nextButton.style.backgroundColor = \"#5783db\";\n    } else {\n      nextButton.style.backgroundColor = \"#ccc\";\n    }\n\n    pageIndicator.innerText = `${currentPage + 1}/${totalPages}`;\n  }\n\n  // Contenedor botones paginación\n  const totalPages = Math.ceil(featuresArray.length / inputsPerPage);\n\n  const paginationContainer = document.createElement(\"div\");\n  paginationContainer.style.position = \"absolute\";\n  paginationContainer.style.left = \"450px\";\n  paginationContainer.style.bottom = \"11px\";\n  paginationContainer.style.display = \"flex\";\n  paginationContainer.style.gap = \"10px\";\n  paginationContainer.style.justifyContent = \"center\";\n  paginationContainer.style.marginBottom = \"10px\";\n\n  const prevButton = document.createElement(\"button\");\n  prevButton.innerText = \"<\";\n  prevButton.style.padding = \"6px 12px\";\n  prevButton.style.borderRadius = \"5px\";\n  prevButton.style.border = \"none\";\n  prevButton.style.backgroundColor = \"#ccc\";\n  prevButton.style.color = \"white\";\n  prevButton.style.cursor = \"pointer\";\n  prevButton.disabled = currentPage === 0;\n\n  const nextButton = document.createElement(\"button\");\n  nextButton.innerText = \">\";\n  nextButton.style.padding = \"6px 12px\";\n  nextButton.style.borderRadius = \"5px\";\n  nextButton.style.border = \"none\";\n  nextButton.style.backgroundColor = \"#ccc\";\n  nextButton.style.color = \"white\";\n  nextButton.style.cursor = \"pointer\";\n  nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresArray.length;\n\n  const pageIndicator = document.createElement(\"span\");\n  pageIndicator.innerText = `${currentPage + 1}/${totalPages}`;\n  pageIndicator.style.fontSize = \"16px\";\n  pageIndicator.style.fontWeight = \"bold\";\n  pageIndicator.style.color = \"#333\";\n  pageIndicator.style.display = \"flex\";\n  pageIndicator.style.alignItems = \"center\";\n\n  prevButton.addEventListener(\"click\", () => {\n    if (currentPage > 0) {\n      currentPage--;\n      loadInputs(currentPage);\n      prevButton.disabled = currentPage === 0;\n      nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresArray.length;\n      updatePaginationStyles();\n    }\n  });\n\n  nextButton.addEventListener(\"click\", () => {\n    if ((currentPage + 1) * inputsPerPage < featuresArray.length) {\n      currentPage++;\n      loadInputs(currentPage);\n      nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresArray.length;\n      prevButton.disabled = currentPage === 0;\n      updatePaginationStyles();\n    }\n  });\n\n  paginationContainer.appendChild(prevButton);\n  paginationContainer.appendChild(pageIndicator);\n  paginationContainer.appendChild(nextButton);\n\n  // Solo mostrar si hay más de una página\n  if (totalPages > 1) {\n    container.appendChild(paginationContainer);\n  }\n\n  loadInputs(currentPage);\n  updatePaginationStyles();\n\n  // Botón de predecir y resultado\n  const actionRow = document.createElement(\"div\");\n  actionRow.style.position = \"absolute\";\n  actionRow.style.left = \"21px\";\n  actionRow.style.bottom = \"16px\";\n  actionRow.style.zIndex = \"10\";\n  actionRow.style.display = \"flex\";\n  actionRow.style.alignItems = \"center\";\n  actionRow.style.gap = \"14px\";\n\n  const button = document.createElement(\"button\");\n  button.innerText = \"Predecir\";\n  button.style.padding = \"8px 14px\";\n  button.style.backgroundColor = \"#5783db\";\n  button.style.color = \"white\";\n  button.style.border = \"none\";\n  button.style.borderRadius = \"6px\";\n  button.style.fontSize = \"16px\";\n  button.style.cursor = \"pointer\";\n\n  const result = document.createElement(\"div\");\n  result.style.fontSize = \"18px\";\n  result.style.fontWeight = \"bold\";\n  result.style.color = \"#222\";\n\n  actionRow.appendChild(button);\n  actionRow.appendChild(result);\n  container.appendChild(actionRow);\n\n  // Botón de reinicio\n  const resetRow = document.createElement(\"div\");\n  resetRow.style.position = \"absolute\";\n  resetRow.style.right = \"21px\";\n  resetRow.style.bottom = \"16px\";\n  resetRow.style.zIndex = \"10\";\n  resetRow.style.display = \"flex\";\n  resetRow.style.alignItems = \"center\";\n\n  const resetButton = document.createElement(\"button\");\n  resetButton.innerText = \"Restablecer\";\n  resetButton.style.padding = \"8px 14px\";\n  resetButton.style.backgroundColor = \"#5783db\";\n  resetButton.style.color = \"white\";\n  resetButton.style.border = \"none\";\n  resetButton.style.borderRadius = \"6px\";\n  resetButton.style.fontSize = \"16px\";\n  resetButton.style.cursor = \"pointer\";\n\n  resetButton.addEventListener(\"click\", () => {\n    for (const key in inputRefs) {\n      inputRefs[key].value = \"0\";\n    }\n    result.innerText = \"\";\n  });\n\n  resetRow.appendChild(resetButton);\n  container.appendChild(resetRow);\n\n  button.addEventListener(\"click\", () => {\n    let current = root;\n\n    while (current) {\n      const node = nodes[current.id];\n\n      if (!node.feature || node.prediction !== null) {\n        result.innerHTML = `Clase = <span style=\"color: #5783db\">${node.prediction}</span>`;\n        return;\n      }\n\n      const value = parseFloat(inputRefs[node.feature]?.value) || 0;\n      current = nodes[value <= node.threshold ? node.left : node.right];\n    }\n\n    result.innerText = \"No se pudo realizar la predicción.\";\n  });\n\n  dom.appendChild(container);\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be1w9io4ze7eod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  f.name AS caracteristica,\r\n  dt.left_node AS nodo_izquierdo,\r\n  dt.right_node AS nodo_derecho,\r\n  dt.threshold AS umbral,\r\n  pv.class_name AS valor_prediccion,\r\n  dt.id_node AS nodo_id,\r\n  dt.id_model AS modelo_id,\r\n  dt.parent_node AS padre\r\nFROM\r\n  grafana_ml_model_decision_tree AS dt\r\nLEFT JOIN\r\n  grafana_ml_model_feature AS f ON dt.feature = f.id\r\nLEFT JOIN\r\n  grafana_ml_model_prediction_values AS pv ON dt.prediction_value = pv.id_prediction\r\nWHERE\r\n  dt.id_model IN ($Modelos_Arbol_Decision)\r\nORDER BY\r\n  dt.id_node ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "1"
+          ],
+          "value": [
+            "1"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eemkjpe5dqrr4d"
+        },
+        "definition": "SELECT\n  id\nFROM\n  grafana_ml_model_index\nWHERE\n  algorithm= 'arbol_decision';",
+        "hide": 0,
+        "includeAll": false,
+        "multi": true,
+        "name": "Modelos_Arbol_Decision",
+        "options": [],
+        "query": "SELECT\n  id\nFROM\n  grafana_ml_model_index\nWHERE\n  algorithm= 'arbol_decision';",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Horizontal",
+          "value": "Horizontal"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Visualizaciones_Arboles_Decision",
+        "options": [
+          {
+            "selected": true,
+            "text": "Horizontal",
+            "value": "Horizontal"
+          },
+          {
+            "selected": false,
+            "text": "Vertical",
+            "value": "Vertical"
+          },
+          {
+            "selected": false,
+            "text": "Circular",
+            "value": "Circular"
+          },
+          {
+            "selected": false,
+            "text": "Doble",
+            "value": "Doble"
+          }
+        ],
+        "query": "Horizontal, Vertical, Circular, Doble",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Claro",
+          "value": "Claro"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Modo_Visualizacion_Arbol",
+        "options": [
+          {
+            "selected": true,
+            "text": "Claro",
+            "value": "Claro"
+          },
+          {
+            "selected": false,
+            "text": "Oscuro",
+            "value": "Oscuro"
+          }
+        ],
+        "query": "Claro, Oscuro",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Mediano",
+          "value": "Mediano"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Tamaño_Etiqueta_Arbol_Decision",
+        "multi": false,
+        "name": "Tamanno_Etiqueta_Arbol_Decision",
+        "options": [
+          {
+            "selected": false,
+            "text": "Pequeño",
+            "value": "Pequeño"
+          },
+          {
+            "selected": true,
+            "text": "Mediano",
+            "value": "Mediano"
+          },
+          {
+            "selected": false,
+            "text": "Grande",
+            "value": "Grande"
+          }
+        ],
+        "query": "Pequeño, Mediano, Grande",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Fino",
+          "value": "Fino"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "Grosor_Arista_Arbol_Decision",
+        "options": [
+          {
+            "selected": true,
+            "text": "Fino",
+            "value": "Fino"
+          },
+          {
+            "selected": false,
+            "text": "Grueso",
+            "value": "Grueso"
+          }
+        ],
+        "query": "Fino, Grueso",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "2025-05-03T08:41:48.460Z",
+    "to": "2025-05-03T20:41:48.460Z"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Decision_Tree",
+  "uid": "ce1wc563124g0eff",
+  "version": 34,
+  "weekStart": ""
+}

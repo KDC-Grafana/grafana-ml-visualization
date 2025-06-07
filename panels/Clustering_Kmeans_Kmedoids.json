@@ -1,0 +1,1699 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 25,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "La tabla presenta un registro de los modelos de agrupamiento organizados por fuente de datos. Para cada fuente, se incluye el nombre, el creador y una descripción. Adicionalmente, por cada modelo asociado a la fuente, se especifica su identificador (ID), el algoritmo de agrupamiento utilizado, los parámetros empleados durante su ejecución, junto con la fecha y hora de creación. ",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "afterRender": "",
+        "content": "<div style=\"color: #444; max-width: 1100px; margin: 0 auto;\">\n\n<div style=\"font-size: 24px; font-weight: bold; font-family: 'Arial', sans-serif; color: #444; margin-bottom: 20px; margin-left: 10px\">\n  Modelos\n</div>\n\n{{#each (groupByDataset data)}}\n\n<div style= \"font-family: 'Arial', sans-serif; border: 2px solid rgba(0, 50, 255, 0.3); background-color: transparent; border-radius: 8px; padding: 16px; margin-bottom: 24px;\">\n\n  <h2 style=\"font-weight: bold; font-size: 20px; margin-top: 0;\">{{this.dataset.source_name}}</h2>\n\n  <p style=\"font-size: 18px; margin-bottom: 16px;\">\n    <strong style=\"font-weight: bold;\"> Creador:</strong> {{this.dataset.creator}}<br>\n    {{this.dataset.description}}\n  </p>\n\n  <h3 style=\"font-size: 18.5px; font-weight: bold; margin-bottom: 10px; color: #444;\">Detalles de los Modelos</h3>\n\n  <table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" \n         style=\"text-align: center; border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 10px;\">\n    <thead style=\"font-size: 18px;\">\n      <tr>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255, 0.1);  font-weight: bold;\">ID</th>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255, 0.1);  font-weight: bold;\">Algoritmo</th>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255,  0.1);  font-weight: bold;\">Parámetros</th>\n        <th style=\"text-align: center; background-color: rgba(0, 50, 255, 0.1);  font-weight: bold;\">Fecha</th>\n      </tr>\n    </thead>\n    <tbody style=\"font-size: 17px;\">\n      {{#each this.models}}\n      <tr>\n        <td>{{model_id}}</td>\n        <td>{{algorithm_name}}</td>\n        <td>{{parameters}}</td>\n        <td>{{created_date}}</td>\n      </tr>\n      {{/each}}\n    </tbody>\n  </table>\n\n</div>\n\n{{/each}}\n\n</div>",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "// Helper para agrupar los datos por dataset\ncontext.handlebars.registerHelper(\"groupByDataset\", function (data) {\n  const grouped = [];\n  let currentGroup = null;\n\n  data.forEach((item, index) => {\n    const itemAnterior = data[index - 1];\n\n    if (index === 0 || item.source_id !== itemAnterior.source_id) {\n      currentGroup = {\n        dataset: {\n          source_name: item.source_name,\n          creator: item.creator,\n          description: item.description\n        },\n        models: []\n      };\n      grouped.push(currentGroup);\n    }\n\n    // Procesar 'parameters' para mostrarlo de forma más limpia\n    let paramStr = '';\n    try {\n      const paramsObj = JSON.parse(item.parameters);\n      paramStr = Object.entries(paramsObj)\n        .map(([key, val]) => `${key}: ${val === null ? 'null' : val}`)\n        .join(', ');\n    } catch (e) {\n      paramStr = item.parameters; // fallback por si no es JSON\n    }\n\n    currentGroup.models.push({\n      model_id: item.model_id,\n      algorithm_name: item.algorithm_name,\n      parameters: paramStr,\n      created_date: formatDate(item.created_date)\n    });\n  });\n\n  return grouped;\n});\n\nfunction formatDate(dateString) {\n  const date = new Date(dateString);\n\n  const year = date.getFullYear();\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const day = String(date.getDate()).padStart(2, '0');\n\n  const hours = String(date.getHours()).padStart(2, '0');\n  const minutes = String(date.getMinutes()).padStart(2, '0');\n\n  return `${year}-${month}-${day} ${hours}:${minutes}`;\n}\n",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    s.id AS source_id,\n    s.name AS source_name,\n    s.creator,\n    s.description,\n    i.id AS model_id,\n    CASE \n        WHEN i.algorithm = 'a_kmedias'  THEN 'a_kmedias'\n        WHEN i.algorithm = 'a_kmedoides' THEN 'a_kmedoides'\n        ELSE i.algorithm\n    END AS algorithm_name,\n    i.parameters,\n    i.date AS created_date\nFROM grafana_ml_model_source s\nINNER JOIN grafana_ml_model_index i \n    ON s.id = i.id_source\nWHERE i.algorithm IN ('a_kmedias', 'a_kmedoides')\n    AND (\n        ('$date' = 'Hoy' AND i.date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND i.date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND i.date >= CURRENT_DATE - INTERVAL '6 days' AND i.date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND i.date >= DATE_TRUNC('month', CURRENT_DATE) AND i.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND i.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND i.date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY s.id, i.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de dispersión muestra cómo se distribuyen los datos según los clústeres. Incluye menús desplegables que permiten escoger las características a visualizar. Cada punto representa un dato con color que indica su clúster. Además, se muestran los centroides o medoides mediante cruces.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 1,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fieldsPoints = context.panel.data.series[0].fields;\n  let fieldsCentroids = context.panel.data.series[1].fields;\n  let fieldsFeatures = context.panel.data.series[2].fields;\n  let fieldsAlgorithm = context.panel.data.series[5].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  // K-means, Kmedoids\n  if (algorithm == 'a_kmedias') {\n    fieldsPoints = context.panel.data.series[0].fields;\n    fieldsCentroids = context.panel.data.series[1].fields;\n  } else {\n    fieldsPoints = context.panel.data.series[3].fields;\n    fieldsCentroids = context.panel.data.series[4].fields;\n  }\n\n  const pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  const pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  const pointClusters = (fieldsPoints.find(fields => fields.name == 'number_cluster')).values;\n  const centroidValues = (fieldsCentroids.find(fields => fields.name == 'feature_values')).values;\n  const centroidClusters = (fieldsCentroids.find(fields => fields.name == 'number_cluster')).values;\n  const featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const parsedValuesCentroids = centroidValues.map(value => JSON.parse(value));\n\n  const CLUSTER_COUNT = centroidValues.length;\n  const DIENSIION_CLUSTER_INDEX = 2;\n  let selectedFeatureX = 0;\n  let selectedFeatureY = featuresName.length === 1 ? 0 : 1;\n\n  // Paleta de colores\n  var COLOR_ALL = getPalette();\n\n  // Visual map\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  // Puntos \n  const pointSeriesData = createSeriesData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY);\n\n  // Centroides \n  const centroidSeriesData = createSeriesData(parsedValuesCentroids, centroidClusters, selectedFeatureX, selectedFeatureY);\n\n  // Lógica para la selección\n  if (context.grafana.replaceVariables('${index}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.flexDirection = \"row\";\n    container.style.width = \"100%\";\n\n    // Título\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Diagrama de dispersión\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.flexGrow = \"1\";\n    title.style.marginLeft = \"20px\";\n    title.style.marginTop = \"14px\";\n    title.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.flexDirection = \"column\";\n    rightContainer.style.alignItems = \"flex-end\";\n    rightContainer.style.marginLeft = \"10px\";\n\n    // Eje X\n    const xAxisContainer = document.createElement(\"div\");\n    xAxisContainer.style.display = \"flex\";\n    xAxisContainer.style.alignItems = \"center\";\n    xAxisContainer.style.marginBottom = \"2px\";\n\n    const xAxisLabel = document.createElement(\"span\");\n    xAxisLabel.innerHTML = \"Eje x:\";\n    xAxisLabel.style.marginRight = \"6px\";\n    xAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    xAxisLabel.style.fontWeight = \"bold\";\n    xAxisLabel.style.fontSize = \"19px\";\n    xAxisLabel.style.marginTop = \"15px\";\n    xAxisLabel.style.color = \"#444\";\n\n    const selectListX = document.createElement(\"select\");\n    selectListX.id = \"selectX\";\n    selectListX.style.fontFamily = \"'Arial', sans-serif\";\n    selectListX.style.fontSize = \"16px\";\n    selectListX.style.border = \"1px solid gray\";\n    selectListX.style.borderRadius = \"8px\";\n    selectListX.style.padding = \"5px\";\n    selectListX.style.minWidth = \"120px\";\n    selectListX.style.marginTop = \"15px\";\n    selectListX.style.marginRight = \"10px\";\n\n    // Eje Y\n    const yAxisContainer = document.createElement(\"div\");\n    yAxisContainer.style.display = \"flex\";\n    yAxisContainer.style.alignItems = \"center\";\n    yAxisContainer.style.marginBottom = \"2px\";\n\n    const yAxisLabel = document.createElement(\"span\");\n    yAxisLabel.innerHTML = \"Eje y:\";\n    yAxisLabel.style.marginRight = \"6px\";\n    yAxisLabel.style.fontFamily = \"'Arial', sans-serif\";\n    yAxisLabel.style.fontWeight = \"bold\";\n    yAxisLabel.style.fontSize = \"19px\";\n    yAxisLabel.style.color = \"#444\";\n\n    const selectListY = document.createElement(\"select\");\n    selectListY.id = \"selectY\";\n    selectListY.style.fontFamily = \"'Arial', sans-serif\";\n    selectListY.style.fontSize = \"16px\";\n    selectListY.style.border = \"1px solid gray\";\n    selectListY.style.borderRadius = \"8px\";\n    selectListY.style.padding = \"5px\";\n    selectListY.style.minWidth = \"120px\";\n    selectListY.style.marginRight = \"10px\";\n\n    featuresName.forEach((value, index) => {\n      const optionX = document.createElement(\"option\");\n      optionX.value = index;\n      optionX.text = value;\n      selectListX.appendChild(optionX);\n\n      const optionY = document.createElement(\"option\");\n      optionY.value = index;\n      optionY.text = value;\n      selectListY.appendChild(optionY);\n    });\n\n    selectListY.value = selectedFeatureY;\n\n    selectListX.addEventListener(\"change\", () => {\n      selectedFeatureX = parseInt(selectListX.value);\n      updateChartData();\n    });\n\n    selectListY.addEventListener(\"change\", () => {\n      selectedFeatureY = parseInt(selectListY.value);\n      updateChartData();\n    });\n\n    // Añadir todo a rightContainer\n    xAxisContainer.appendChild(xAxisLabel);\n    xAxisContainer.appendChild(selectListX);\n    yAxisContainer.appendChild(yAxisLabel);\n    yAxisContainer.appendChild(selectListY);\n\n    rightContainer.appendChild(xAxisContainer);\n    rightContainer.appendChild(yAxisContainer);\n\n    // Añadir todo al container\n    container.appendChild(title);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Actualizar el gráfico después de un cambio en la selección\n  function updateChartData() {\n    const pointSeriesData = createSeriesData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY);\n    const centroidSeriesData = createSeriesData(parsedValuesCentroids, centroidClusters, selectedFeatureX, selectedFeatureY);\n\n    context.panel.chart.setOption({\n      xAxis: {\n        name: featuresName[selectedFeatureX],\n        min: () => calculateMargin(pointValues, selectedFeatureX)\n      },\n      yAxis: {\n        name: featuresName[selectedFeatureY],\n        min: () => calculateMargin(pointValues, selectedFeatureY)\n      },\n      series: [\n        {\n          name: 'Puntos',\n          data: pointSeriesData\n        },\n        {\n          name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n          data: centroidSeriesData\n        }\n      ]\n    });\n  }\n\n  // Configuración del gráfico\n  option = {\n    tooltip: {\n      position: 'top',\n      formatter: function (params) {\n        const seriesIndex = params.seriesIndex;\n        const dataIndex = params.dataIndex;\n\n        let featureValues = (seriesIndex === 0 ? parsedValuesPoints : parsedValuesCentroids)[dataIndex];\n        let clusterId = (seriesIndex === 0 ? pointClusters : centroidClusters)[dataIndex];\n        const pointName = (seriesIndex === 0 ? pointNames[dataIndex] : 'Centroide');\n\n        const featureName1 = featuresName[selectedFeatureX];\n        const featureName2 = featuresName[selectedFeatureY];\n\n        const featureValueX = parseFloat(featureValues[selectedFeatureX].toFixed(4));\n        const featureValueY = parseFloat(featureValues[selectedFeatureY].toFixed(4));\n\n        return `\n            <div><strong>${pointName}</strong></div>\n            <div><strong>cluster: ${clusterId}</strong></div>\n            <div>${featureName1}: ${featureValueX}</div>\n            <div>${featureName2}: ${featureValueY}</div>`;\n      }\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '22%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      textStyle: {\n        fontSize: 17\n      },\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length];\n        }\n      },\n      outOfRange: {\n        // Oculta completamente los puntos filtrados\n        opacity: 0,\n        symbolSize: 0,\n        color: '#999'\n      }\n    },\n    grid: {\n      bottom: \"23%\",\n      containLabel: true,\n      left: \"135\",\n      right: \"4%\",\n      top: \"3%\"\n    },\n    xAxis: {\n      type: 'value',\n      name: featuresName[selectedFeatureX],\n      nameLocation: 'middle',\n      nameGap: 30,\n      min: () => calculateMargin(pointValues, selectedFeatureX),\n      nameTextStyle: {\n        fontSize: 17,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n    },\n    yAxis: {\n      type: 'value',\n      name: featuresName[selectedFeatureY],\n      nameLocation: 'middle',\n      nameGap: 30,\n      min: () => calculateMargin(pointValues, selectedFeatureY),\n      nameTextStyle: {\n        fontSize: 17,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n    },\n    legend: {\n      data: ['Puntos', algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides'],\n      top: '8%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 17\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#000',\n        borderWidth: 1.5\n      }\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'scatter',\n        symbolSize: 15,\n        symbol: getShape(context.grafana.replaceVariables('${shape}')),\n        itemStyle: {\n          color: '#888',\n          borderColor: '#555',\n        },\n        data: pointSeriesData,\n      },\n      {\n        name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n        type: 'effectScatter',\n        showEffectOn: 'render',\n        symbol: `path://${getSvgPathCentroid()}`,\n        symbolSize: 25,\n        itemStyle: {\n          color: '#888',\n          borderColor: '#111',\n        },\n        data: centroidSeriesData,\n      }\n    ]\n  };\n  return option;\n}\n\n// Array de 2 dimensiones y el clúster \nfunction createSeriesData(values, clusters, dim1Index, dim2Index) {\n  return values.map((value, index) => {\n    const dim1 = value[dim1Index];\n    const dim2 = value[dim2Index];\n    const cluster = clusters[index];\n    const color = COLOR_ALL[cluster];\n\n    return {\n      value: [dim1, dim2, cluster],\n      itemStyle: {\n        color: color\n      }\n    };\n  });\n}\n\n// Calcular el margen del 5% basado en el rango de los datos\nfunction calculateMargin(values, axisIndex) {\n  const axisValues = values.map(value => JSON.parse(value)[axisIndex]);\n  const minValue = Math.min(...axisValues);\n  const maxValue = Math.max(...axisValues);\n  const range = maxValue - minValue;\n  const margin = range * 0.04;\n  const result = minValue - margin;\n\n  return parseFloat(result.toFixed(4));\n}\n\n// Símbolo de los centroides\nfunction getSvgPathCentroid() {\n  return \"M2750 12751 c-116 -26 -186 -52 -295 -110 -299 -157 -485 -326 -1104 \" +\n    \"-1004 -79 -86 -271 -277 -427 -422 -320 -301 -448 -431 -570 -584 -148 -183 \" +\n    \"-238 -344 -290 -517 -24 -78 -28 -106 -28 -234 -1 -176 13 -238 89 -395 133 \" +\n    \"-276 388 -564 1000 -1130 276 -255 599 -572 1175 -1154 437 -441 795 -808 795 \" +\n    \"-814 0 -12 -1837 -1835 -2267 -2250 -525 -506 -711 -761 -804 -1098 -13 -46 \" +\n    \"-18 -101 -18 -194 0 -152 19 -236 87 -375 60 -123 147 -232 362 -457 105 -109 \" +\n    \"323 -340 485 -513 580 -622 785 -826 1149 -1146 240 -212 346 -280 509 -326 \" +\n    \"111 -32 292 -31 417 1 355 92 700 348 1234 916 410 436 1057 1110 1286 1340 \" +\n    \"444 446 749 702 869 730 33 7 53 -13 1756 -1730 698 -703 847 -844 1040 -981 \" +\n    \"419 -297 777 -346 1153 -158 203 101 279 166 802 683 595 589 869 857 1067 \" +\n    \"1044 373 352 518 591 535 882 12 221 -66 463 -232 717 -184 281 -425 535 -985 \" +\n    \"1039 -219 197 -451 424 -900 879 -333 337 -656 658 -719 714 -155 137 -176 \" +\n    \"165 -175 227 0 38 8 59 35 99 19 27 463 474 987 992 1735 1716 1773 1755 1841 \" +\n    \"1853 79 114 132 225 162 340 20 75 23 114 23 230 -1 162 -19 243 -83 381 -83 \" +\n    \"177 -180 299 -487 614 -116 118 -334 357 -486 531 -456 523 -681 753 -933 954 \" +\n    \"-162 130 -277 205 -420 275 -404 199 -747 166 -1087 -104 -58 -47 -211 -190 \" +\n    \"-340 -319 -262 -263 -2071 -2052 -2303 -2278 -161 -156 -197 -182 -261 -183 \" +\n    \"-57 -1 -98 30 -200 149 -47 55 -208 224 -358 375 -1608 1625 -2172 2191 -2240 \" +\n    \"2249 -224 189 -409 268 -646 277 -89 3 -134 0 -200 -15z\";\n}\n\n// Símbolo de los puntos\nfunction getShape(shape) {\n  let seLectedShapeValue = 'circle';\n\n  if (shape == 'Círculo') {\n    seLectedShapeValue = 'circle';\n  } else if (shape == 'Triángulo') {\n    seLectedShapeValue = 'triangle';\n  } else if (shape == 'Rectángulo') {\n    seLectedShapeValue = 'rect';\n  } else if (shape == 'Pin') {\n    seLectedShapeValue = 'pin';\n  }\n\n  return seLectedShapeValue;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 2'];\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Puntos k-means\n\nSELECT \n  p.name AS point_name, \n  c.number AS number_cluster, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_index idx ON idx.id = $index\nJOIN \n  grafana_ml_model_kmeans_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = idx.id\nJOIN \n  grafana_ml_model_clustering_cluster c ON c.id = p_cluster.id_cluster AND c.id_model = idx.id\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE \n  p.id_source = idx.id_source\n  AND pv.numeric_value IS NOT NULL\n  AND f.name IN ($features)\nGROUP BY \n  p.id, p.name, c.number\nORDER BY RANDOM()\nLIMIT (\n  SELECT CEIL(COUNT(*) * $numInstances)\n  FROM grafana_ml_model_point p\n  JOIN grafana_ml_model_kmeans_point p_cluster ON p_cluster.id_point = p.id\n  WHERE p_cluster.id_model = $index\n    AND p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index)\n);\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Centroides k-means\n\nSELECT \n  cl.number AS number_cluster,  \n  array_to_json(array_agg(c.value ORDER BY f.id)) AS feature_values\nFROM \"grafana_ml_model_kmeans_centroid\" c\nJOIN \"grafana_ml_model_feature\" f ON f.id = c.id_feature\nJOIN \"grafana_ml_model_clustering_cluster\" cl ON cl.id = c.id_cluster  \nWHERE c.id_model=$index AND f.name IN ($features)\nGROUP BY cl.number\n\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Nombres características\n\nSELECT DISTINCT \n  f.id, f.name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index  \n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  )\n  AND f.name IN ($features)\nORDER BY f.id;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Puntos k-medoids\n\nSELECT \n  p.name AS point_name, \n  cc.number AS number_cluster,\n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = $index\nJOIN \n  grafana_ml_model_clustering_cluster cc ON cc.id = p_cluster.id_cluster AND cc.id_model = $index\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index)\n  AND pv.numeric_value IS NOT NULL  \n  AND f.name IN ($features)\nGROUP BY \n  p.id, cc.number\nORDER BY RANDOM()\nLIMIT (\n  SELECT CEIL(COUNT(*) * $numInstances)\n  FROM grafana_ml_model_point p\n  JOIN grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_point = p.id\n  WHERE p_cluster.id_model = $index\n    AND p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index)\n);\n",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Medoides k-medoids\n\nSELECT \n  p.name AS point_name, \n  c.number AS number_cluster,  \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = $index\nJOIN \n  grafana_ml_model_clustering_cluster c  ON c.id = p_cluster.id_cluster AND c.id_model = $index\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index) \n  AND p_cluster.is_medoid = true\n  AND pv.numeric_value IS NOT NULL\n  AND f.name IN ($features)\nGROUP BY \n  p.id, c.number;",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Algoritmo (k-medias o k-medoides)\n\nSELECT algorithm\nFROM grafana_ml_model_index\nWHERE id=$index",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 18,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  var fieldsPoints = context.panel.data.series[0].fields;\n  var fieldsCentroids = context.panel.data.series[1].fields;\n  var fieldsFeatures = context.panel.data.series[2].fields;\n  var fieldsClusterCount = context.panel.data.series[3].fields;\n  let fieldsAlgorithm = context.panel.data.series[5].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  // K-means, Kmedoids\n  if (algorithm == 'a_kmedias') {\n    fieldsPoints = context.panel.data.series[0].fields;\n    fieldsCentroids = context.panel.data.series[1].fields;\n  } else {\n    fieldsPoints = context.panel.data.series[3].fields;\n    fieldsCentroids = context.panel.data.series[4].fields;\n  }\n\n  let pointNames = (fieldsPoints.find(fields => fields.name == 'point_name')).values;\n  let pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  let pointClusters = (fieldsPoints.find(fields => fields.name == 'number_cluster')).values;\n  let centroidValues = (fieldsCentroids.find(fields => fields.name == 'feature_values')).values;\n  let centroidClusters = (fieldsCentroids.find(fields => fields.name == 'number_cluster')).values;\n  let featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n\n  let parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  let parsedValuesCentroids = centroidValues.map(value => JSON.parse(value));\n\n  var CLUSTER_COUNT = centroidValues.length;\n  var DIENSIION_CLUSTER_INDEX = 3;\n  var selectedFeatureX = 0;\n  var selectedFeatureY = featuresName.length > 1 ? 1 : 0;;\n  var selectedFeatureZ = featuresName.length > 2 ? 2 : 0;\n\n  // Paleta de colores\n  var COLOR_ALL = getPalette();\n\n  // Visual map\n  var pieces = [];\n  for (var i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  // Puntos y centroides en 3D\n  const pointSeriesData3D = create3DSeriesData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY, selectedFeatureZ);\n  const centroidSeriesData3D = create3DSeriesData(parsedValuesCentroids, centroidClusters, selectedFeatureX, selectedFeatureY, selectedFeatureZ);\n\n  // Lógica para la selección de ejes\n  if (context.grafana.replaceVariables('${index}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.flexDirection = \"row\";\n    container.style.width = \"100%\";\n\n    // Título\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Diagrama de dispersión 3D\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.flexGrow = \"1\";\n    title.style.marginLeft = \"20px\";\n    title.style.marginTop = \"14px\";\n    title.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.flexDirection = \"column\";\n    rightContainer.style.alignItems = \"flex-end\";\n    rightContainer.style.marginLeft = \"10px\";\n\n    // Controles para selección de ejes\n    const createAxisControl = (axisName, defaultValue, selectedValue) => {\n      const container = document.createElement(\"div\");\n      container.style.display = \"flex\";\n      container.style.alignItems = \"center\";\n      container.style.marginBottom = \"2px\";\n\n      const label = document.createElement(\"span\");\n      label.innerHTML = `Eje ${axisName}:`;\n      label.style.marginRight = \"6px\";\n      label.style.fontFamily = \"'Arial', sans-serif\";\n      label.style.fontWeight = \"bold\";\n      label.style.fontSize = \"19px\";\n      if (axisName === 'x') label.style.marginTop = \"15px\";\n      label.style.color = \"#444\";\n\n      const select = document.createElement(\"select\");\n      select.id = `select${axisName.toUpperCase()}`;\n      select.style.fontFamily = \"'Arial', sans-serif\";\n      select.style.fontSize = \"16px\";\n      select.style.border = \"1px solid gray\";\n      select.style.borderRadius = \"8px\";\n      select.style.padding = \"5px\";\n      select.style.minWidth = \"120px\";\n      if (axisName === 'x') select.style.marginTop = \"15px\";\n      select.style.marginRight = \"10px\";\n\n      featuresName.forEach((value, index) => {\n        const option = document.createElement(\"option\");\n        option.value = index;\n        option.text = value;\n        select.appendChild(option);\n      });\n\n      select.value = selectedValue;\n\n      select.addEventListener(\"change\", () => {\n        if (axisName === 'x') selectedFeatureX = parseInt(select.value);\n        if (axisName === 'y') selectedFeatureY = parseInt(select.value);\n        if (axisName === 'z') selectedFeatureZ = parseInt(select.value);\n        update3DChartData();\n      });\n\n      container.appendChild(label);\n      container.appendChild(select);\n\n      return container;\n    };\n\n    // Añadir controles para los 3 ejes\n    rightContainer.appendChild(createAxisControl('x', 0, selectedFeatureX));\n    rightContainer.appendChild(createAxisControl('y', 1, selectedFeatureY));\n    rightContainer.appendChild(createAxisControl('z', 2, selectedFeatureZ));\n\n    // Añadir todo al container\n    container.appendChild(title);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Función para actualizar el gráfico 3D\n  function update3DChartData() {\n    const pointSeriesData3D = create3DSeriesData(parsedValuesPoints, pointClusters, selectedFeatureX, selectedFeatureY, selectedFeatureZ);\n    const centroidSeriesData3D = create3DSeriesData(parsedValuesCentroids, centroidClusters, selectedFeatureX, selectedFeatureY, selectedFeatureZ);\n\n    context.panel.chart.setOption({\n      xAxis3D: {\n        name: featuresName[selectedFeatureX],\n        type: 'value'\n      },\n      yAxis3D: {\n        name: featuresName[selectedFeatureY],\n        type: 'value'\n      },\n      zAxis3D: {\n        name: featuresName[selectedFeatureZ],\n        type: 'value'\n      },\n      series: [\n        {\n          name: 'Puntos',\n          data: pointSeriesData3D\n        },\n        {\n          name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n          symbol: `path://${getSvgPathCentroid()}`,\n          data: centroidSeriesData3D\n        }\n      ]\n    });\n  }\n\n  // Configuración del gráfico 3D\n  option = {\n    tooltip: {\n      formatter: function (params) {\n        const seriesIndex = params.seriesIndex;\n        const dataIndex = params.dataIndex;\n\n        let featureValues = (seriesIndex === 0 ? parsedValuesPoints : parsedValuesCentroids)[dataIndex];\n        let clusterId = (seriesIndex === 0 ? pointClusters : centroidClusters)[dataIndex];\n        const pointName = (seriesIndex === 0 ? pointNames[dataIndex] : (context.grafana.replaceVariables('${type}') == 'KMeans' ? 'Centroide' : 'Medoide'));\n\n        const featureNameX = featuresName[selectedFeatureX];\n        const featureNameY = featuresName[selectedFeatureY];\n        const featureNameZ = featuresName[selectedFeatureZ];\n\n        const featureValueX = parseFloat(featureValues[selectedFeatureX].toFixed(4));\n        const featureValueY = parseFloat(featureValues[selectedFeatureY].toFixed(4));\n        const featureValueZ = parseFloat(featureValues[selectedFeatureZ].toFixed(4));\n\n        return `\n            <div><strong>${pointName}</strong></div>\n            <div><strong>Cluster: ${clusterId}</strong></div>\n            <div>${featureNameX}: ${featureValueX}</div>\n            <div>${featureNameY}: ${featureValueY}</div>\n            <div>${featureNameZ}: ${featureValueZ}</div>`;\n      }\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '20%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      dimension: 3, // Dimensión del cluster en los datos 3D\n      pieces: pieces,\n      textStyle: {\n        fontSize: 17\n      },\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length];\n        }\n      }\n    },\n    grid3D: {\n      top: '-22%',\n      viewControl: {\n        distance: 210,\n        alpha: 17,\n        beta: 30\n      },\n      axisPointer: {\n        lineStyle: {\n          color: '#ffbd67'\n        }\n      }\n    },\n    xAxis3D: {\n      type: 'value',\n      name: featuresName[selectedFeatureX],\n      nameTextStyle: {\n        fontSize: 17,\n        color: '#333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      }\n    },\n    yAxis3D: {\n      type: 'value',\n      name: featuresName[selectedFeatureY],\n      nameTextStyle: {\n        fontSize: 17,\n        color: '#333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      }\n    },\n    zAxis3D: {\n      type: 'value',\n      name: featuresName[selectedFeatureZ],\n      nameTextStyle: {\n        fontSize: 17,\n        color: '#333'\n      },\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      }\n    },\n    legend: {\n      data: ['Puntos', algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides'],\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 17\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#000',\n        borderWidth: 1.5\n      }\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'scatter3D',\n        symbolSize: 8,\n        data: pointSeriesData3D,\n        itemStyle: {\n          opacity: 0.6\n        },\n      },\n      {\n        name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n        type: 'scatter3D',\n        symbol: `path://${getSvgPathCentroid()}`,\n        symbolSize: 15,\n        data: centroidSeriesData3D,\n        itemStyle: {\n          opacity: 1\n        },\n      }\n    ]\n  };\n  return option;\n}\n\n\n// Crear datos de series 3D\nfunction create3DSeriesData(values, clusters, dimX, dimY, dimZ) {\n  return values.map((value, index) => {\n    const x = value[dimX];\n    const y = value[dimY];\n    const z = value[dimZ];\n    const cluster = clusters[index];\n    const color = COLOR_ALL[cluster];\n\n    return {\n      value: [x, y, z, cluster],\n      itemStyle: {\n        color: color\n      }\n    };\n  });\n}\n\n// Calcular márgenes\nfunction calculateMargin(values, axisIndex) {\n  const axisValues = values.map(value => JSON.parse(value)[axisIndex]);\n  const minValue = Math.min(...axisValues);\n  const maxValue = Math.max(...axisValues);\n  const range = maxValue - minValue;\n  const margin = range * 0.04;\n  const result = minValue - margin;\n\n  return parseFloat(result.toFixed(4));\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 2'];\n}\n\n// Símbolo de los centroides\nfunction getSvgPathCentroid() {\n  return \"M2750 12751 c-116 -26 -186 -52 -295 -110 -299 -157 -485 -326 -1104 \" +\n    \"-1004 -79 -86 -271 -277 -427 -422 -320 -301 -448 -431 -570 -584 -148 -183 \" +\n    \"-238 -344 -290 -517 -24 -78 -28 -106 -28 -234 -1 -176 13 -238 89 -395 133 \" +\n    \"-276 388 -564 1000 -1130 276 -255 599 -572 1175 -1154 437 -441 795 -808 795 \" +\n    \"-814 0 -12 -1837 -1835 -2267 -2250 -525 -506 -711 -761 -804 -1098 -13 -46 \" +\n    \"-18 -101 -18 -194 0 -152 19 -236 87 -375 60 -123 147 -232 362 -457 105 -109 \" +\n    \"323 -340 485 -513 580 -622 785 -826 1149 -1146 240 -212 346 -280 509 -326 \" +\n    \"111 -32 292 -31 417 1 355 92 700 348 1234 916 410 436 1057 1110 1286 1340 \" +\n    \"444 446 749 702 869 730 33 7 53 -13 1756 -1730 698 -703 847 -844 1040 -981 \" +\n    \"419 -297 777 -346 1153 -158 203 101 279 166 802 683 595 589 869 857 1067 \" +\n    \"1044 373 352 518 591 535 882 12 221 -66 463 -232 717 -184 281 -425 535 -985 \" +\n    \"1039 -219 197 -451 424 -900 879 -333 337 -656 658 -719 714 -155 137 -176 \" +\n    \"165 -175 227 0 38 8 59 35 99 19 27 463 474 987 992 1735 1716 1773 1755 1841 \" +\n    \"1853 79 114 132 225 162 340 20 75 23 114 23 230 -1 162 -19 243 -83 381 -83 \" +\n    \"177 -180 299 -487 614 -116 118 -334 357 -486 531 -456 523 -681 753 -933 954 \" +\n    \"-162 130 -277 205 -420 275 -404 199 -747 166 -1087 -104 -58 -47 -211 -190 \" +\n    \"-340 -319 -262 -263 -2071 -2052 -2303 -2278 -161 -156 -197 -182 -261 -183 \" +\n    \"-57 -1 -98 30 -200 149 -47 55 -208 224 -358 375 -1608 1625 -2172 2191 -2240 \" +\n    \"2249 -224 189 -409 268 -646 277 -89 3 -134 0 -200 -15z\";\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de radar muestra una comparación de múltiples variables en diferentes clústeres. Los ejes radiales representan variables, los polígonos formados muestran la distribución de los datos, los centroides o medoides se representan con líneas discontinuas, y los colores  diferencian los clústeres.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 3,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fieldsPoints = context.panel.data.series[0].fields;\n  let fieldsCentroids = context.panel.data.series[1].fields;\n  let fieldsFeatures = context.panel.data.series[2].fields;\n  let fieldsAlgorithm = context.panel.data.series[5].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  //  K-means, K-medoids\n  if (algorithm == 'a_kmedias') {\n    fieldsPoints = context.panel.data.series[0].fields;\n    fieldsCentroids = context.panel.data.series[1].fields;\n  } else {\n    fieldsPoints = context.panel.data.series[3].fields;\n    fieldsCentroids = context.panel.data.series[4].fields;\n  }\n\n  let pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  let pointClusters = (fieldsPoints.find(fields => fields.name == 'number_cluster')).values;\n  let centroidValues = (fieldsCentroids.find(fields => fields.name == 'feature_values')).values;\n  let centroidClusters = (fieldsCentroids.find(fields => fields.name == 'number_cluster')).values;\n  let featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n\n  let parsedValuesCentroids = centroidValues.map(value => JSON.parse(value));\n  let parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n\n  const percentageIncrease = 0.05;  // 5%\n  const CLUSTER_COUNT = centroidValues.length;\n  const DIENSIION_CLUSTER_INDEX = featuresName.length;\n  const COLOR_ALL = getPalette();\n\n  // Visual map\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i % COLOR_ALL.length]\n    });\n  }\n\n  let combinedValues = [...parsedValuesCentroids, ...parsedValuesPoints];\n\n  let radarIndicatorsPoints = featuresName.map((feature, featureIndex) => {\n    let maxFeatureValue = Math.max(...combinedValues.map(value => value[featureIndex]));\n    let minFeatureValue = Math.min(...combinedValues.map(value => value[featureIndex]));\n    let adjustedMax = maxFeatureValue * (1 + percentageIncrease);\n    let adjustedMin = minFeatureValue * (1 - percentageIncrease);\n\n    return {\n      name: feature,\n      max: adjustedMax,\n      min: adjustedMin\n    };\n  });\n\n  const pointSeriesData = parsedValuesPoints.map((value, index) => ({\n    value: [...value, pointClusters[index]],\n    color: COLOR_ALL[pointClusters[index] % COLOR_ALL.length]\n  }));\n\n  const centroidSeriesData = parsedValuesCentroids.map((value, index) => ({\n    value: [...value, centroidClusters[index]],\n    color: COLOR_ALL[centroidClusters[index] % COLOR_ALL.length]\n  }));\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Características de los clústeres',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '40%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      splitNumber: CLUSTER_COUNT,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length];\n        }\n      },\n      textStyle: {\n        fontSize: 17\n      },\n    },\n    radar: {\n      indicator: radarIndicatorsPoints,\n      name: {\n        textStyle: {\n          color: '#333',\n          fontSize: 17\n        }\n      },\n    },\n    series: [\n      {\n        name: 'Puntos',\n        type: 'radar',\n        symbol: 'none',\n        lineStyle: {\n          width: 1,\n          opacity: 0.2\n        },\n        data: pointSeriesData\n      },\n      {\n        name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n        type: 'radar',\n        symbol: `path://${getSvgPathCentroid()}`,\n        symbolSize: 12,\n        lineStyle: {\n          width: 1.5,\n          type: 'dashed',\n          opacity: 1,\n        },\n        data: centroidSeriesData\n      },\n    ],\n    legend: {\n      data: ['Puntos', algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides'],\n      top: '25%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 17\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#999',\n        borderWidth: 1,\n      },\n      itemWidth: 12,\n      itemHeight: 12\n    },\n  };\n\n  return option;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 2'];\n}\n\n// Símbolo de los centroides\nfunction getSvgPathCentroid() {\n  return \"M2750 12751 c-116 -26 -186 -52 -295 -110 -299 -157 -485 -326 -1104 \" +\n    \"-1004 -79 -86 -271 -277 -427 -422 -320 -301 -448 -431 -570 -584 -148 -183 \" +\n    \"-238 -344 -290 -517 -24 -78 -28 -106 -28 -234 -1 -176 13 -238 89 -395 133 \" +\n    \"-276 388 -564 1000 -1130 276 -255 599 -572 1175 -1154 437 -441 795 -808 795 \" +\n    \"-814 0 -12 -1837 -1835 -2267 -2250 -525 -506 -711 -761 -804 -1098 -13 -46 \" +\n    \"-18 -101 -18 -194 0 -152 19 -236 87 -375 60 -123 147 -232 362 -457 105 -109 \" +\n    \"323 -340 485 -513 580 -622 785 -826 1149 -1146 240 -212 346 -280 509 -326 \" +\n    \"111 -32 292 -31 417 1 355 92 700 348 1234 916 410 436 1057 1110 1286 1340 \" +\n    \"444 446 749 702 869 730 33 7 53 -13 1756 -1730 698 -703 847 -844 1040 -981 \" +\n    \"419 -297 777 -346 1153 -158 203 101 279 166 802 683 595 589 869 857 1067 \" +\n    \"1044 373 352 518 591 535 882 12 221 -66 463 -232 717 -184 281 -425 535 -985 \" +\n    \"1039 -219 197 -451 424 -900 879 -333 337 -656 658 -719 714 -155 137 -176 \" +\n    \"165 -175 227 0 38 8 59 35 99 19 27 463 474 987 992 1735 1716 1773 1755 1841 \" +\n    \"1853 79 114 132 225 162 340 20 75 23 114 23 230 -1 162 -19 243 -83 381 -83 \" +\n    \"177 -180 299 -487 614 -116 118 -334 357 -486 531 -456 523 -681 753 -933 954 \" +\n    \"-162 130 -277 205 -420 275 -404 199 -747 166 -1087 -104 -58 -47 -211 -190 \" +\n    \"-340 -319 -262 -263 -2071 -2052 -2303 -2278 -161 -156 -197 -182 -261 -183 \" +\n    \"-57 -1 -98 30 -200 149 -47 55 -208 224 -358 375 -1608 1625 -2172 2191 -2240 \" +\n    \"2249 -224 189 -409 268 -646 277 -89 3 -134 0 -200 -15z\";\n}\n\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "El gráfico de coordenadas paralelas permite comparar múltiples variables simultáneamente, se compone de ejes verticales paralelos que representan cada variable con escalas independientes. Las observaciones se muestran como líneas que conectan sus valores en los distintos ejes. Se emplean líneas discontinuas para marcar centroides o medoides como referencia, y colores distintos para diferenciar visualmente los clústeres.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 8,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fieldsPoints = context.panel.data.series[0].fields;\n  let fieldsCentroid = context.panel.data.series[1].fields;\n  let fieldsFeatures = context.panel.data.series[2].fields;\n  let fieldsAlgorithm = context.panel.data.series[5].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  // K-means, K-medoisds\n  if (algorithm == 'a_kmedias') {\n    fieldsPoints = context.panel.data.series[0].fields;\n    fieldsCentroid = context.panel.data.series[1].fields;\n  } else {\n    fieldsPoints = context.panel.data.series[3].fields;\n    fieldsCentroid = context.panel.data.series[4].fields;\n  }\n\n  let pointValues = (fieldsPoints.find(fields => fields.name == 'feature_values')).values;\n  let pointClusters = (fieldsPoints.find(fields => fields.name == 'number_cluster')).values;\n  let featuresName = (fieldsFeatures.find(fields => fields.name == 'name')).values;\n  let centroidValues = (fieldsCentroid.find(fields => fields.name == 'feature_values')).values;\n  let centroidClusters = (fieldsCentroid.find(fields => fields.name == 'number_cluster')).values;\n  let parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  let parsedValuesCentroids = centroidValues.map(value => JSON.parse(value));\n\n  // Paleta de colores\n  const COLOR_ALL = getPalette();\n\n  const CLUSTER_COUNT = centroidValues.length;\n  const DIENSIION_CLUSTER_INDEX = featuresName.length;\n\n  // Leyenda\n  let pieces = [];\n  for (let i = 0; i < CLUSTER_COUNT; i++) {\n    pieces.push({\n      value: i,\n      label: 'clúster ' + i,\n      color: COLOR_ALL[i]\n    });\n  }\n\n  const pointSeriesData = parsedValuesPoints.map((value, index) => ({\n    value: [...value, pointClusters[index]],\n    itemStyle: {\n      color: COLOR_ALL[pointClusters[index] % COLOR_ALL.length]\n    }\n  }));\n\n  const centroidSeriesData = parsedValuesCentroids.map((value, index) => ({\n    value: [...value, centroidClusters[index]],\n    itemStyle: {\n      color: COLOR_ALL[centroidClusters[index] % COLOR_ALL.length]\n    }\n  }));\n\n  let allValues = parsedValuesPoints.concat(parsedValuesCentroids);\n\n  let dimensions = featuresName.map((name, index) => {\n    const valuesForDimension = allValues.map(row => row[index]);\n    const minRaw = Math.min(...valuesForDimension);\n    const maxRaw = Math.max(...valuesForDimension);\n    const range = maxRaw - minRaw;\n    const padding = range * 0.02; // 10% de margen\n\n    const min = +(minRaw - padding).toFixed(2);\n    const max = +(maxRaw + padding).toFixed(2);\n\n    return {\n      dim: index,\n      name: name,\n      min: min,\n      max: max,\n      axisLabel: {\n        fontSize: 14,\n        color: '#333'\n      },\n      nameTextStyle: {\n        fontSize: 14,\n        color: '#333'\n      }\n    };\n  });\n\n  option = {\n    title: {\n      text: 'Características de los clústeres',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    parallelAxis: dimensions,\n    series: [\n      {\n        name: 'Puntos',\n        type: 'parallel',\n        lineStyle: {\n          width: 1.5,\n          opacity: 0.4\n        },\n        data: pointSeriesData\n      },\n      {\n        name: algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides',\n        type: 'parallel',\n        lineStyle: {\n          width: 2.5,\n          type: 'dashed',\n          opacity: 1\n        },\n        data: centroidSeriesData\n      },\n    ]\n    , parallel: {\n      bottom: \"4%\",\n      left: \"130\",\n      right: \"7%\",\n      top: \"17%\"\n    },\n    visualMap: {\n      type: 'piecewise',\n      top: '40%',\n      min: 0,\n      max: CLUSTER_COUNT - 1,\n      inverse: true,\n      left: 10,\n      splitNumber: CLUSTER_COUNT,\n      dimension: DIENSIION_CLUSTER_INDEX,\n      pieces: pieces,\n      inRange: {\n        color: function (value) {\n          return COLOR_ALL[value % COLOR_ALL.length]; // Repite los colores usando el módulo\n        }\n      },\n      textStyle: {\n        fontSize: 16\n      },\n    },\n    legend: {\n      data: ['Puntos', algorithm == 'a_kmedias' ? 'Centroides' : 'Medoides'],\n      top: '25%',\n      left: '1%',\n      orient: 'vertical',\n      textStyle: {\n        fontSize: 16\n      },\n      itemStyle: {\n        color: '#fff',\n        borderColor: '#999',\n        borderWidth: 1\n      },\n      itemWidth: 12,\n      itemHeight: 12\n    },\n  };\n\n  return option;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 2)\n  return palettes[colorOption] || palettes['Paleta 2'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de caja o bigotes muestra la distribución de los datos en diferentes clústeres según las características. El eje X representa los clústeres y el Y la característica seleccionada. Cada caja muestra el rango intercuartílico, la mediana y los bigotes que indican la dispersión, mientras que los puntos fuera de los bigotes representan valores atípicos. Los colores diferencian visualmente los clústeres.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 49
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeature = context.panel.data.series[0].fields;\n  const uniqueNamesFeature = fieldsFeature.find(fields => fields.name == 'feature_name').values;\n\n  let data = getFeatureValuesByCluster(uniqueNamesFeature[0]);\n  let selectedFeature = uniqueNamesFeature[0];\n  \n  // Lógica para la seleción\n  if (context.grafana.replaceVariables('${index}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length >= 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.justifyContent = \"space-between\";\n    container.style.alignItems = \"center\";\n    container.style.marginTop = \"10px\";\n\n    // Título\n    const boxplotTitle = document.createElement(\"h3\");\n    boxplotTitle.innerHTML = \"Diagrama de caja. Características por clústeres\";\n    boxplotTitle.style.marginLeft = \"20px\";\n    boxplotTitle.style.fontWeight = \"bold\";\n    boxplotTitle.style.fontSize = \"22px\";\n    boxplotTitle.style.fontFamily = \"'Arial', sans-serif\";\n    boxplotTitle.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.alignItems = \"center\";\n\n    // Label característica \n    const characteristicLabel = document.createElement(\"span\");\n    characteristicLabel.innerHTML = \"Característica:\";\n    characteristicLabel.style.marginRight = \"6px\";\n    characteristicLabel.style.fontFamily = \"'Arial', sans-serif\";\n    characteristicLabel.style.fontWeight = \"bold\";\n    characteristicLabel.style.fontSize = \"20px\";\n    characteristicLabel.style.color = \"#444\";\n\n    const selectList = document.createElement(\"select\");\n    selectList.id = \"mySelect\";\n    selectList.style.fontFamily = \"'Arial', sans-serif\";\n    selectList.style.fontSize = \"16px\";\n    selectList.style.border = \"1px solid gray\";\n    selectList.style.borderRadius = \"8px\";\n    selectList.style.padding = \"5px\";\n    selectList.style.marginRight = \"10px\";\n\n    uniqueNamesFeature.forEach((value) => {\n      const option = document.createElement(\"option\");\n      option.value = value;\n      option.text = value;\n      selectList.appendChild(option);\n    });\n\n    selectList.addEventListener(\"change\", () => {\n      selectedFeature = selectList.value;\n      let result = getFeatureValuesByCluster(selectedFeature);\n\n      context.panel.chart.setOption({\n        dataset: [\n          {\n            source: result\n          },\n          {\n            transform: {\n              type: 'boxplot',\n              config: {\n                itemNameFormatter: function (params) {\n                  return 'clúster ' + (params.value);\n                }\n              }\n            }\n          },\n          {\n            fromDatasetIndex: 1,\n            fromTransformResult: 1\n          },\n        ],\n        yAxis: {\n          type: 'value',\n          min: calculateMargin(result),\n          splitArea: {\n            show: true\n          },\n        }\n      });\n    });\n\n    rightContainer.appendChild(characteristicLabel);\n    rightContainer.appendChild(selectList);\n\n    container.appendChild(boxplotTitle);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Configuración del gráfico\n  option = {\n    dataset: [\n      {\n        source: data\n      },\n      {\n        transform: {\n          type: 'boxplot',\n          config: {\n            itemNameFormatter: function (params) {\n              return 'clúster ' + (params.value);\n            }\n          }\n        }\n      },\n      {\n        fromDatasetIndex: 1,\n        fromTransformResult: 1\n      }\n    ],\n    tooltip: {\n      trigger: 'item',\n      axisPointer: {\n        type: 'shadow'\n      },\n      formatter: function (params) {\n        if (params.componentType === 'series') {\n          if (params.seriesType === 'boxplot') {\n            const { value } = params;\n            const [min, q1, median, q3, max] = value.slice(1);\n\n            // Aplicando el formato parseFloat(feature.toFixed(4)) a cada valor\n            const minFormatted = parseFloat(min.toFixed(4));\n            const q1Formatted = parseFloat(q1.toFixed(4));\n            const medianFormatted = parseFloat(median.toFixed(4));\n            const q3Formatted = parseFloat(q3.toFixed(4));\n            const maxFormatted = parseFloat(max.toFixed(4));\n\n            // Nombre del clúster en negrita y subrayado\n            return `\n          <div>\n            <b><u>${params.name}</u></b><br>\n            <b>Mínimo:</b> ${minFormatted}<br>\n            <b>Q1 (Primer cuartil):</b> ${q1Formatted}<br>\n            <b>Mediana:</b> ${medianFormatted}<br>\n            <b>Q3 (Tercer cuartil):</b> ${q3Formatted}<br>\n            <b>Máximo:</b> ${maxFormatted}\n          </div>\n        `;\n          } else if (params.seriesType === 'scatter') {\n            const outlierFormatted = parseFloat(params.value[1].toFixed(4));\n            return `\n          <div>\n            <b>Outlier:</b> ${outlierFormatted}\n          </div>\n        `;\n          }\n        }\n        return '';\n      }\n    },\n    grid: {\n      left: '10%',\n      right: '10%',\n      bottom: '15%',\n      top: '7%'\n    },\n    xAxis: {\n      type: 'category',\n      boundaryGap: true,\n      nameGap: 30,\n      splitArea: {\n        show: false\n      },\n      splitLine: {\n        show: false\n      },\n      axisLabel: {\n        fontSize: 17,\n        color: '#333'\n      },\n    },\n    yAxis: {\n      type: 'value',\n      min: calculateMargin(data),\n      splitArea: {\n        show: true\n      },\n      axisLabel: {\n        fontSize: 15,\n        color: '#333'\n      },\n    },\n    series: [\n      {\n        name: 'boxplot',\n        type: 'boxplot',\n        datasetIndex: 1,\n        itemStyle: {\n          borderColor: function (params) {\n            return getPalette()[params.dataIndex % getPalette().length];\n          },\n          borderWidth: 2\n        }\n      },\n      {\n        name: 'outlier',\n        type: 'scatter',\n        datasetIndex: 2\n      }\n    ],\n\n  };\n\n  return option;\n}\n\n// Obtiene los valores de características agrupados por cluster.\nfunction getFeatureValuesByCluster(featureName) {\n  let fieldsAlgorithm = context.panel.data.series[3].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  // k-means, k-medoids\n  if (algorithm == 'a_kmedias') {\n    fields = context.panel.data.series[1].fields;\n  } else {\n    fields = context.panel.data.series[2].fields;\n  }\n\n  let clusterId = fields.find(field => field.name == 'cluster_id').values;\n  let featureNames = fields.find(field => field.name == 'feature_name').values;\n  let featureValues = fields.find(field => field.name == 'feature_values').values;\n\n  let clusterData = {};\n\n  for (let i = 0; i < featureNames.length; i++) {\n    if (featureNames[i] === featureName) {\n      let cluster = clusterId[i];\n      let values = featureValues[i];\n\n      values = JSON.parse(values);\n\n      if (!clusterData[cluster]) {\n        clusterData[cluster] = [];\n      }\n\n      clusterData[cluster].push(...values);\n    }\n  }\n\n  return Object.values(clusterData);\n}\n\n\n// Calcular el margen del 5% basado en el rango de los datos\nfunction calculateMargin(clusterData) {\n  const allValues = clusterData.flat();\n  const minValue = Math.min(...allValues);\n  const maxValue = Math.max(...allValues);\n  const range = maxValue - minValue;\n  const margin = range * 0.05;\n  const result = minValue - margin;\n  return parseFloat(result.toFixed(4));\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Nombres características\n\nSELECT DISTINCT \n  f.id, f.name AS feature_name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  )\n  AND f.name IN ($features)\nORDER BY f.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- K-means\n\nSELECT \n    cl.id AS cluster_id,  \n    cl.number AS cluster_number, \n    f.name AS feature_name,  \n    array_to_json(array_agg(pv.numeric_value)) AS feature_values  \nFROM \n    grafana_ml_model_clustering_cluster cl\nJOIN \n    grafana_ml_model_kmeans_point p_cluster ON p_cluster.id_cluster = cl.id  \nJOIN \n    grafana_ml_model_point p ON p.id = p_cluster.id_point  \nJOIN \n    grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n    grafana_ml_model_feature f ON f.id = pv.id_feature AND f.id_source = pv.id_source\nWHERE \n    cl.id_model = $index AND pv.numeric_value IS NOT NULL\nGROUP BY \n    cl.id, cl.number, f.id, f.name  \nORDER BY \n    cl.id, f.id;\n\n    ",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- K-medoids\n\nSELECT \n    cl.id AS cluster_id,  \n    cl.number AS cluster_number, \n    f.name AS feature_name,  \n    array_to_json(array_agg(pv.numeric_value)) AS feature_values  \nFROM \n    grafana_ml_model_clustering_cluster cl\nJOIN \n    grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_cluster = cl.id  \nJOIN \n    grafana_ml_model_point p ON p.id = p_cluster.id_point  \nJOIN \n    grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n    grafana_ml_model_feature f ON f.id = pv.id_feature AND f.id_source = pv.id_source\nWHERE \n    cl.id_model = $index AND pv.numeric_value IS NOT NULL\nGROUP BY \n    cl.id, cl.number, f.id, f.name  \nORDER BY \n    cl.id, f.id;\n",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT algorithm\nFROM grafana_ml_model_index\nWHERE id=$index",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Representa la proporción de datos en cada clúster como sectores de un círculo. El tamaño de cada porción refleja la cantidad de observaciones en ese grupo, con etiquetas de porcentaje. Se utilizan colores distintos para cada clúster.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 49
+      },
+      "id": 12,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fields = context.panel.data.series[0].fields;\n  let fieldsAlgorithm = context.panel.data.series[2].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name == 'algorithm')).values;\n\n  // k-means, k-medoids\n  if (algorithm == 'a_kmedias') {\n    fields = context.panel.data.series[0].fields;\n  } else {\n    fields = context.panel.data.series[1].fields;\n  }\n\n  let numberCluster = (fields.find(field => field.name == 'number_cluster')).values;\n  let pointCount = (fields.find(field => field.name == 'points_count')).values;\n\n  let clusters = numberCluster.map((_, index) => ({\n    value: pointCount[index],  // Asocia el número de puntos al cluster\n    name: `clúster ${index}`\n  }));\n\n  // Paletas de colores\n  let COLOR_ALL = getPalette();\n  let clusterColors = clusters.map((_, index) => COLOR_ALL[index % COLOR_ALL.length]);\n\n  // Sumar el total de puntos para calcular los porcentajes\n  let totalPoints = clusters.reduce((acc, cluster) => acc + cluster.value, 0);\n\n  // Configuración del gráfico\n  option = {\n    title: {\n      text: 'Cantidad de puntos por clúster',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22\n      },\n    },\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        let percent = ((params.value / totalPoints) * 100).toFixed(2); // Calcula el porcentaje\n        return `${params.name}<br/>Cantidad: ${params.value}<br/>${percent}%`;\n      }\n    },\n    legend: {\n      orient: 'vertical',\n      left: 'right',\n      top: \"15%\",\n      left: '2%',\n      textStyle: {\n        fontSize: 16\n      },\n    },\n    series: [\n      {\n        type: 'pie',\n        radius: ['0%', '55%'],\n        itemStyle: {\n          borderRadius: 10,\n          borderColor: '#fff',\n          borderWidth: 2\n        },\n        data: clusters.map((cluster, index) => ({\n          value: cluster.value,\n          name: cluster.name,\n          itemStyle: {\n            color: clusterColors[index]\n          },\n          label: {\n            show: true,\n            formatter: function (params) {\n              let percent = ((params.value / totalPoints) * 100).toFixed(2); // Calcula el porcentaje\n              return `${params.name}\\n${params.value} (${percent}%)`; // Muestra la cantidad y el porcentaje en el gráfico\n            },\n            fontSize: 16,\n          }\n        })),\n        emphasis: {\n          itemStyle: {\n            shadowBlur: 10,\n            shadowOffsetX: 0,\n            shadowColor: 'rgba(0, 0, 0, 0.5)'\n          },\n          label: {\n            fontSize: 20,\n            fontWeight: 'bold'\n          }\n        }\n      }\n    ]\n  };\n\n  return option;\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- K-means\n\nSELECT \n  c.number AS number_cluster, \n  COUNT(p.id) AS points_count\nFROM \"grafana_ml_model_point\" p\nJOIN \"grafana_ml_model_kmeans_point\" p_cluster\n  ON p_cluster.id_point = p.id\nJOIN \"grafana_ml_model_clustering_cluster\" c  \n  ON c.id = p_cluster.id_cluster  \nWHERE p_cluster.id_model = $index \n      AND c.id_model = $index\nGROUP BY c.number\nORDER BY number_cluster\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- K-medoids\n\nSELECT \n  c.number AS number_cluster, \n  COUNT(p.id) AS points_count\nFROM \"grafana_ml_model_point\" p\nJOIN \"grafana_ml_model_kmedoids_point\" p_cluster\n  ON p_cluster.id_point = p.id\nJOIN \"grafana_ml_model_clustering_cluster\" c  \n  ON c.id = p_cluster.id_cluster  \nWHERE p_cluster.id_model = $index \n    AND c.id_model = $index\nGROUP BY c.number\nORDER BY number_cluster\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT algorithm\nFROM grafana_ml_model_index\nWHERE id=$index",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Permite ingresar manualmente los valores de las características para una nueva instancia e identifica el grupo al que pertenece. Además, muestra la distancia entre la instancia y el centroide del clúster asignado.",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 63
+      },
+      "id": 19,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fieldsCentroids = context.panel.data.series[0].fields;\n  let fieldsFeatures = context.panel.data.series[1].fields;\n  let fieldsAlgorithm = context.panel.data.series[3].fields;\n  const algorithm = (fieldsAlgorithm.find(fields => fields.name === 'algorithm')).values;\n\n  if (algorithm == 'a_kmedias') {\n    fieldsCentroids = context.panel.data.series[0].fields;\n  } else {\n    fieldsCentroids = context.panel.data.series[2].fields;\n  }\n\n  const featuresName = (fieldsFeatures.find(f => f.name === 'name')).values;\n  const centroidValues = (fieldsCentroids.find(f => f.name === 'feature_values')).values;\n  const centroidClusters = (fieldsCentroids.find(f => f.name === 'number_cluster')).values;\n  const parsedCentroids = centroidValues.map(val => JSON.parse(val));\n\n  const dom = context.panel.chart.getDom();\n  dom.innerHTML = \"\";\n\n  const container = document.createElement(\"div\");\n  container.style.display = \"flex\";\n  container.style.flexDirection = \"column\";\n  container.style.gap = \"10px\";\n  container.style.padding = \"20px\";\n  container.style.fontFamily = \"'Arial', sans-serif\";\n\n  const inputValues = {};\n  const inputsPerPage = 12;\n  let currentPage = 0;\n\n  const title = document.createElement(\"h2\");\n  title.innerText = \"Asignar nueva instancia a un clúster\";\n  title.style.marginLeft = \"10px\";\n  title.style.fontWeight = \"bold\";\n  title.style.fontSize = \"20px\";\n  title.style.color = \"#444\";\n  title.style.marginBottom = \"20px\";\n  container.appendChild(title);\n\n  const inputsWrapper = document.createElement(\"div\");\n  inputsWrapper.style.display = \"flex\";\n  inputsWrapper.style.flexWrap = \"wrap\";\n  inputsWrapper.style.gap = \"12px\";\n  inputsWrapper.style.marginLeft = \"60px\";\n  inputsWrapper.style.maxWidth = \"100%\";\n  inputsWrapper.style.marginBottom = \"20px\";\n\n  function loadInputs(page) {\n    inputsWrapper.innerHTML = \"\";\n\n    const startIdx = page * inputsPerPage;\n    const endIdx = Math.min((page + 1) * inputsPerPage, featuresName.length);\n\n    for (let i = startIdx; i < endIdx; i++) {\n      const name = featuresName[i];\n\n      const inputContainer = document.createElement(\"div\");\n      inputContainer.style.display = \"flex\";\n      inputContainer.style.flexDirection = \"column\";\n      inputContainer.style.minWidth = \"200px\";\n\n      const label = document.createElement(\"label\");\n      label.innerText = name;\n      label.style.fontSize = \"16px\";\n      label.style.marginBottom = \"4px\";\n\n      const input = document.createElement(\"input\");\n      input.type = \"number\";\n      input.value = inputValues[name] ?? \"0\";\n      input.step = \"0.01\";\n      input.style.padding = \"6px\";\n      input.style.borderRadius = \"6px\";\n      input.style.border = \"1px solid #888\";\n      input.style.width = \"170px\";\n\n      input.addEventListener(\"input\", () => {\n        inputValues[name] = parseFloat(input.value) || 0;\n      });\n\n      inputContainer.appendChild(label);\n      inputContainer.appendChild(input);\n      inputsWrapper.appendChild(inputContainer);\n    }\n  }\n\n  loadInputs(currentPage);\n  container.appendChild(inputsWrapper);\n\n  const resultDiv = document.createElement(\"div\");\n  resultDiv.style.fontSize = \"19px\";\n  resultDiv.style.fontWeight = \"bold\";\n\n  const actionRow = document.createElement(\"div\");\n  actionRow.style.display = \"flex\";\n  actionRow.style.alignItems = \"center\";\n  actionRow.style.gap = \"12px\";\n  actionRow.style.marginTop = \"18px\";\n\n  const assignButton = document.createElement(\"button\");\n  assignButton.innerText = \"Calcular\";\n  assignButton.style.padding = \"5px 10px\";\n  assignButton.style.fontSize = \"18px\";\n  assignButton.style.borderRadius = \"6px\";\n  assignButton.style.border = \"none\";\n  assignButton.style.backgroundColor = '#888';\n  assignButton.style.color = \"white\";\n  assignButton.style.cursor = \"pointer\";\n  assignButton.style.width = \"180px\";\n  assignButton.style.marginLeft = \"60px\";\n\n  assignButton.addEventListener(\"click\", () => {\n    const inputVector = featuresName.map(name => parseFloat(inputValues[name] ?? 0));\n    let minDistance = Infinity;\n    let assignedCluster = null;\n\n    parsedCentroids.forEach((centroid, idx) => {\n      let distance = 0;\n\n      if (algorithm == 'a_kmedias') {\n        for (let i = 0; i < centroid.length; i++) {\n          const diff = centroid[i] - inputVector[i];\n          distance += diff * diff;\n        }\n        distance = Math.sqrt(distance);\n      } else {\n        for (let i = 0; i < centroid.length; i++) {\n          distance += Math.abs(centroid[i] - inputVector[i]);\n        }\n      }\n\n      if (distance < minDistance) {\n        minDistance = distance;\n        assignedCluster = centroidClusters[idx];\n      }\n    });\n\n    // Obtener color correspondiente según el clúster\n    const palette = getPalette();\n    const color = palette[assignedCluster % palette.length];\n\n    // Establecer texto y color del borde\n    resultDiv.innerHTML = `Clúster: ${assignedCluster} → Distancia: ${minDistance.toFixed(4)}`;\n    resultDiv.style.border = `3px solid ${color}`;\n    resultDiv.style.padding = \"10px\";\n    resultDiv.style.borderRadius = \"8px\";\n    resultDiv.style.marginLeft = \"60px\";\n    resultDiv.style.backgroundColor = \"#f9f9f9\";\n  });\n\n  actionRow.appendChild(assignButton);\n  actionRow.appendChild(resultDiv);\n  container.appendChild(actionRow);\n\n  // Paginación\n  const paginationContainer = document.createElement(\"div\");\n  paginationContainer.style.position = \"fixed\";\n  paginationContainer.style.bottom = \"20px\";\n  paginationContainer.style.right = \"20px\";\n  paginationContainer.style.display = \"flex\";\n  paginationContainer.style.gap = \"10px\";\n\n  const prevButton = document.createElement(\"button\");\n  prevButton.innerText = \"<\";\n  prevButton.style.padding = \"5px 10px\";\n  prevButton.style.fontSize = \"14px\";\n  prevButton.style.borderRadius = \"50%\";\n  prevButton.style.border = \"none\";\n  prevButton.style.backgroundColor = \"#ccc\";\n  prevButton.style.color = \"white\";\n  prevButton.style.cursor = \"pointer\";\n  prevButton.disabled = currentPage === 0;\n\n  prevButton.addEventListener(\"click\", () => {\n    if (currentPage > 0) {\n      currentPage--;\n      loadInputs(currentPage);\n      nextButton.disabled = false;\n      prevButton.disabled = currentPage === 0;\n    }\n  });\n\n  const nextButton = document.createElement(\"button\");\n  nextButton.innerText = \">\";\n  nextButton.style.padding = \"5px 10px\";\n  nextButton.style.fontSize = \"14px\";\n  nextButton.style.borderRadius = \"50%\";\n  nextButton.style.border = \"none\";\n  nextButton.style.backgroundColor = \"#ccc\";\n  nextButton.style.color = \"white\";\n  nextButton.style.cursor = \"pointer\";\n  nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresName.length;\n\n  nextButton.addEventListener(\"click\", () => {\n    if ((currentPage + 1) * inputsPerPage < featuresName.length) {\n      currentPage++;\n      loadInputs(currentPage);\n      prevButton.disabled = false;\n      nextButton.disabled = (currentPage + 1) * inputsPerPage >= featuresName.length;\n    }\n  });\n\n  paginationContainer.appendChild(prevButton);\n  paginationContainer.appendChild(nextButton);\n\n  container.appendChild(paginationContainer);\n  dom.appendChild(container);\n}\n\n// Obtener paleta de colores seleccionada\nfunction getPalette() {\n  const colorOption = context.grafana.replaceVariables('${color}');\n\n  const palettes = {\n    'Paleta 1': ['#729ece', '#ff9e4a', '#67bf5c', '#ed665d', '#ad8bc9', '#a8786e', '#ed97ca', '#a2a2a2', '#cdcc5d', '#6dccda'],\n    'Paleta 2': ['#6929c4', '#9f1853', '#198038', '#1192e8', '#570408', '#b28600', '#002d9c', '#ee538b', '#a56eff', '#fa4d56'],\n    'Paleta 3': ['#9e0142', '#5e4fa2', '#66c2a5', '#3288bd', '#f46d43', '#e6f598', '#d53e4f', '#fd61ec', '#7cd42e', '#65d9e3']\n  };\n\n  // Valor por defecto (Paleta 1)\n  return palettes[colorOption] || palettes['Paleta 1'];\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Centroides k-means\n\nSELECT \n  cl.number AS number_cluster,  \n  array_to_json(array_agg(c.value ORDER BY f.id)) AS feature_values\nFROM \"grafana_ml_model_kmeans_centroid\" c\nJOIN \"grafana_ml_model_feature\" f ON f.id = c.id_feature\nJOIN \"grafana_ml_model_clustering_cluster\" cl ON cl.id = c.id_cluster  \nWHERE c.id_model=$index \nGROUP BY cl.number\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Nombres características\n\nSELECT DISTINCT \n  f.id, f.name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index  \n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  )\nORDER BY f.id;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Medoides k-medoids\n\nSELECT \n  p.name AS point_name, \n  c.number AS number_cluster,  \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = $index\nJOIN \n  grafana_ml_model_clustering_cluster c  ON c.id = p_cluster.id_cluster AND c.id_model = $index\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index) \n  AND p_cluster.is_medoid = true\n  AND pv.numeric_value IS NOT NULL\nGROUP BY \n  p.id, c.number;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Algoritmo (k-medias o k-medoides)\n\nSELECT algorithm\nFROM grafana_ml_model_index\nWHERE id=$index",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#514d4db3"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 12,
+        "y": 63
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Inertia$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  m.silhouette_coefficient AS \"Silhouette Coefficient\", \n  m.inertia AS \"Inertia\"\nFROM \n  \"grafana_ml_model_clustering_metrics\" m\nWHERE id_model=$index ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Presenta las métricas de inercia y silueta para cada clúster individual, identificándolos con colores. Además se destaca el grupo con mejor rendimiento en tono verde, mientras que el de peor desempeño se destaca en rojo.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 17,
+        "y": 63
+      },
+      "id": 7,
+      "options": {
+        "afterRender": "",
+        "content": "<h3\n    style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin-left: 20px; margin-top: 2px; color: #444;\">\n    Métricas por clúster\n</h3>\n\n<table style=\"font-family: 'Arial', sans-serif; font-size: 22px; margin: 40px auto; border-collapse: collapse; text-align: center;\">\n  <thead>\n    <tr>\n      <th style=\"font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; padding: 10px; text-align: center;\">Cluster</th>\n      <th style=\"font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; padding: 10px; text-align: center;\">Inertia</th>\n      <th style=\"font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; padding: 10px; text-align: center;\">Silhouette Coefficient</th>\n    </tr>\n  </thead>\n  <tbody>\n    {{#each data}}\n      <tr>\n        <td style=\"padding: 10px; background-color: {{getClusterColor name}}\"\">{{name}}</td>\n        <td style=\"padding: 10px; background-color: {{getInertiaColor inertia}}\">{{roundToThree inertia}}</td>\n        <td style=\"padding: 10px; background-color: {{getSilhouetteColor silhouette_coefficient}}\">{{roundToThree silhouette_coefficient}}</td>\n      </tr>\n    {{/each}}\n  </tbody>\n</table>",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "handlebars"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "let data = context.data.data;\nlet TRANSPARENCY = 0.6;\nlet COLOR_ALL;\n\nif (context.grafana.replaceVariables('${color}') == 'Paleta 1') {\n  COLOR_ALL = [\n    `rgba(114, 158, 206, ${TRANSPARENCY})`, // #729ece\n    `rgba(255, 158, 74, ${TRANSPARENCY})`,  // #ff9e4a\n    `rgba(103, 191, 92, ${TRANSPARENCY})`,  // #67bf5c\n    `rgba(237, 102, 93, ${TRANSPARENCY})`,  // #ed665d\n    `rgba(173, 139, 201, ${TRANSPARENCY})`, // #ad8bc9\n    `rgba(168, 120, 142, ${TRANSPARENCY})`, // #a8786e\n    `rgba(237, 151, 202, ${TRANSPARENCY})`, // #ed97ca\n    `rgba(162, 162, 162, ${TRANSPARENCY})`, // #a2a2a2\n    `rgba(205, 204, 93, ${TRANSPARENCY})`,  // #cdcc5d\n    `rgba(109, 204, 218, ${TRANSPARENCY})`  // #6dccda\n  ];\n} else if (context.grafana.replaceVariables('${color}') == 'Paleta 2') {\n  COLOR_ALL = [\n    `rgba(105, 41, 196, ${TRANSPARENCY})`,  // #6929c4\n    `rgba(159, 24, 83, ${TRANSPARENCY})`,   // #9f1853\n    `rgba(25, 143, 56, ${TRANSPARENCY})`,   // #198038\n    `rgba(17, 146, 232, ${TRANSPARENCY})`,  // #1192e8\n    `rgba(87, 4, 8, ${TRANSPARENCY})`,      // #570408\n    `rgba(178, 134, 0, ${TRANSPARENCY})`,   // #b28600\n    `rgba(0, 45, 156, ${TRANSPARENCY})`,    // #002d9c\n    `rgba(238, 83, 139, ${TRANSPARENCY})`,  // #ee538b\n    `rgba(165, 110, 255, ${TRANSPARENCY})`, // #a56eff\n    `rgba(250, 77, 86, ${TRANSPARENCY})`    // #fa4d56\n  ];\n} else if (context.grafana.replaceVariables('${color}') == 'Paleta 3') {\n  COLOR_ALL = [\n    `rgba(158, 1, 66, ${TRANSPARENCY})`,    // #9e0142\n    `rgba(94, 79, 162, ${TRANSPARENCY})`,   // #5e4fa2\n    `rgba(102, 194, 165, ${TRANSPARENCY})`, // #66c2a5\n    `rgba(50, 136, 189, ${TRANSPARENCY})`,  // #3288bd\n    `rgba(244, 109, 67, ${TRANSPARENCY})`,  // #f46d43\n    `rgba(230, 245, 152, ${TRANSPARENCY})`, // #e6f598\n    `rgba(213, 62, 79, ${TRANSPARENCY})`,   // #d53e4f\n    `rgba(253, 97, 236, ${TRANSPARENCY})`,  // #fd61ec\n    `rgba(124, 212, 46, ${TRANSPARENCY})`,  // #7cd42e\n    `rgba(101, 217, 227, ${TRANSPARENCY})`  // #65d9e3\n  ];\n}\n\ncontext.handlebars.registerHelper(\"getClusterColor\", (name) => {\n  return COLOR_ALL[name % COLOR_ALL.length];\n});\n\nfunction getColor(value, min, max, isBetterHigher) {\n  // Ajustar la transparencia (alpha) a un valor bajo para mayor transparencia\n  const alpha = 0.3; // Puedes ajustar este valor entre 0 y 1\n\n  if (isBetterHigher) {\n    if (value === max) return `rgba(0, 255, 0, ${alpha})`;  // Mejor valor (verde)\n    if (value === min) return `rgba(255, 0, 0, ${alpha})`;  // Peor valor (rojo)\n    return `rgba(255, 255, 255, ${alpha})`; // Valor intermedio (blanco)\n  } else {\n    if (value === min) return `rgba(0, 255, 0, ${alpha})`;  // Mejor valor (verde)\n    if (value === max) return `rgba(255, 0, 0, ${alpha})`;  // Peor valor (rojo)\n    return `rgba(255, 255, 255, ${alpha})`; // Valor intermedio (blanco)\n  }\n}\n// Registrar la función para obtener el color de \"Inertia\"\ncontext.handlebars.registerHelper(\"getInertiaColor\", (inertia) => {\n  // Obtener los valores de la columna 'inertia'\n  const inertiaValues = data.map(item => item.inertia);\n  const inertiaMin = Math.min(...inertiaValues);  // Valor mínimo en 'inertia'\n  const inertiaMax = Math.max(...inertiaValues);  // Valor máximo en 'inertia'\n  return getColor(inertia, inertiaMin, inertiaMax, false);  // Mejor cuando es mayor\n});\n\n// Registrar la función para obtener el color de \"Silhouette Coefficient\"\ncontext.handlebars.registerHelper(\"getSilhouetteColor\", (silhouette_coefficient) => {\n  // Obtener los valores de la columna 'silhouette_coefficient'\n  const silhouetteValues = data.map(item => item.silhouette_coefficient);\n  const silhouetteMin = Math.min(...silhouetteValues);  // Valor mínimo en 'silhouette_coefficient'\n  const silhouetteMax = Math.max(...silhouetteValues);  // Valor máximo en 'silhouette_coefficient'\n  return getColor(silhouette_coefficient, silhouetteMin, silhouetteMax, true);  // Mejor cuando es mayor\n});\n\ncontext.handlebars.registerHelper('roundToThree', function (value) {\n  if (value) {\n    return value.toFixed(3);\n  }\n  return value; // Si el valor no es numérico, lo devolvemos tal cual.\n});",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Si el tipo es 'kMeans'\nSELECT \n    cl.number AS name,  \n    cl.inertia,\n    cl.silhouette_coefficient\nFROM \n    \"grafana_ml_model_clustering_cluster\" cl\nWHERE cl.id_model = $index\n\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "name": "grafana-postgresql-datasource-ml-models",
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-red"
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-orange",
+                "value": 0.25
+              },
+              {
+                "color": "light-yellow",
+                "value": 0.3
+              },
+              {
+                "color": "super-light-orange",
+                "value": 0.4
+              },
+              {
+                "color": "light-green",
+                "value": 0.5
+              },
+              {
+                "color": "green",
+                "value": 0.75
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 12,
+        "y": 67
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Silhouette Coefficient$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  m.silhouette_coefficient AS \"Silhouette Coefficient\", \n  m.inertia AS \"Inertia\"\nFROM \n  \"grafana_ml_model_clustering_metrics\" m\nWHERE id_model=$index ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#514d4db3"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 12,
+        "y": 71
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Davies Bouldin Index$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  m.silhouette_coefficient AS \"Silhouette Coefficient\", \n  m.inertia AS \"Inertia\",\n  m.davies_bouldin_index AS \"Davies Bouldin Index\"\nFROM \n  \"grafana_ml_model_clustering_metrics\" m\nWHERE id_model=$index ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Gráfico de barras que permite visualizar la distribución de características binarias y ternarias dentro de un clúster específico, seleccionable mediante un menú desplegable. En el eje Y se listan las características analizadas, mientras que el eje X muestra el porcentaje de instancias del clúster seleccionado para cada uno de los valores posibles. ",
+      "gridPos": {
+        "h": 17,
+        "w": 12,
+        "x": 0,
+        "y": 75
+      },
+      "id": 20,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "visual",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "const series = context.panel.data.series.map((s) => {\n  const sData = s.fields.find((f) => f.type === 'number').values.buffer || s.fields.find((f) => f.type === 'number').values;\n  const sTime = s.fields.find((f) => f.type === 'time').values.buffer || s.fields.find((f) => f.type === 'time').values;\n  \n  return {\n    name: s.refId,\n    type: 'line',\n    showSymbol: false,\n    areaStyle: {\n      opacity: 0.1,\n    },\n    lineStyle: {\n      width: 1,\n    },\n    data: sData.map((d, i) => [sTime[i], d.toFixed(2)]),\n  };\n});\n\n/**\n * Enable Data Zoom by default\n */\nsetTimeout(() => context.panel.chart.dispatchAction({\n  type: 'takeGlobalCursor',\n  key: 'dataZoomSelect',\n  dataZoomSelectActive: true,\n}), 500);\n\n/**\n * Update Time Range on Zoom\n */\ncontext.panel.chart.on('datazoom', function (params) {\n  const startValue = params.batch[0]?.startValue;\n  const endValue = params.batch[0]?.endValue;\n  locationService.partial({ from: startValue, to: endValue });\n});\n\nreturn {\n  backgroundColor: 'transparent',\n  tooltip: {\n    trigger: 'axis',\n  },\n  legend: {\n    left: '0',\n    bottom: '0',\n    data: context.panel.data.series.map((s) => s.refId),\n    textStyle: {\n      color: 'rgba(128, 128, 128, .9)',\n    },\n  },\n  toolbox: {\n    feature: {\n      dataZoom: {\n        yAxisIndex: 'none',\n        icon: {\n          zoom: 'path://',\n          back: 'path://',\n        },\n      },\n      saveAsImage: {},\n    }\n  },\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n  grid: {\n    left: '2%',\n    right: '2%',\n    top: '2%',\n    bottom: 24,\n    containLabel: true,\n  },\n  series,\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "if (context.panel.data && context.panel.data.series.length > 0) {\n  let fieldsPoints = context.panel.data.series[0].fields;\n  let fieldsFeatures = context.panel.data.series[1].fields;\n  let fieldsAlgorithm = context.panel.data.series[3].fields;\n\n  const algorithm = (fieldsAlgorithm.find(f => f.name == 'algorithm')).values;\n  let selectedClusterIndex = 0;\n\n  // Selección de fields dependiendo del algoritmo\n  if (algorithm == 'a_kmedias') {\n    fieldsPoints = context.panel.data.series[0].fields;\n  } else {\n    fieldsPoints = context.panel.data.series[2].fields;\n  }\n\n  const pointValues = (fieldsPoints.find(f => f.name == 'feature_values')).values;\n  const pointClusters = (fieldsPoints.find(f => f.name == 'number_cluster')).values;\n  const featuresName = (fieldsFeatures.find(f => f.name == 'name')).values;\n\n  const parsedValuesPoints = pointValues.map(value => JSON.parse(value));\n  const uniqueClusters = [...new Set(pointClusters)].sort((a, b) => a - b);\n  const numFeatures = featuresName.length;\n  const valueCountsByFeature = Array.from({ length: numFeatures }, () => new Set());\n\n  parsedValuesPoints.forEach(row => {\n    row.forEach((val, idx) => {\n      valueCountsByFeature[idx].add(val);\n    });\n  });\n\n  // Índices de características con solo 2 o 3 valores distintos\n  const binaryTernaryIndexes = valueCountsByFeature\n    .map((set, idx) => (set.size <= 3 ? idx : -1))\n    .filter(idx => idx !== -1);\n\n  // Filtrar nombres de características\n  const filteredFeaturesName = binaryTernaryIndexes.map(idx => featuresName[idx]);\n  // Filtrar valores de puntos solo para esas características\n  const filteredParsedValuesPoints = parsedValuesPoints.map(row =>\n    binaryTernaryIndexes.map(idx => row[idx])\n  );\n\n  const oldMsg = document.getElementById(\"no-binary-message\");\n  if (oldMsg) {\n    oldMsg.remove();\n  }\n\n  // Verificar si hay características binarias o ternarias\n  if (filteredFeaturesName.length === 0) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 1) {\n      nodeList[0].remove();\n    }\n\n    const message = document.createElement(\"div\");\n    message.id = \"no-binary-message\";\n    message.style.textAlign = \"center\";\n    message.style.marginTop = \"20px\";\n    message.style.fontSize = \"18px\";\n    message.style.fontFamily = \"'Arial', sans-serif\";\n    message.style.color = \"#777\";\n    message.innerText = \"No se encontraron características binarias o ternarias para mostrar.\";\n\n    dom.insertBefore(message, dom.firstChild);\n\n    return {}; // No se construye el gráfico\n  }\n\n  // Lógica para la selección\n  if (context.grafana.replaceVariables('${index}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length > 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.justifyContent = \"space-between\";\n    container.style.alignItems = \"center\";\n    container.style.marginTop = \"10px\";\n\n    // Título\n    const title = document.createElement(\"h3\");\n    title.innerHTML = \"Distribución de características binarias o ternarias\";\n    title.style.marginLeft = \"20px\";\n    title.style.fontWeight = \"bold\";\n    title.style.fontSize = \"22px\";\n    title.style.fontFamily = \"'Arial', sans-serif\";\n    title.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.alignItems = \"center\";\n\n    // Label clúster\n    const characteristicLabel = document.createElement(\"span\");\n    characteristicLabel.innerHTML = \"Clúster:\";\n    characteristicLabel.style.marginRight = \"6px\";\n    characteristicLabel.style.fontFamily = \"'Arial', sans-serif\";\n    characteristicLabel.style.fontWeight = \"bold\";\n    characteristicLabel.style.fontSize = \"20px\";\n    characteristicLabel.style.color = \"#444\";\n\n    const selectList = document.createElement(\"select\");\n    selectList.id = \"mySelect\";\n    selectList.style.fontFamily = \"'Arial', sans-serif\";\n    selectList.style.fontSize = \"16px\";\n    selectList.style.border = \"1px solid gray\";\n    selectList.style.borderRadius = \"8px\";\n    selectList.style.padding = \"5px\";\n    selectList.style.marginRight = \"10px\";\n\n    uniqueClusters.forEach(cluster => {\n      const option = document.createElement(\"option\");\n      option.value = cluster;\n      option.text = \"clúster \" + cluster;\n      selectList.appendChild(option);\n    });\n\n    selectList.addEventListener(\"change\", () => {\n      selectedClusterIndex = Number(selectList.value);\n      updateChart();\n    });\n\n    rightContainer.appendChild(characteristicLabel);\n    rightContainer.appendChild(selectList);\n\n    container.appendChild(title);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n\n  }\n\n  // Actualizar el gráfico después de un cambio en la selección\n  function updateChart() {\n    const series = getClusterDistribution(selectedClusterIndex, filteredParsedValuesPoints, pointClusters, filteredFeaturesName);\n\n    context.panel.chart.setOption({\n      series: series,\n    });\n  }\n\n  let series = getClusterDistribution(selectedClusterIndex, filteredParsedValuesPoints, pointClusters, filteredFeaturesName);\n\n  // Configuración del gráfico\n  option = {\n    tooltip: {\n      trigger: 'axis',\n      axisPointer: { type: 'shadow' }\n    },\n    legend: {\n      top: 'bottom',\n      top: \"87%\",\n      textStyle: {\n        fontSize: 16\n      },\n    },\n    grid: {\n      left: '3%',\n      right: '4%',\n      bottom: '15%',\n      top: '5%',\n      containLabel: true\n    },\n    xAxis: {\n      type: 'value',\n      max: 100,\n      axisLabel: {\n        fontSize: 15,\n        color: '#333'\n      },\n    },\n    yAxis: {\n      type: 'category',\n      data: filteredFeaturesName,\n      axisLabel: {\n        interval: 0,\n        rotate: 0,\n        fontSize: 15,\n        color: '#333'\n      }\n    },\n    series: series,\n    color: ['#ee6666', '#fac858', '#91cc75']\n  };\n\n  return option;\n}\n\nfunction getClusterDistribution(selectedClusterIndex, parsedValuesPoints, pointClusters, featuresName) {\n  // Filtrar puntos que pertenecen al clúster seleccionado\n  const filteredPoints = parsedValuesPoints.filter((_, idx) => pointClusters[idx] === selectedClusterIndex);\n\n  // Calcular distribución porcentual para cada característica\n  const distributions = featuresName.map((_, featureIndex) => {\n    const valueCounts = {};\n    filteredPoints.forEach(row => {\n      const val = row[featureIndex];\n      valueCounts[val] = (valueCounts[val] || 0) + 1;\n    });\n\n    const total = filteredPoints.length;\n    const sortedKeys = Object.keys(valueCounts).sort();\n    const values = sortedKeys.map(k => (valueCounts[k] * 100 / total).toFixed(2));\n\n    return {\n      name: featuresName[featureIndex],\n      keys: sortedKeys,\n      values: values\n    };\n  });\n\n  // Obtener todos los valores únicos posibles de todas las características\n  const allKeys = [...new Set(distributions.flatMap(d => d.keys))].sort();\n\n  // Construir datos para gráfico stacked bar\n  const series = allKeys.map(key => ({\n    name: key,\n    type: 'bar',\n    stack: 'total',\n    emphasis: { focus: 'series' },\n    label: {\n      show: true,\n      position: 'inside',\n      formatter: function (params) {\n        return params.value < 5 ? '' : params.value + ' %';\n      },\n      fontSize: 14\n    },\n    data: distributions.map(d => {\n      const idx = d.keys.indexOf(key);\n      return idx !== -1 ? parseFloat(d.values[idx]) : 0;\n    })\n  }));\n\n  return series;\n}",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Puntos k-means\n\nSELECT \n  p.name AS point_name, \n  c.number AS number_cluster, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_index idx ON idx.id = $index\nJOIN \n  grafana_ml_model_kmeans_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = idx.id\nJOIN \n  grafana_ml_model_clustering_cluster c ON c.id = p_cluster.id_cluster AND c.id_model = idx.id\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE \n  p.id_source = idx.id_source\n  AND pv.numeric_value IS NOT NULL\n  AND f.name IN ($features)\nGROUP BY \n  p.id, p.name, c.number\nORDER BY p.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Nombres características\n\nSELECT DISTINCT \n  f.id, f.name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index  \n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  )\n  AND f.name IN ($features)\nORDER BY f.id;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Puntos k-medoids\n\nSELECT \n  p.name AS point_name, \n  cc.number AS number_cluster,\n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM \n  grafana_ml_model_point p\nJOIN \n  grafana_ml_model_point_value pv ON pv.id_point = p.id AND pv.id_source = p.id_source\nJOIN \n  grafana_ml_model_kmedoids_point p_cluster ON p_cluster.id_point = p.id AND p_cluster.id_model = $index\nJOIN \n  grafana_ml_model_clustering_cluster cc ON cc.id = p_cluster.id_cluster AND cc.id_model = $index\nJOIN \n  grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (SELECT id_source FROM grafana_ml_model_index WHERE id = $index)\n  AND pv.numeric_value IS NOT NULL  \n  AND f.name IN ($features)\nGROUP BY \n  p.id, cc.number\nORDER BY p.id;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Algoritmo (k-medias o k-medoides)\n\nSELECT algorithm\nFROM grafana_ml_model_index\nWHERE id=$index",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Todos",
+          "value": "Todos"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Fecha",
+        "multi": false,
+        "name": "date",
+        "options": [],
+        "query": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('a_kmedias', 'a_kmedoides') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "1",
+          "value": "1"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('a_kmedias', 'a_kmedoides')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "description": "Caso para los cuales se desea mostrar las visualizaciones",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Modelo",
+        "multi": false,
+        "name": "index",
+        "options": [],
+        "query": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('a_kmedias', 'a_kmedoides')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT DISTINCT \n  f.name\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  );",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Características",
+        "multi": true,
+        "name": "features",
+        "options": [],
+        "query": "SELECT DISTINCT \n  f.name\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $index\n  AND (\n    f.is_target = FALSE\n    OR (f.is_target = TRUE AND pv.numeric_value IS NOT NULL)\n  );",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "100%",
+          "value": "1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instancias",
+        "multi": false,
+        "name": "numInstances",
+        "options": [
+          {
+            "selected": false,
+            "text": "20%",
+            "value": "0.2"
+          },
+          {
+            "selected": false,
+            "text": "40%",
+            "value": "0.4"
+          },
+          {
+            "selected": false,
+            "text": "60%",
+            "value": "0.6"
+          },
+          {
+            "selected": false,
+            "text": "80%",
+            "value": "0.8"
+          },
+          {
+            "selected": true,
+            "text": "100%",
+            "value": "1"
+          }
+        ],
+        "query": "20% : 0.2, 40% : 0.4, 60% : 0.6, 80% : 0.8, 100% : 1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Paleta 1",
+          "value": "Paleta 1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Color",
+        "multi": false,
+        "name": "color",
+        "options": [
+          {
+            "selected": true,
+            "text": "Paleta 1",
+            "value": "Paleta 1"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 2",
+            "value": "Paleta 2"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 3",
+            "value": "Paleta 3"
+          }
+        ],
+        "query": "Paleta 1, Paleta 2, Paleta 3",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Círculo",
+          "value": "Círculo"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Símbolo",
+        "multi": false,
+        "name": "shape",
+        "options": [
+          {
+            "selected": true,
+            "text": "Círculo",
+            "value": "Círculo"
+          },
+          {
+            "selected": false,
+            "text": "Triángulo",
+            "value": "Triángulo"
+          },
+          {
+            "selected": false,
+            "text": "Rectángulo",
+            "value": "Rectángulo"
+          },
+          {
+            "selected": false,
+            "text": "Pin",
+            "value": "Pin"
+          }
+        ],
+        "query": "Círculo, Triángulo, Rectángulo, Pin",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": false,
+    "refresh_intervals": [
+      "5s"
+    ]
+  },
+  "timezone": "browser",
+  "title": "clustering kmeans/kmedoids",
+  "uid": "ae5xat5tr7474a",
+  "version": 1231,
+  "weekStart": ""
+}

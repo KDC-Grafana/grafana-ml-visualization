@@ -1,0 +1,875 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 9,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": true,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eemkjpe5dqrr4d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 14,
+        "x": 5,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "nestedObjects": [],
+        "tables": [
+          {
+            "addRow": {
+              "enabled": false,
+              "permission": {
+                "mode": "",
+                "userRole": []
+              },
+              "request": {
+                "datasource": "",
+                "payload": {}
+              }
+            },
+            "deleteRow": {
+              "enabled": false,
+              "permission": {
+                "mode": "",
+                "userRole": []
+              },
+              "request": {
+                "datasource": "",
+                "payload": {}
+              }
+            },
+            "expanded": false,
+            "items": [
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": false,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "id",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": true,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Id",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "nombre",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Nombre",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "descripcion",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Descripción",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "parametros",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Parámetros",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "creador",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": false,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Creador",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              },
+              {
+                "aggregation": "none",
+                "appearance": {
+                  "alignment": "center",
+                  "background": {
+                    "applyToRow": false
+                  },
+                  "colors": {},
+                  "header": {
+                    "backgroundColor": "#3274D9",
+                    "fontSize": "lg"
+                  },
+                  "width": {
+                    "auto": true,
+                    "min": 20,
+                    "value": 100
+                  },
+                  "wrap": true
+                },
+                "edit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false,
+                  "permission": {
+                    "mode": "",
+                    "userRole": []
+                  }
+                },
+                "enabled": true,
+                "field": {
+                  "name": "fecha_creacion",
+                  "source": "A"
+                },
+                "filter": {
+                  "enabled": true,
+                  "mode": "client",
+                  "variable": ""
+                },
+                "footer": [],
+                "group": false,
+                "label": "Fecha",
+                "newRowEdit": {
+                  "editor": {
+                    "type": "string"
+                  },
+                  "enabled": false
+                },
+                "objectId": "",
+                "pin": "",
+                "preformattedStyle": false,
+                "scale": "auto",
+                "sort": {
+                  "descFirst": false,
+                  "enabled": false
+                },
+                "type": "auto"
+              }
+            ],
+            "name": "Modelos",
+            "pagination": {
+              "defaultPageSize": 10,
+              "enabled": true,
+              "mode": "client"
+            },
+            "showHeader": true,
+            "update": {
+              "datasource": "",
+              "payload": {}
+            }
+          }
+        ],
+        "toolbar": {
+          "export": false
+        }
+      },
+      "pluginVersion": "1.9.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be1w9io4ze7eod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n  i.id,\r\n  s.name AS nombre,\r\n  s.description AS descripcion,\r\n  i.parameters AS parametros,\r\n  s.creator AS creador,\r\n  TO_CHAR(i.date, 'YYYY-MM-DD HH24:MI') AS fecha_creacion\r\nFROM \r\n  grafana_ml_model_index AS i\r\nINNER JOIN \r\n  grafana_ml_model_source AS s ON i.id_source = s.id\r\nWHERE \r\n  i.algorithm = 'reglas_asociacion'\r\nORDER BY \r\n  i.id ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-table-panel"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eemkjpe5dqrr4d"
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 20,
+        "x": 2,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n\n  // Extraer valores de la consulta SQL\n  const antecedentes = fields.find(field => field.name === 'antecedente').values;\n  const consecuentes = fields.find(field => field.name === 'consecuente').values;\n  const soportes = fields.find(field => field.name === 'soporte').values;\n  const confianzas = fields.find(field => field.name === 'confianza').values;\n  const lifts = fields.find(field => field.name === 'lift').values;\n\n  // Obtener valor de la variable para el filtro\n  let mode = context.grafana.replaceVariables('${Visualizaciones_Reglas_Asociacion}'); // Variable dinámica\n\n  // Obtener el valor de la variable para el modo\n  let theme = context.grafana.replaceVariables('${Modo_Visualizacion_Regla}'); // Variable dinámica que define el modo (claro u oscuro)\n\n  // Obtener el valor de la variable para el grafo\n  let grafo = context.grafana.replaceVariables('${Grafo_Reglas_Asociacion}'); // Variable dinámica que define como mostrar el grafo\n\n  // Obtener el valor de la variable para la cantidad de reglas\n  let cantidad = context.grafana.replaceVariables('${Cantidad_Reglas_Asociacion}');\n\n  // Obtener el valor de la variable para ordenar las reglas\n  let ordenar_cantidad = context.grafana.replaceVariables('${Ordenar_x_Cantidad}');\n\n  // Obtener el valor de la variable para ordenar las reglas según la cantidad por un criterio\n  let ordenar_cantidad_criterio = context.grafana.replaceVariables('${Ordenar_x_Cantidad_x_Criterio}');\n\n  // Obtener el valor de la variable para establecer el # max de items en los antecedentes y consecuentes\n  let maxItems = context.grafana.replaceVariables('${Maxima_Cantidad_Items_x_Antecedente_y_Consecuente}');\n\n  // Obtener el valor de la variable para el color de las reglas\n  let colorMode = context.grafana.replaceVariables('${Color_Reglas_Asociacion}');\n\n  // Función para generar colores aleatorios\n  function generateRandomColor() {\n    const letters = '0123456789ABCDEF';\n    let color = '#';\n    for (let i = 0; i < 6; i++) {\n      color += letters[Math.floor(Math.random() * 16)];\n    }\n    return color;\n  }\n\n  // Paletas de colores predefinidas\n  const palettes = {\n    Paleta1: [\n      '#0500FF', '#00F4FF', '#00FF05', '#FAFF00', '#FF0500', '#FF00FA', '#A703FF', '#035BFF', '#03FFA7', '#5BFF03',\n      '#FFA703', '#FF035B', '#F000FF', '#000FFF', '#00FFF0', '#0FFF00', '#FFF000', '#FF000F', '#FF0A74', '#950AFF',\n      '#0A74FF', '#0AFF95', '#74FF0A', '#FF950A', '#FF6552', '#FF52EC', '#6552FF', '#52ECFF', '#52FF65', '#ECFF52',\n    ],\n    Paleta2: [\n      '#1E8449', '#922B21', '#2471A3', '#7D6608', '#117A65', '#4A235A', '#B9770E', '#D4AC0D', '#34495E', '#145A32',\n      '#7B241C', '#2E86C1', '#A04000', '#1C2833', '#6E2C00', '#0B5345', '#4D5656', '#196F3D', '#7F8C8D', '#512E5F',\n      '#99A3A4', '#45B39D', '#85C1E9', '#76D7C4', '#F9E79F', '#D5F5E3', '#A3E4D7', '#A9CCE3', '#FAD7A0', '#ABB2B9',\n    ],\n    Paleta3: [\n      '#F4D03F', '#5DADE2', '#58D68D', '#AF7AC5', '#EB984E', '#EC7063', '#45B39D', '#5499C7', '#F5CBA7', '#E74C3C',\n      '#52BE80', '#7FB3D5', '#FAD7A0', '#DC7633', '#9B59B6', '#F39C12', '#28B463', '#2980B9', '#D35400', '#2874A6',\n      '#D98880', '#AAB7B8', '#F7DC6F', '#F5B041', '#BB8FCE', '#82E0AA', '#E59866', '#1ABC9C', '#E67E22', '#C0392B',\n    ],\n  };\n\n  // Mapa para guardar colores asignados por nodo\n  const itemColorMap = new Map();\n\n  function assignColorToNode(nodeName, usedColors) {\n    let color;\n\n    const normalizedColorMode = colorMode.replace(/\\s+/g, '');\n\n    if (itemColorMap.has(nodeName)) {\n      return itemColorMap.get(nodeName);\n    }\n\n    if (normalizedColorMode === 'Aleatorio') {\n      color = generateRandomColor();\n      while (usedColors.has(color)) {\n        color = generateRandomColor();\n      }\n    } else if (palettes[normalizedColorMode]) {\n      const palette = palettes[normalizedColorMode];\n\n      // Buscar el primer color no usado en la paleta\n      let index = 0;\n      while (index < palette.length && usedColors.has(palette[index])) {\n        index++;\n      }\n\n      if (index < palette.length) {\n        // Asignar el primer color no usado de la paleta\n        color = palette[index];\n      } else {\n        // Paleta agotada: generar color aleatorio no usado\n        color = generateRandomColor();\n        while (usedColors.has(color)) {\n          color = generateRandomColor();\n        }\n      }\n    } else {\n      console.error('Modo de color inválido:', colorMode);\n      color = '#000000';\n    }\n\n    usedColors.add(color);\n    itemColorMap.set(nodeName, color);\n    return color;\n  }\n\n  // Función para asignar los indices según el orden y el criterio de las reglas que se quieren mostrar\n  function getSelectedIndices(longitudTotal, cantidadMostrar, ordenar_cantidad, ordenar_cantidad_criterio, datos) {\n    // Asegurar de no pedir más reglas de las que existen\n    const cantidad = Math.min(cantidadMostrar, longitudTotal);\n    let indices = [];\n\n    if (ordenar_cantidad === 'Aleatorias') {\n      const totalIndices = Array.from({ length: longitudTotal }, (_, i) => i);\n      while (indices.length < cantidad && totalIndices.length > 0) {\n        const randIndex = Math.floor(Math.random() * totalIndices.length);\n        indices.push(totalIndices.splice(randIndex, 1)[0]);\n      }\n    } else {\n      // Seleccionar los valores numéricos según el criterio\n      let valoresOrdenar = [];\n      switch (ordenar_cantidad_criterio) {\n        case 'Confianza':\n          valoresOrdenar = datos.map(d => d.confianza);\n          break;\n        case 'Soporte':\n          valoresOrdenar = datos.map(d => d.soporte);\n          break;\n        case 'Lift':\n          valoresOrdenar = datos.map(d => d.lift);\n          break;\n        default:\n          console.warn(\"Criterio no reconocido, usando confianza por defecto\");\n          valoresOrdenar = datos.map(d => d.confianza);\n      }\n\n      // Crear array de índices [0, 1, ..., n] y ordenarlo según los valores del criterio\n      const allIndices = Array.from({ length: longitudTotal }, (_, i) => i);\n      if (ordenar_cantidad === 'Mejores') {\n        allIndices.sort((a, b) => valoresOrdenar[b] - valoresOrdenar[a]);\n      } else if (ordenar_cantidad === 'Peores') {\n        allIndices.sort((a, b) => valoresOrdenar[a] - valoresOrdenar[b]);\n      } else {\n        console.warn(\"Tipo de orden no reconocido, no se aplicará orden.\");\n      }\n\n      indices = allIndices.slice(0, cantidad);\n    }\n\n    return indices;\n  }\n\n  // Función para limpiar el nombre base de los ítems\n  function cleanItemName(item) {\n    const index = item.indexOf('_');\n    if (index !== -1) {\n      return item.slice(0, index); // Conserva todo antes del primer \"_\"\n    }\n    return item; // Si no tiene \"_\", lo devuelve tal cual\n  }\n\n  const maxItemsReglas = parseInt(maxItems); // Para obtener el número max de items \n\n  // Crear nuevas listas filtradas (para evitar reglas con ítems base repetidos)\n  const antecedentesFiltrados = [];\n  const consecuentesFiltrados = [];\n  const soportesFiltrados = [];\n  const confianzasFiltradas = [];\n  const liftsFiltrados = [];\n\n  for (let i = 0; i < antecedentes.length; i++) {\n    const antItems = antecedentes.get(i).split(',').map(a => a.trim());\n    const consItems = consecuentes.get(i).split(',').map(c => c.trim());\n\n    const antBases = antItems.map(cleanItemName);\n    const consBases = consItems.map(cleanItemName);\n\n    const allBases = [...antBases, ...consBases];\n    const uniqueBases = new Set(allBases);\n\n    if (\n      uniqueBases.size === allBases.length &&\n      antItems.length <= maxItemsReglas &&\n      consItems.length <= maxItemsReglas\n    ) {\n      antecedentesFiltrados.push(antecedentes.get(i));\n      consecuentesFiltrados.push(consecuentes.get(i));\n      soportesFiltrados.push(soportes.get(i));\n      confianzasFiltradas.push(confianzas.get(i));\n      liftsFiltrados.push(lifts.get(i));\n    }\n  }\n\n  // Lógica de selección según el valor del filtro\n  if (mode === \"Grafo\") {\n    // Lógica para el primer panel\n    option = getPanelOption1(antecedentesFiltrados, consecuentesFiltrados, soportesFiltrados, confianzasFiltradas, liftsFiltrados, theme, grafo, cantidad, ordenar_cantidad, ordenar_cantidad_criterio);\n  } else if (mode === \"Matricial\") {\n    // Lógica para el segundo panel\n    option = getPanelOption2(antecedentesFiltrados, consecuentesFiltrados, soportesFiltrados, confianzasFiltradas, theme, cantidad, ordenar_cantidad, ordenar_cantidad_criterio);\n  } else if (mode === \"Separadas\") {\n    // Lógica para el tercer panel\n    option = getPanelOption3(antecedentesFiltrados, consecuentesFiltrados, soportesFiltrados, confianzasFiltradas, liftsFiltrados, theme, colorMode, palettes, cantidad, ordenar_cantidad, ordenar_cantidad_criterio);\n  } else if (mode === \"3D\") {\n    // Lógica para el cuarto panel\n    option = getPanelOption4(antecedentesFiltrados, consecuentesFiltrados, soportesFiltrados, confianzasFiltradas, liftsFiltrados, theme, cantidad, ordenar_cantidad, ordenar_cantidad_criterio);\n  } else {\n    // Si el valor no coincide con ninguno, muestra un gráfico vacío o un mensaje\n    option = {\n      graphic: [\n        {\n          type: 'text',\n          left: 'center', // Posición fija en la esquina superior izquierda\n          top: '45%', // Posición fija en la esquina superior izquierda\n          style: {\n            text: 'Visualización no disponible', // Título personalizado\n            fontSize: 45,\n            fontWeight: 'bold',\n            fill: theme === 'Oscuro' ? 'white' : 'red', // Ajuste según el tema\n          },\n        },\n      ],\n      backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff', // Fondo del gráfico\n    };\n  }\n\n  // Devuelve la configuración seleccionada\n  return option;\n}\n\n// Función para configurar el primer panel\nfunction getPanelOption1(antecedentes, consecuentes, soportes, confianzas, lifts, theme, grafo, cantidad, ordenar_cantidad, ordenar_cantidad_criterio) {\n  const cantidadMostrar = parseInt(cantidad, 10); // Para la cantidad de reglas a mostrar\n  const totalReglas = antecedentes.length; // Para el total de reglas\n\n  const datos = soportes.map((soporte, i) => ({ // Para darle los datos a getSelectedIndices\n    soporte,\n    confianza: confianzas[i],\n    lift: lifts[i],\n  }));\n\n  const selectedIndices = getSelectedIndices(totalReglas, cantidadMostrar, ordenar_cantidad, ordenar_cantidad_criterio, datos); // Para los Índices con que se van a construir las reglas\n\n  const uniqueNodes = new Map(); // Para guardar nodos únicos\n  const links = []; // Para las conexiones\n  const usedColors = new Set(); // Para llevar un registro de colores usados\n\n  // Función para dividir un string en un arreglo de items\n  function parseItems(itemString) {\n    return itemString.split(',').map(item => item.trim());\n  }\n\n  // Crear nodos y enlaces\n  selectedIndices.forEach(i => {\n    const antecedente = antecedentes[i];\n    const consecuente = consecuentes[i];\n    const soporte = soportes[i];\n    const confianza = confianzas[i];\n    const lift = lifts[i];\n\n    const antecedentItems = parseItems(antecedente).sort();\n    const consequentItems = parseItems(consecuente).sort();\n\n    // Crear nodos simples \n    [...antecedentItems, ...consequentItems].forEach(item => {\n      if (!uniqueNodes.has(item)) {\n        uniqueNodes.set(item, {\n          name: item,\n          type: 'item',\n          symbolSize: 25,\n          itemStyle: { color: assignColorToNode(item, usedColors) },\n          label: {\n            show: true,\n            color: theme === 'Oscuro' ? '#E0E0E0' : '#000000',\n          },\n        });\n      }\n    });\n\n    // Crear nodos compuestos  \n    if (!uniqueNodes.has(antecedente)) {\n      uniqueNodes.set(antecedente, {\n        name: antecedente,\n        type: 'composite',\n        symbolSize: 30,\n        itemStyle: { color: assignColorToNode(antecedente, usedColors) },\n        label: {\n          show: true,\n          color: theme === 'Oscuro' ? '#E0E0E0' : '#000000',\n        },\n      });\n    }\n\n    if (!uniqueNodes.has(consecuente)) {\n      uniqueNodes.set(consecuente, {\n        name: consecuente,\n        type: 'composite',\n        symbolSize: 30,\n        itemStyle: { color: assignColorToNode(consecuente, usedColors) },\n        label: {\n          show: true,\n          color: theme === 'Oscuro' ? '#E0E0E0' : '#000000',\n        },\n      });\n    }\n\n    // Generar enlaces para las relaciones de conjunción (líneas discontinuas)\n    if (grafo === 'Ambas' || grafo === 'Relaciones Conjunción') {\n      antecedentItems.forEach(item => {\n        links.push({\n          source: item,\n          target: antecedente,\n          value: confianza,\n          support: soporte,\n          lift: lift,\n          lineStyle: {\n            color: theme === 'Oscuro' ? '#CCCCCC' : 'black',\n            curveness: 0.3,\n            width: 2,\n            opacity: 1,\n            type: 'dashed',\n            emphasis: { width: 5 },\n          },\n          emphasis: { focus: 'adjacency' },\n          tooltip: {\n            show: true,\n            formatter: params => {\n              return `Nodo conjunción: ${item}<br>`;\n            }\n          },\n        });\n      });\n\n      consequentItems.forEach(item => {\n        links.push({\n          source: item,\n          target: consecuente,\n          value: confianza,\n          support: soporte,\n          lift: lift,\n          lineStyle: {\n            color: theme === 'Oscuro' ? '#CCCCCC' : 'black',\n            curveness: 0.3,\n            width: 2,\n            opacity: 1,\n            type: 'dashed',\n            emphasis: { width: 5 },\n          },\n          emphasis: { focus: 'adjacency' },\n          tooltip: {\n            show: true,\n            formatter: params => {\n              return `Nodo conjunción: ${item}<br>`;\n            }\n          },\n        });\n      });\n    }\n\n    // Generar enlaces para las reglas de asociación (líneas continuas con flechas)\n    if (grafo === 'Ambas' || grafo === 'Reglas Asociación') {\n      links.push({\n        source: antecedente,\n        target: consecuente,\n        value: confianza,\n        support: soporte,\n        lift: lift,\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#54B6C6' : 'source',\n          curveness: 0.3,\n          width: 2,\n          opacity: 1,\n          type: 'solid',\n          emphasis: { width: 5 },\n        },\n        emphasis: { focus: 'adjacency' },\n        symbol: ['none', 'arrow'],\n        symbolSize: [0, 13],\n      });\n    }\n  });\n  // Finalizar nodos\n  const nodes = Array.from(uniqueNodes.values());\n\n  // Categorías definidas para la leyenda\n  const categories = [];\n  if (grafo === 'Ambas' || grafo === 'Reglas Asociación') {\n    categories.push({ name: 'Reglas de asociación' });\n  }\n  if (grafo === 'Ambas' || grafo === 'Relaciones Conjunción') {\n    categories.push({ name: 'Relación de conjunción' });\n  }\n\n  // Ajuste de parámetros de diseño según la selección\n  let repulsion = 200;\n  let edgeLength = [120, 200];\n  let topPosition = '20%';\n\n  if (grafo === 'Reglas Asociación') {\n    repulsion = 200;\n    edgeLength = [100, 150];\n    topPosition = '20%';\n  } else if (grafo === 'Relaciones Conjunción') {\n    repulsion = 200;\n    edgeLength = [110, 180];\n    topPosition = '20%';\n  }\n\n  // Configuración del grafo para ECharts\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        if (params.dataType === 'edge') {\n          return `\n            <b>Confianza:</b> ${params.data.value.toFixed(2)}<br>\n            <b>Soporte:</b> ${params.data.support.toFixed(2)}<br>\n            <b>Lift:</b> ${params.data.lift.toFixed(2)}\n          `;\n        } else {\n          return `<b>Nodo:</b> ${params.data.name}`;\n        }\n      },\n    },\n    legend: {\n      type: 'plain', // Leyenda simple\n      selectedMode: false, // Sin interacción\n      textStyle: {\n        fontSize: 15,\n        color: theme === 'Oscuro' ? '#E0E0E0' : '#000000', // Color general del texto\n      },\n      itemGap: 20,\n      top: '13%',\n      data: categories.map(category => {\n        // Definir ícono y estilo solo para 'Relación de conjunción'\n        if (category.name === 'Relación de conjunción') {\n          return {\n            name: category.name,\n            icon: 'lin', // Ícono de línea\n            itemStyle: {\n              color: theme === 'Oscuro' ? '#CCCCCC' : 'black', // Color del ícono para esta categoría\n            },\n          };\n        }\n        return {\n          name: category.name,\n          icon: 'lin', // Usa el ícono por defecto para las demás categorías\n          itemStyle: {\n            color: theme === 'Oscuro' ? '#54B6C6' : undefined, // Color del ícono para esta categoría\n          },\n        };\n      }),\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: '2%', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Reglas de Asociación ( Grafo )', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'graph',\n        layout: 'force',\n        data: Array.from(uniqueNodes.values()),\n        links: links,\n        categories: categories, // Asignación de categorías\n        roam: true,\n        draggable: true,\n        label: {\n          position: 'right',\n          formatter: '{b}',\n        },\n        force: {\n          repulsion: repulsion,\n          edgeLength: edgeLength,\n          gravity: 0.05,\n        },\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : 'source',\n          curveness: 0.3,\n        },\n        emphasis: {\n          focus: 'adjacency',\n          lineStyle: {\n            width: 10,\n          },\n        },\n        top: topPosition,\n      },\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff',\n  };\n\n  return option;\n}\n\n// Función para configurar el segundo panel\nfunction getPanelOption2(antecedentes, consecuentes, soportes, confianzas, theme, cantidad, ordenar_cantidad, ordenar_cantidad_criterio) {\n  // Almacenar cantidad de reglas a mostrar\n  const cantidadMostrar = parseInt(cantidad, 10);\n\n  // Total de reglas disponibles\n  const totalReglas = antecedentes.length;\n\n  // Para darle los datos a getSelectedIndices\n  const datos = soportes.map((soporte, i) => ({\n    soporte,\n    confianza: confianzas[i],\n  }));\n\n  if (ordenar_cantidad_criterio === 'Lift') {\n    return {\n      graphic: [\n        {\n          type: 'text',\n          left: 'center',\n          top: '45%',\n          style: {\n            text: 'La métrica Lift no se contempla en esta visualización',\n            fontSize: 45,\n            fontWeight: 'bold',\n            fill: theme === 'Oscuro' ? 'white' : 'red',\n          },\n        },\n      ],\n      backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff',\n    };\n  }\n\n  // Índices con que se van a construir las reglas\n  const selectedIndices = getSelectedIndices(totalReglas, cantidadMostrar, ordenar_cantidad, ordenar_cantidad_criterio, datos);\n\n  // Almacén para colores ya usados\n  const usedColors = new Set();\n\n  // Crear nodos únicos (tanto antecedentes como consecuentes)\n  const uniqueNodes = new Set([...antecedentes, ...consecuentes]);\n\n  // Crear nodos para la visualización\n  const nodes = [];\n\n  selectedIndices.forEach(i => {\n    const antecedente = antecedentes[i];\n    const consecuente = consecuentes[i];\n    const soporte = soportes[i];\n    const confianza = confianzas[i];\n\n    // Generar un color único para la regla\n    const ruleColor = assignColorToNode(`${antecedente} -> ${consecuente}`, usedColors);\n\n    // Crear un nodo para la regla completa\n    const ruleNode = {\n      name: `${antecedente} -> ${consecuente}`, // Regla como texto\n      value: [antecedente, consecuente], // Coordenadas X e Y (antecedente y consecuente)\n      symbolSize: 20, // Tamaño del nodo\n      itemStyle: { color: ruleColor }, // Color único del nodo\n      originalIndex: i,\n      label: {\n        show: false\n      }\n    };\n\n    nodes.push(ruleNode);\n  });\n\n  // Crear categorias de las reglas a mostrar\n  const xCategories = Array.from(new Set(selectedIndices.map(i => antecedentes[i])));\n  const yCategories = Array.from(new Set(selectedIndices.map(i => consecuentes[i])));\n\n  // Configuración de la opción de ECharts\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        const originalIndex = params.data.originalIndex;\n        return `\n          <b>Regla:</b> ${params.data.name}<br>\n          <b>Confianza:</b> ${confianzas[originalIndex].toFixed(2)}<br>\n          <b>Soporte:</b> ${soportes[originalIndex].toFixed(2)}\n        `;\n      }\n    },\n    xAxis: {\n      name: 'Antecedente',\n      type: 'category', // Eje categórico\n      data: xCategories, // Usar valores únicos de antecedentes\n      nameLocation: 'middle',\n      nameGap: xCategories.length > 5 ? 60 : 50,\n      axisLine: {\n        show: true, // Mostrar línea principal del eje X\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#333' // Color de la línea del eje\n        }\n      },\n      axisLabel: {\n        interval: 0, // Mostrar todas las etiquetas\n        rotate: xCategories.length > 5 ? 345 : 0,\n        textStyle: {\n          fontSize: xCategories.length > 5 ? 10 : 12,\n        }\n      },\n      axisTick: {\n        show: true // Mostrar marcas de las divisiones en el eje\n      },\n      nameTextStyle: {\n        color: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color negro\n      },\n      splitLine: {\n        show: true, // Mostrar líneas de la cuadrícula\n        lineStyle: {\n          color: '#ddd' // Color de las líneas de la cuadrícula\n        }\n      }\n    },\n    yAxis: {\n      name: 'Consecuente',\n      type: 'category', // Eje categórico\n      data: yCategories, // Usar valores únicos de consecuentes\n      nameLocation: 'middle',\n      nameGap: 130,\n      axisLine: {\n        show: true, // Mostrar línea principal del eje Y\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#333' // Color de la línea del eje\n        }\n      },\n      axisLabel: {\n        interval: 0, // Mostrar todas las etiquetas\n        textStyle: {\n          fontSize: xCategories.length > 5 ? 10 : 12,\n        }\n      },\n      axisTick: {\n        show: true // Mostrar marcas de las divisiones en el eje\n      },\n      nameTextStyle: {\n        color: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color negro\n      },\n      splitLine: {\n        show: true, // Mostrar líneas de la cuadrícula\n        lineStyle: {\n          color: '#ddd' // Color de las líneas de la cuadrícula\n        }\n      }\n    },\n    grid: {\n      bottom: xCategories.length > 6 ? 90 : 80\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: 'center', // Posición fija en la esquina superior izquierda\n        top: '3%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Reglas de Asociación/ Gráfico Matricial/ Confianza y soporte', // Título personalizado\n          fontSize: 18,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'scatter', // Cambiar a scatter ya que no hay enlaces\n        data: nodes,\n        label: {\n          show: true,\n          formatter: '{b}',\n          position: 'top'\n        },\n      }\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff',\n  };\n  return option;\n}\n\n// Función para configurar el tercer panel\nfunction getPanelOption3(antecedentes, consecuentes, soportes, confianzas, lifts, theme, colorMode, palettes, cantidad, ordenar_cantidad, ordenar_cantidad_criterio) {\n  // Almacenar cantidad de reglas a mostrar\n  const cantidadMostrar = parseInt(cantidad, 10);\n\n  // Mapa para asignar colores únicos a cada nodo\n  const nodeColors = new Map();\n  const usedColors = new Set(); // Para evitar duplicación de colores\n\n  // Función para obtener o asignar un color único a un nodo\n  function getColorForNode(nodeName) {\n    if (!nodeColors.has(nodeName)) {\n      // Normalizar el modo de color eliminando espacios en blanco\n      const normalizedColorMode = colorMode.replace(/\\s+/g, '');\n\n      let color;\n      if (normalizedColorMode === 'Aleatorio') {\n        // Generar color aleatorio y evitar duplicados\n        color = generateRandomColor();\n        while (usedColors.has(color)) {\n          color = generateRandomColor();\n        }\n      } else if (palettes[normalizedColorMode]) {\n        // Seleccionar la paleta correspondiente\n        const palette = palettes[normalizedColorMode];\n        const index = usedColors.size % palette.length; // Reinicia si supera el tamaño de la paleta\n        color = palette[index];\n      } else {\n        console.error('Modo de color inválido:', colorMode);\n        color = '#000000'; // Color por defecto en caso de error\n      }\n\n      // Asignar el color al nodo y marcarlo como usado\n      nodeColors.set(nodeName, color);\n      usedColors.add(color);\n    }\n\n    return nodeColors.get(nodeName);\n  }\n\n  // Total de reglas disponibles\n  const totalReglas = antecedentes.length;\n\n  // Para darle los datos a getSelectedIndices\n  const datos = soportes.map((soporte, i) => ({\n    soporte,\n    confianza: confianzas[i],\n    lift: lifts[i],\n  }));\n\n  // Índices con que se van a construir las reglas\n  const selectedIndices = getSelectedIndices(totalReglas, cantidadMostrar, ordenar_cantidad, ordenar_cantidad_criterio, datos);\n\n  // Crear un grafo para cada regla\n  const datas = [];\n  selectedIndices.forEach(i => {\n    const antecedente = antecedentes[i];\n    const consecuente = consecuentes[i];\n    const soporte = soportes[i];\n    const confianza = confianzas[i];\n    const lift = lifts[i];\n\n    // Tamaño dinámico de nodos y aristas\n    const nodeSize = soporte * 60 + 25;  // Tamaño base 25, escala por soporte\n    const linkWidth = Math.pow(confianza, 2) * 20 + 2; // Grosor base 2, escala por confianza\n\n    // Crear nodos para el antecedente y el consecuente con colores consistentes\n    const nodes = [\n      {\n        name: antecedente,\n        itemStyle: { color: getColorForNode(antecedente) }, // Reutiliza el color único\n        symbolSize: nodeSize, // Tamaño dinámico del nodo\n        label: { show: true },\n      },\n      {\n        name: consecuente,\n        itemStyle: { color: getColorForNode(consecuente) }, // Reutiliza el color único\n        symbolSize: nodeSize, // Tamaño dinámico del nodo\n        label: { show: true },\n      },\n    ];\n\n    // Crear enlace entre los nodos\n    const links = [\n      {\n        source: antecedente,\n        target: consecuente,\n        value: confianza,\n        support: soporte,\n        lift: lift,\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#3498DB',\n          curveness: 0.5,\n          width: linkWidth, // Grosor dinámico de la línea\n        },\n        emphasis: {\n          focus: 'adjacency',\n        },\n        symbol: ['none', 'arrow'],\n        symbolSize: [0, linkWidth * 2], // Grosor dinámico de la flecha\n      },\n    ];\n\n    // Agregar grafo individual\n    datas.push({\n      nodes: nodes,\n      links: links,\n      confidence: confianza, // Usado para tamaño del grafo\n      support: soporte,\n      lift: lift,\n    });\n  });\n\n  // Calcular filas y columnas necesarias\n  const numRules = datas.length; // Número total de reglas\n  const columns = Math.ceil(Math.sqrt(numRules)); // Determinar columnas necesarias\n  const rows = Math.ceil(numRules / columns); // Determinar filas necesarias\n  const cellWidth = 98 / columns; // Ancho de cada celda en porcentaje\n  const cellHeight = 98 / rows; // Alto de cada celda en porcentaje\n\n  // Configuración final con varios grafos\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        if (params.dataType === 'edge') {\n          return `\n            <b>Lift:</b> ${params.data.lift.toFixed(2)}\n          `;\n        } else {\n          return `<b>Nodo:</b> ${params.data.name}`;\n        }\n      },\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: '1%', // Posición fija en la esquina superior izquierda\n        top: '1%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Reglas de Asociación/ Soporte tamaño nodo/ Confianza grosor arista/  Lift etiqueta', // Título personalizado\n          fontSize: 16,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto\n        },\n      },\n    ],\n    series: datas.map((item, idx) => ({\n      type: 'graph',\n      layout: 'force',\n      animation: false,\n      data: item.nodes,\n      links: item.links,\n      left: `${(idx % columns) * cellWidth}%`, // Distribuir en columnas dinámicas\n      top: `${Math.floor(idx / columns) * cellHeight + 2}%`, // Distribuir en filas dinámicas\n      width: `${cellWidth}%`, // Ajustar ancho dinámico\n      height: `${cellHeight}%`, // Ajustar alto dinámico\n      force: {\n        repulsion: 300, // Espaciado entre nodos (constante)\n        edgeLength: [100, 100], // Longitud fija de enlaces\n        gravity: 0.1, // Ajuste de expansión general\n      },\n      emphasis: {\n        focus: 'adjacency',\n      },\n      lineStyle: {\n        curveness: 0.3,\n      },\n    })),\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff',\n  };\n  return option;\n}\n\n// Función para configurar el cuarto panel\nfunction getPanelOption4(antecedentes, consecuentes, soportes, confianzas, lifts, theme, cantidad, ordenar_cantidad, ordenar_cantidad_criterio) {\n  // Almacenar cantidad de reglas a mostrar\n  const cantidadMostrar = parseInt(cantidad, 10);\n\n  // Total de reglas disponibles\n  const totalReglas = antecedentes.length;\n\n  // Para darle los datos a getSelectedIndices\n  const datos = soportes.map((soporte, i) => ({\n    soporte,\n    confianza: confianzas[i],\n    lift: lifts[i],\n  }));\n\n  // Índices con que se van a construir las reglas\n  const selectedIndices = getSelectedIndices(totalReglas, cantidadMostrar, ordenar_cantidad, ordenar_cantidad_criterio, datos);\n\n  // Almacén para colores ya usados\n  const usedColors = new Set();\n\n  // Generar datos para la visualización\n  const data3D = selectedIndices.map(i => {\n    const antecedente = antecedentes[i];\n    const consecuente = consecuentes[i];\n    const lift = lifts[i];\n    const confianza = confianzas[i];\n\n    // Asignar un color único a la regla\n    const ruleColor = assignColorToNode(`${antecedente} -> ${consecuente}`, usedColors);\n\n    // Escalar el tamaño del símbolo basado en la confianza\n    const minSize = 5;\n    const maxSize = 50;\n    const maxConfidence = confianzas.reduce((max, val) => (val > max ? val : max), -Infinity);\n    const scaledSize = minSize + ((confianza / maxConfidence) * (maxSize - minSize));\n\n    return {\n      value: [antecedente, consecuente, lift], // Coordenadas X, Y, Z\n      symbolSize: scaledSize, // Tamaño proporcional a la confianza\n      itemStyle: {\n        color: ruleColor // Color único para cada regla\n      },\n      label: {\n        show: false,\n      }\n    };\n  });\n\n  // Crear categorias de las reglas a mostrar\n  const xCategories = Array.from(new Set(selectedIndices.map(i => antecedentes[i])));\n  const yCategories = Array.from(new Set(selectedIndices.map(i => consecuentes[i])));\n\n  // Configuración del gráfico 3D\n  const option = {\n    tooltip: {\n      trigger: 'item',\n      formatter: function (params) {\n        const originalIndex = selectedIndices[params.dataIndex];\n        return `\n          <b>Regla:</b> ${antecedentes[originalIndex]} -> ${consecuentes[originalIndex]}<br>\n          <b>Soporte:</b> ${soportes[originalIndex].toFixed(2)}<br>\n        `;\n      }\n    },\n    xAxis3D: {\n      name: 'Antecedente',\n      type: 'category',\n      data: xCategories, // Usar valores únicos de antecedentes\n      nameLocation: 'middle',\n      nameGap: 50,\n      axisLine: {\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#333' // Color de la línea del eje\n        }\n      },\n      axisLabel: {\n        interval: 0, // Mostrar todas las etiquetas\n        textStyle: {\n          fontSize: xCategories.length > 10 ? 7.9 : 12,\n        }\n      },\n      nameTextStyle: {\n        color: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color negro\n      },\n    },\n    yAxis3D: {\n      name: 'Consecuente',\n      type: 'category',\n      data: yCategories, // Usar valores únicos de consecuentes\n      nameLocation: 'middle',\n      nameGap: 50,\n      axisLine: {\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#333' // Color de la línea del eje\n        }\n      },\n      axisLabel: {\n        interval: 0, // Mostrar todas las etiquetas\n        textStyle: {\n          fontSize: yCategories.length > 10 ? 7.9 : 12,\n        }\n      },\n      nameTextStyle: {\n        color: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color negro\n      },\n    },\n    zAxis3D: {\n      name: 'Lift',\n      type: 'value',\n      nameLocation: 'middle',\n      nameGap: 40,\n      nameTextStyle: {\n        color: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color negro\n      },\n      axisLine: {\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#CCCCCC' : '#333' // Color de la línea del eje\n        }\n      },\n    },\n    grid3D: {\n      boxWidth: 200,\n      boxDepth: 200,\n      boxHeight: 130,\n      viewControl: {\n        autoRotate: false,\n        center: [0, 0, 0],\n        targetCoord: [50, 50, 25],\n        distance: 400,\n      },\n      top: \"-30\",\n      axisPointer: {\n        lineStyle: {\n          color: theme === 'Oscuro' ? '#FF5733' : undefined, // Cambiar según el tema\n          width: 1,\n          type: 'solid',\n        }\n      }\n    },\n    graphic: [\n      {\n        type: 'text',\n        left: 'center', // Posición fija en la esquina superior izquierda\n        top: '5%', // Posición fija en la esquina superior izquierda\n        style: {\n          text: 'Reglas de Asociación/ Gráfico 3D/ Lift tercera dimensión/ Confianza tamaño/ Soporte etiqueta', // Título personalizado\n          fontSize: 20,\n          fontWeight: 'bold',\n          fill: theme === 'Oscuro' ? '#ffffff' : '#000000', // Color del texto\n        },\n      },\n    ],\n    series: [\n      {\n        type: 'scatter3D',\n        data: data3D,\n        itemStyle: {\n          opacity: 0.8,\n        }\n      }\n    ],\n    backgroundColor: theme === 'Oscuro' ? '#1F1F1F' : '#ffffff',\n  };\n  return option;\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be1w9io4ze7eod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  ar.antecedent AS antecedente,\r\n  ar.consequent AS consecuente,\r\n  ar.support AS soporte,\r\n  ar.confidence AS confianza,\r\n  ar.lift\r\nFROM\r\n  grafana_ml_model_association_rules AS ar\r\nWHERE \r\n  ar.id_model = $Modelos_Reglas_Asociacion \r\nORDER BY\r\n  ar.id ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "8",
+          "value": "8"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eemkjpe5dqrr4d"
+        },
+        "definition": "SELECT\n  id\nFROM\n  grafana_ml_model_index\nWHERE\n  algorithm= 'reglas_asociacion';",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Modelos_Reglas_Asociacion",
+        "options": [],
+        "query": "SELECT\n  id\nFROM\n  grafana_ml_model_index\nWHERE\n  algorithm= 'reglas_asociacion';",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Grafo",
+          "value": "Grafo"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Visualizaciones_Reglas_Asociacion",
+        "options": [
+          {
+            "selected": true,
+            "text": "Grafo",
+            "value": "Grafo"
+          },
+          {
+            "selected": false,
+            "text": "Matricial",
+            "value": "Matricial"
+          },
+          {
+            "selected": false,
+            "text": "Separadas",
+            "value": "Separadas"
+          },
+          {
+            "selected": false,
+            "text": "3D",
+            "value": "3D"
+          }
+        ],
+        "query": "Grafo, Matricial, Separadas, 3D",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Ambas",
+          "value": "Ambas"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Grafo_Reglas_Asociacion",
+        "options": [
+          {
+            "selected": true,
+            "text": "Ambas",
+            "value": "Ambas"
+          },
+          {
+            "selected": false,
+            "text": "Reglas Asociación",
+            "value": "Reglas Asociación"
+          },
+          {
+            "selected": false,
+            "text": "Relaciones Conjunción",
+            "value": "Relaciones Conjunción"
+          }
+        ],
+        "query": "Ambas, Reglas Asociación, Relaciones Conjunción ",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Claro",
+          "value": "Claro"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Modo_Visualizacion_Regla",
+        "options": [
+          {
+            "selected": true,
+            "text": "Claro",
+            "value": "Claro"
+          },
+          {
+            "selected": false,
+            "text": "Oscuro",
+            "value": "Oscuro"
+          }
+        ],
+        "query": "Claro, Oscuro",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Paleta 1",
+          "value": "Paleta 1"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Color_Reglas_Asociacion",
+        "options": [
+          {
+            "selected": true,
+            "text": "Paleta 1",
+            "value": "Paleta 1"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 2",
+            "value": "Paleta 2"
+          },
+          {
+            "selected": false,
+            "text": "Paleta 3",
+            "value": "Paleta 3"
+          },
+          {
+            "selected": false,
+            "text": "Aleatorio",
+            "value": "Aleatorio"
+          }
+        ],
+        "query": "Paleta 1, Paleta 2, Paleta 3, Aleatorio",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "10",
+          "value": "10"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Cantidad_Reglas_Asociacion",
+        "options": [
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": true,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "15",
+            "value": "15"
+          },
+          {
+            "selected": false,
+            "text": "20",
+            "value": "20"
+          }
+        ],
+        "query": "5, 10, 15, 20",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Mejores",
+          "value": "Mejores"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Ordenar_x_Cantidad",
+        "options": [
+          {
+            "selected": true,
+            "text": "Mejores",
+            "value": "Mejores"
+          },
+          {
+            "selected": false,
+            "text": "Peores",
+            "value": "Peores"
+          },
+          {
+            "selected": false,
+            "text": "Aleatorias",
+            "value": "Aleatorias"
+          }
+        ],
+        "query": "Mejores, Peores, Aleatorias",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Confianza",
+          "value": "Confianza"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Ordenar_x_Cantidad_x_Criterio",
+        "options": [
+          {
+            "selected": true,
+            "text": "Confianza",
+            "value": "Confianza"
+          },
+          {
+            "selected": false,
+            "text": "Soporte",
+            "value": "Soporte"
+          },
+          {
+            "selected": false,
+            "text": "Lift",
+            "value": "Lift"
+          }
+        ],
+        "query": "Confianza, Soporte, Lift",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2",
+          "value": "2"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Maxima_Cantidad_Items_x_Antecedente_y_Consecuente",
+        "options": [
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          },
+          {
+            "selected": true,
+            "text": "2",
+            "value": "2"
+          },
+          {
+            "selected": false,
+            "text": "3",
+            "value": "3"
+          },
+          {
+            "selected": false,
+            "text": "4",
+            "value": "4"
+          }
+        ],
+        "query": "1, 2, 3, 4",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Association_Rules",
+  "uid": "ce1wc563124g0e",
+  "version": 106,
+  "weekStart": ""
+}

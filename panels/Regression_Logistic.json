@@ -1,0 +1,1012 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 38,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "La tabla presenta los detalles de los modelos de regresión logística disponibles, mostrando para cada uno: el ID único, la base de datos utilizada, el autor del modelo, una breve descripción del dataset y la fecha y hora de creación del modelo.",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "afterRender": "",
+        "content": "<h3 style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin: 10px 0; color: #444; margin-left: 15px\">\n    Modelos\n</h3>\n\n<table style=\"font-family: 'Arial', sans-serif; font-size: 16px; margin: 20px auto; border-collapse: collapse; text-align: center; line-height: 1.4; table-layout: fixed; margin-left: 12px; margin-right: 12px;\">\n  <colgroup>\n    <col style=\"width: 2%;\"> <!-- ID -->\n    <col style=\"width: 12%;\"> <!-- Nombre -->\n    <col style=\"width: 10%;\"> <!-- Creador -->\n    <col style=\"width: 30%;\"> <!-- Descripción -->\n    <col style=\"width: 10%;\"> <!-- Fecha -->\n  </colgroup>\n  <thead>\n    <tr style=\"border-bottom: 1px solid #ccc;\">\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">ID</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Nombre</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Creador</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Descripción</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Fecha</th>\n    </tr>\n  </thead>\n  <tbody>\n    {{#each data}}\n      <tr style=\"border-bottom: 1px solid #ccc;\">\n        <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{id}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{name}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{creator}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{description}}</td>\n         <td style=\"padding: 8px; text-align: center; font-size: 16px;\">{{formatDate created_date}}</td>\n      </tr>\n    {{/each}}\n  </tbody>\n</table>\n",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "handlebars"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "context.handlebars.registerHelper('getColor', function () {\n  let color = context.grafana.replaceVariables('${color}');\n  let selectedColor = 'Azul';\n\n  if (color == 'Azul') {\n    selectedColor = '#77bef7';\n  } else if (color == 'Verde') {\n    selectedColor = '#9EDF9C';\n  } else if (color == 'Naranja') {\n    selectedColor = '#FFB200';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#ffd32c';\n  } else if (color == 'Rosado') {\n    selectedColor = '#FFCCE1';\n  }\n\n  return selectedColor + '50';\n});\n\ncontext.handlebars.registerHelper('formatDate', function (dateString) {\n  const date = new Date(dateString);\n\n  const year = date.getFullYear();\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const day = String(date.getDate()).padStart(2, '0');\n\n  const hours = String(date.getHours()).padStart(2, '0');\n  const minutes = String(date.getMinutes()).padStart(2, '0');\n\n  return `${year}-${month}-${day} ${hours}:${minutes}`;\n});\n",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    i.id,\n    s.name,\n    s.creator,\n    s.description,\n    i.date AS created_date\nFROM grafana_ml_model_source s\nINNER JOIN grafana_ml_model_index i \n    ON s.id = i.id_source AND i.algorithm IN ('r_logistica')\nWHERE (\n        ('$date' = 'Hoy' AND i.date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND i.date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND i.date >= CURRENT_DATE - INTERVAL '6 days' AND i.date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND i.date >= DATE_TRUNC('month', CURRENT_DATE) AND i.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND i.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND i.date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nGROUP BY s.id, s.name, s.creator, s.description, i.id\nORDER BY s.id;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "La tabla presenta las variables independientes junto con sus coeficientes estimados, desviaciones estándar, estadísticos z y valores de significancia (p). ",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "afterRender": "",
+        "content": "<h3 style=\"font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; margin: 10px 0; color: #444; margin-left: 15px\">\n    Resultados de la estimación de coeficientes\n</h3>\n\n<table id=\"coeficientes\" style=\"font-family: 'Arial', sans-serif; font-size: 16px; margin: 20px auto; border-collapse: collapse; text-align: center; line-height: 1.4; table-layout: fixed; margin-left: 1px; margin-right: 15px;\">\n  <colgroup>\n    <col style=\"width: 20%;\"> <!-- Nombre -->\n    <col style=\"width: 10%;\"> <!-- Coeficiente -->\n    <col style=\"width: 20%;\"> <!-- Desviación estándar -->\n    <col style=\"width: 10%;\"> <!-- z-value -->\n    <col style=\"width: 10%;\"> <!-- P>|z| -->\n  </colgroup>\n  <thead>\n    <tr style=\"border-bottom: 1px solid #ccc;\">\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Nombre</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Coeficiente</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">Desviación estándar</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">z-value</th>\n      <th style=\"font-size: 18px; font-weight: bold; padding: 8px; text-align: center; background-color: {{getColor}};\">P>|z|</th>\n    </tr>\n  </thead>\n  <tbody>\n    {{#each data}}\n      <tr style=\"border-bottom: 1px solid #ccc;\">\n        <td style=\"padding: 8px; text-align: center; font-size: 17px;\">{{feature}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 17px;\">{{roundTo4Significant coeff}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 17px;\">{{roundTo4Significant std_err}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 17px;\">{{roundTo4Significant value}}</td>\n        <td style=\"padding: 8px; text-align: center; font-size: 17px;\">{{roundTo4Significant p}}</td>\n      </tr>\n    {{/each}}\n  </tbody>\n</table>\n",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalStyles": [],
+        "helpers": "context.handlebars.registerHelper('roundTo4Significant', function (value) {\n  if (typeof value !== 'number') return value;\n  if (value === 0) return \"0\";\n\n  return parseFloat(value.toFixed(4));\n});\n\ncontext.handlebars.registerHelper('getColor', function () {\n  let color = context.grafana.replaceVariables('${color}');\n  let selectedColor = 'Azul';\n\n  if (color == 'Azul') {\n    selectedColor = '#77bef7';\n  } else if (color == 'Verde') {\n    selectedColor = '#9EDF9C';\n  } else if (color == 'Naranja') {\n    selectedColor = '#FFB200';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#ffd32c';\n  } else if (color == 'Rosado') {\n    selectedColor = '#FFCCE1';\n  }\n\n  return selectedColor + '50';\n});",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 3,
+          "refId": "A"
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de barras con líneas de error se utiliza para mostrar los coeficientes estimados del modelo de regresión, junto con la incertidumbre asociada. Las barras indican el valor del coeficiente de cada variable independiente, mientras que las líneas reflejan la desviación estándar. El eje Y muestra los valores de los coeficientes y el eje X las variables independientes.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 3,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data.series[0].fields.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n\n  let feature = (fields.find(fields => fields.name == 'feature')).values;\n  let coeff = (fields.find(fields => fields.name == 'coeff')).values;\n  let stdErr = (fields.find(fields => fields.name == 'std_err')).values;\n  let value = (fields.find(fields => fields.name == 'value')).values;\n  let p = (fields.find(fields => fields.name == 'p')).values;\n\n  var categoryData = feature;\n  var errorData = [];\n  var barData = coeff;\n  var dataCount = coeff.length;\n\n  for (let i = 0; i < dataCount; i++) {\n    let coef = coeff[i];\n    let std = stdErr[i];\n\n    let low = coef - std;\n    let high = coef + std;\n    errorData.push([i, low, high]);\n  }\n\n  return {\n    tooltip: {\n      trigger: 'axis',\n      axisPointer: {\n        type: 'shadow'\n      },\n      formatter: function (params) {\n        let index = params[0].dataIndex;\n\n        let name = feature[index];\n        let coef = coeff[index];\n        let std = stdErr[index];\n        let tVal = value[index];\n        let pVal = p[index];\n\n        coef = roundToSignificantFigures(coef, 4);\n        std = roundToSignificantFigures(std, 4);\n        tVal = roundToSignificantFigures(tVal, 4);\n        pVal = roundToSignificantFigures(pVal, 4);\n\n        return `\n          <div style=\"text-align: center; text-decoration: underline; font-weight: bold;\">${name}</div>\n          <strong>Coeficiente: </strong>${coef}<br>\n          <strong>Desviación estándar: </strong>${std}<br>\n          <strong>z-value: </strong>${tVal}<br>\n          <strong>P>|z|: </strong>${pVal}<br>\n        `;\n      }\n    },\n    title: {\n      text: 'Coeficientes y desviación estándar',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22,\n      },\n    },\n    legend: {\n      data: ['bar', 'error'],\n      left: '80%',\n      top: \"2%\",\n      textStyle: {\n        fontSize: 16,\n        color: ' #333'\n      }\n    },\n    grid: {\n      left: \"6%\",\n      right: \"3%\",\n      top: \"14%\"\n    },\n    dataZoom: [\n      {\n        type: 'slider',\n        start: 0,\n        end: 100\n      },\n      {\n        type: 'inside',\n        start: 0,\n        end: 100\n      }\n    ],\n    xAxis: {\n      data: categoryData,\n      nameTextStyle: {\n        fontSize: 14,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 12,\n        color: ' #333',\n        //rotate: 45\n      },\n    },\n    yAxis: {\n      nameTextStyle: {\n        fontSize: 14,\n        color: ' #333'\n      },\n      axisLabel: {\n        fontSize: 15,\n        color: ' #333'\n      },\n    },\n    series: [\n      {\n        type: 'bar',\n        name: 'bar',\n        data: barData,\n        itemStyle: {\n          color: getColorBar(context.grafana.replaceVariables('${color}')),\n        }\n      },\n      {\n        type: 'custom',\n        name: 'error',\n        itemStyle: {\n          borderWidth: 1.5,\n          color: getColorError(context.grafana.replaceVariables('${color}')),\n        },\n        renderItem: function (params, api) {\n          var xValue = api.value(0);\n          var highPoint = api.coord([xValue, api.value(1)]);\n          var lowPoint = api.coord([xValue, api.value(2)]);\n          var halfWidth = api.size([1, 0])[0] * 0.1;\n          var style = api.style({\n            stroke: api.visual('color'),\n            fill: undefined\n          });\n\n          return {\n            type: 'group',\n            children: [\n              {\n                type: 'line',\n                transition: ['shape'],\n                shape: {\n                  x1: highPoint[0] - halfWidth,\n                  y1: highPoint[1],\n                  x2: highPoint[0] + halfWidth,\n                  y2: highPoint[1]\n                },\n                style: style\n              },\n              {\n                type: 'line',\n                transition: ['shape'],\n                shape: {\n                  x1: highPoint[0],\n                  y1: highPoint[1],\n                  x2: lowPoint[0],\n                  y2: lowPoint[1]\n                },\n                style: style\n              },\n              {\n                type: 'line',\n                transition: ['shape'],\n                shape: {\n                  x1: lowPoint[0] - halfWidth,\n                  y1: lowPoint[1],\n                  x2: lowPoint[0] + halfWidth,\n                  y2: lowPoint[1]\n                },\n                style: style\n              }\n            ]\n          };\n        },\n        encode: {\n          x: 0,\n          y: [1, 2]\n        },\n        data: errorData,\n        z: 100\n      }\n    ]\n  };\n}\n\n// Si la consulta es NULL\nif (context.panel.data.series[0].fields.length == 0) {\n  option = {\n    graphic: {\n      elements: [\n        {\n          type: 'text',\n          left: 'center',\n          top: 'center',\n          style: {\n            text: 'No Disponible',\n            fontSize: 50,\n            fontWeight: 'bold',\n            fill: '#555', // Color final estático\n            stroke: 'black',\n            lineWidth: 1\n          }\n        }\n      ]\n    }\n  };\n\n  return option;\n}\n\n// Función para redondear a n cifras significativas\nfunction roundToSignificantFigures(num, n) {\n  return parseFloat(num.toFixed(n));\n}\n\n// Colores bar\nfunction getColorBar(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#77bef7';\n  } else if (color == 'Verde') {\n    selectedColor = '#9EDF9C';\n  } else if (color == 'Naranja') {\n    selectedColor = '#FFB200';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#ffd32c';\n  } else if (color == 'Rosado') {\n    selectedColor = '#FFCCE1';\n  }\n\n  return selectedColor;\n}\n\n// Colores error\nfunction getColorError(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#0043ce';\n  } else if (color == 'Verde') {\n    selectedColor = '#62825D';\n  } else if (color == 'Naranja') {\n    selectedColor = '#EB5B00';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#e0bc00';\n  } else if (color == 'Rosado') {\n    selectedColor = '#E195AB';\n  }\n\n  return selectedColor;\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Datos regresión\n\nSELECT \n    f.name AS feature,\n    f.id,\n    r.coeff,\n    r.std_err,\n    r.value AS \"value\",\n    r.p_value AS \"p\"\nFROM \n    grafana_ml_model_regression r\nJOIN \n    grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE r.id_model=$case AND f.name IN ($features)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "El gráfico de puntos con líneas de error permite visualizar los coeficientes estimados de las variables independientes en un modelo de regresión. Cada punto en el gráfico representa el coeficiente de una variable y cada línea refleja la desviación estándar. El eje Y muestra las variables independientes, mientras que el eje X refleja los valores de los coeficientes estimados. ",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "id": 4,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data.series[0].fields.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n\n  let feature = (fields.find(fields => fields.name == 'feature')).values;\n  let coeff = (fields.find(fields => fields.name == 'coeff')).values;\n  let stdErr = (fields.find(fields => fields.name == 'std_err')).values;\n  let value = (fields.find(fields => fields.name == 'value')).values;\n  let p = (fields.find(fields => fields.name == 'p')).values;\n\n  const selectedColor = getColorBar(context.grafana.replaceVariables('${color}'));\n  const selectedErrorColor = getColorError(context.grafana.replaceVariables('${color}'));\n  const selectedShape = getShape(context.grafana.replaceVariables('${shape}'));\n  const selectedSize = parseInt(context.grafana.replaceVariables('${sizeS}'));\n\n  const dimensions = [\n    'Característica', 'Coeficiente', 'Mín', 'Máx',\n    'Desviación estándar', 'z-value', 'P>|z|'\n  ];\n\n  let data = [];\n  for (let i = 0; i < feature.length; i++) {\n    let row = [\n      feature[i], // Característica\n      parseFloat(coeff[i].toFixed(4)),  // Coeficiente\n      parseFloat((coeff[i] - stdErr[i]).toFixed(4)),  // Mín\n      parseFloat((coeff[i] + stdErr[i]).toFixed(4)), // Máx\n      parseFloat(stdErr[i].toFixed(4)),  // Desviación estándar\n      parseFloat(value[i].toFixed(4)),  // Value\n      parseFloat(p[i].toFixed(4))  // p\n    ];\n    data.push(row);\n  }\n\n  function renderItem(params, api) {\n    const group = {\n      type: 'group',\n      children: []\n    };\n\n    let coordDims = ['x', 'y'];\n    for (let baseDimIdx = 0; baseDimIdx < 2; baseDimIdx++) {\n      let otherDimIdx = 1 - baseDimIdx;\n      let encode = params.encode;\n      let baseValue = api.value(encode[coordDims[baseDimIdx]][0]);\n      let param = [];\n      param[baseDimIdx] = baseValue;\n      param[otherDimIdx] = api.value(encode[coordDims[otherDimIdx]][1]);\n      let highPoint = api.coord(param);\n      param[otherDimIdx] = api.value(encode[coordDims[otherDimIdx]][2]);\n      let lowPoint = api.coord(param);\n      let halfWidth = 5;\n      var style = api.style({\n        stroke: api.visual('color'),\n        fill: undefined\n      });\n      group.children.push(\n        {\n          type: 'line',\n          transition: ['shape'],\n          shape: makeShape(\n            baseDimIdx,\n            highPoint[baseDimIdx] - halfWidth,\n            highPoint[otherDimIdx],\n            highPoint[baseDimIdx] + halfWidth,\n            highPoint[otherDimIdx]\n          ),\n          style: style\n        },\n        {\n          type: 'line',\n          transition: ['shape'],\n          shape: makeShape(\n            baseDimIdx,\n            highPoint[baseDimIdx],\n            highPoint[otherDimIdx],\n            lowPoint[baseDimIdx],\n            lowPoint[otherDimIdx]\n          ),\n          style: style\n        },\n        {\n          type: 'line',\n          transition: ['shape'],\n          shape: makeShape(\n            baseDimIdx,\n            lowPoint[baseDimIdx] - halfWidth,\n            lowPoint[otherDimIdx],\n            lowPoint[baseDimIdx] + halfWidth,\n            lowPoint[otherDimIdx]\n          ),\n          style: style\n        }\n      );\n    }\n\n    function makeShape(baseDimIdx, base1, value1, base2, value2) {\n      var shape = {};\n      shape[coordDims[baseDimIdx] + '1'] = base1;\n      shape[coordDims[1 - baseDimIdx] + '1'] = value1;\n      shape[coordDims[baseDimIdx] + '2'] = base2;\n      shape[coordDims[1 - baseDimIdx] + '2'] = value2;\n      return shape;\n    }\n    return group;\n  }\n\n  // Configución del gráfico\n  return {\n    tooltip: {},\n    title: {\n      text: 'Coeficientes y desviación estándar',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22,\n      },\n    },\n    dataZoom: [\n      {\n        type: 'slider'\n      },\n      {\n        type: 'inside'\n      }\n    ],\n    grid: {\n      bottom: 80,\n      left: '10%',\n      right: '4%',\n      top: '14%'\n    },\n    xAxis: {\n      type: 'value',\n      axisLabel: {\n        fontSize: 15,\n        color: ' #333333',\n      },\n    },\n    yAxis: {\n      type: 'category',\n      data: feature,\n      nameTextStyle: {\n        align: 'center',\n      },\n      position: 'left',\n      axisLabel: {\n        margin: 10,\n        color: ' #333333',\n        fontSize: 15,\n      },\n      axisLine: {\n        show: true,\n        lineStyle: {\n          color: 'red',\n          width: 2,\n        }\n      },\n    },\n    series: [\n      {\n        type: 'scatter',\n        data: data,\n        dimensions: dimensions,\n        symbolSize: selectedSize,\n        encode: {\n          x: 1,\n          y: 0,\n          tooltip: [1, 4, 5, 6],\n          itemName: 0\n        },\n        itemStyle: {\n          color: selectedColor,\n          opacity: 1\n        },\n        symbol: selectedShape,\n        z: 200\n      },\n      {\n        type: 'custom',\n        name: 'error',\n        renderItem: renderItem,\n        dimensions: dimensions,\n        encode: {\n          x: [1, 2, 3],\n          y: [0],\n          tooltip: [1, 2, 3, 4],\n          itemName: 0\n        },\n        data: data,\n        z: 100,\n        itemStyle: {\n          color: selectedErrorColor,\n        }\n      }\n    ]\n  };\n}\n\n// Colores bar\nfunction getColorBar(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#77bef7';\n  } else if (color == 'Verde') {\n    selectedColor = '#9EDF9C';\n  } else if (color == 'Naranja') {\n    selectedColor = '#FFB200';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#ffd32c';\n  } else if (color == 'Rosado') {\n    selectedColor = '#FFCCE1';\n  }\n\n  return selectedColor;\n}\n\n// Colores error\nfunction getColorError(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#0043ce';\n  } else if (color == 'Verde') {\n    selectedColor = '#62825D';\n  } else if (color == 'Naranja') {\n    selectedColor = '#EB5B00';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#e0bc00';\n  } else if (color == 'Rosado') {\n    selectedColor = '#E195AB';\n  }\n\n  return selectedColor;\n}\n\n// Símbolo de los puntos\nfunction getShape(shape) {\n  let seLectedShapeValue = 'circle';\n\n  if (shape == 'Círculo') {\n    seLectedShapeValue = 'circle';\n  } else if (shape == 'Triángulo') {\n    seLectedShapeValue = 'triangle';\n  } else if (shape == 'Rectángulo') {\n    seLectedShapeValue = 'rect';\n  } else if (shape == 'Pin') {\n    seLectedShapeValue = 'pin';\n  }\n\n  return seLectedShapeValue;\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Datos regresión\n\nSELECT \n    f.name AS feature,\n    f.id,\n    r.coeff,\n    r.std_err AS \"std_err\",\n    r.value AS \"value\",\n    r.p_value AS \"p\"\nFROM \n    grafana_ml_model_regression r\nJOIN \n    grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE r.id_model=$case AND f.name IN ($features)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Diagrama de caja que compara la distribución de características (seleccionables) entre las clases predichas por el modelo de regresión logística.",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "id": 13,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fieldsFeature = context.panel.data.series[0].fields;\n  const uniqueNamesFeature = fieldsFeature.find(fields => fields.name == 'feature_name').values;\n\n  let data = getFeatureValuesByTargetClass(uniqueNamesFeature[0]);\n  let selectedFeature = uniqueNamesFeature[0];\n  let selectedColor = getColor(context.grafana.replaceVariables('${color}'))\n  let selectedBorderColor = getBorderColor(context.grafana.replaceVariables('${color}'))\n\n  // Lógica para la seleción\n  if (context.grafana.replaceVariables('${case}')) {\n    let dom = context.panel.chart.getDom();\n    let nodeList = dom.childNodes;\n\n    if (nodeList.length >= 2) {\n      nodeList[0].remove();\n    }\n\n    const container = document.createElement(\"div\");\n    container.style.display = \"flex\";\n    container.style.justifyContent = \"space-between\";\n    container.style.alignItems = \"center\";\n    container.style.marginTop = \"10px\";\n\n    // Título\n    const boxplotTitle = document.createElement(\"h3\");\n    boxplotTitle.innerHTML = \"Diagrama de caja. Características por clases\";\n    boxplotTitle.style.marginLeft = \"20px\";\n    boxplotTitle.style.fontWeight = \"bold\";\n    boxplotTitle.style.fontSize = \"22px\";\n    boxplotTitle.style.fontFamily = \"'Arial', sans-serif\";\n    boxplotTitle.style.color = \"#444\";\n\n    const rightContainer = document.createElement(\"div\");\n    rightContainer.style.display = \"flex\";\n    rightContainer.style.alignItems = \"center\";\n\n    // Label característica \n    const characteristicLabel = document.createElement(\"span\");\n    characteristicLabel.innerHTML = \"Característica:\";\n    characteristicLabel.style.marginRight = \"6px\";\n    characteristicLabel.style.fontFamily = \"'Arial', sans-serif\";\n    characteristicLabel.style.fontWeight = \"bold\";\n    characteristicLabel.style.fontSize = \"20px\";\n    characteristicLabel.style.color = \"#444\";\n\n    const selectList = document.createElement(\"select\");\n    selectList.id = \"mySelect\";\n    selectList.style.fontFamily = \"'Arial', sans-serif\";\n    selectList.style.fontSize = \"16px\";\n    selectList.style.border = \"1px solid gray\";\n    selectList.style.borderRadius = \"8px\";\n    selectList.style.padding = \"5px\";\n    selectList.style.marginRight = \"10px\";\n\n    uniqueNamesFeature.forEach((value) => {\n      const option = document.createElement(\"option\");\n      option.value = value;\n      option.text = value;\n      selectList.appendChild(option);\n    });\n\n    selectList.addEventListener(\"change\", () => {\n      selectedFeature = selectList.value;\n      let result = getFeatureValuesByTargetClass(selectedFeature);\n\n      context.panel.chart.setOption({\n        dataset: [\n          {\n            source: result\n          },\n          {\n            transform: {\n              type: 'boxplot',\n              config: {\n                itemNameFormatter: function (params) {\n                  return 'clase ' + (params.value);\n                }\n              }\n            }\n          },\n          {\n            fromDatasetIndex: 1,\n            fromTransformResult: 1\n          },\n        ],\n        yAxis: {\n          type: 'value',\n          min: calculateMargin(result),\n          splitArea: {\n            show: true\n          },\n        }\n      });\n    });\n\n    rightContainer.appendChild(characteristicLabel);\n    rightContainer.appendChild(selectList);\n\n    container.appendChild(boxplotTitle);\n    container.appendChild(rightContainer);\n\n    dom.insertBefore(container, dom.firstChild);\n  }\n\n  // Configuración del gráfico\n  option = {\n    dataset: [\n      {\n        source: data\n      },\n      {\n        transform: {\n          type: 'boxplot',\n          config: {\n            itemNameFormatter: function (params) {\n              return 'clase ' + (params.value);\n            }\n          }\n        }\n      },\n      {\n        fromDatasetIndex: 1,\n        fromTransformResult: 1\n      }\n    ],\n    tooltip: {\n      trigger: 'item',\n      axisPointer: {\n        type: 'shadow'\n      },\n      formatter: function (params) {\n        if (params.componentType === 'series') {\n          if (params.seriesType === 'boxplot') {\n            const { value } = params;\n            const [min, q1, median, q3, max] = value.slice(1);\n\n            // Aplicando el formato parseFloat(feature.toFixed(4)) a cada valor\n            const minFormatted = parseFloat(min.toFixed(4));\n            const q1Formatted = parseFloat(q1.toFixed(4));\n            const medianFormatted = parseFloat(median.toFixed(4));\n            const q3Formatted = parseFloat(q3.toFixed(4));\n            const maxFormatted = parseFloat(max.toFixed(4));\n\n            // Nombre del clúster en negrita y subrayado\n            return `\n          <div>\n            <b><u>${params.name}</u></b><br>\n            <b>Mínimo:</b> ${minFormatted}<br>\n            <b>Q1 (Primer cuartil):</b> ${q1Formatted}<br>\n            <b>Mediana:</b> ${medianFormatted}<br>\n            <b>Q3 (Tercer cuartil):</b> ${q3Formatted}<br>\n            <b>Máximo:</b> ${maxFormatted}\n          </div>\n        `;\n          } else if (params.seriesType === 'scatter') {\n            const outlierFormatted = parseFloat(params.value[1].toFixed(4));\n            return `\n          <div>\n            <b>Outlier:</b> ${outlierFormatted}\n          </div>\n        `;\n          }\n        }\n        return '';\n      }\n    },\n    grid: {\n      left: '10%',\n      right: '10%',\n      bottom: '15%',\n      top: '7%'\n    },\n    xAxis: {\n      type: 'category',\n      boundaryGap: true,\n      nameGap: 30,\n      splitArea: {\n        show: false\n      },\n      splitLine: {\n        show: false\n      },\n      axisLabel: {\n        fontSize: 17,\n        color: '#333'\n      },\n    },\n    yAxis: {\n      type: 'value',\n      min: calculateMargin(data),\n      splitArea: {\n        show: true\n      },\n      axisLabel: {\n        fontSize: 15,\n        color: '#333'\n      },\n    },\n    series: [\n      {\n        name: 'boxplot',\n        type: 'boxplot',\n        datasetIndex: 1,\n        itemStyle: {\n          color: selectedColor,        // Color de las cajas\n          borderColor: selectedBorderColor   // Color del borde de las cajas\n        },\n        boxWidth: 100\n      },\n      {\n        name: 'outlier',\n        type: 'scatter',\n        datasetIndex: 2\n      }\n    ],\n\n  };\n\n  return option;\n}\n\n// Obtiene los valores de características agrupados por target_class.\nfunction getFeatureValuesByTargetClass(featureName) {\n  let fields = context.panel.data.series[1].fields;\n\n  let targetClass = fields.find(field => field.name === 'target_class').values;\n  let featureNames = fields.find(field => field.name === 'feature_name').values;\n  let featureValues = fields.find(field => field.name === 'feature_values').values;\n\n  let classData = {};\n\n  for (let i = 0; i < featureNames.length; i++) {\n    if (featureNames[i] === featureName) {\n      let tClass = targetClass[i];\n      let values = featureValues[i];\n\n      values = JSON.parse(values);\n\n      if (!classData[tClass]) {\n        classData[tClass] = [];\n      }\n\n      classData[tClass].push(...values);\n    }\n  }\n\n  return Object.values(classData);\n}\n\n// Colores \nfunction getColor(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#77bef7';\n  } else if (color == 'Verde') {\n    selectedColor = '#9EDF9C';\n  } else if (color == 'Naranja') {\n    selectedColor = '#FFB200';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#ffd32c';\n  } else if (color == 'Rosado') {\n    selectedColor = '#FFCCE1';\n  }\n\n  return selectedColor;\n}\n\n// Colores borde\nfunction getBorderColor(color) {\n  let selectedColor = 'blue';\n\n  if (color == 'Azul') {\n    selectedColor = '#0043ce';\n  } else if (color == 'Verde') {\n    selectedColor = '#62825D';\n  } else if (color == 'Naranja') {\n    selectedColor = '#EB5B00';\n  } else if (color == 'Amarillo') {\n    selectedColor = '#e0bc00';\n  } else if (color == 'Rosado') {\n    selectedColor = '#E195AB';\n  }\n\n  return selectedColor;\n}\n\n\n// Calcular el margen del 5% basado en el rango de los datos\nfunction calculateMargin(clusterData) {\n  const allValues = clusterData.flat();\n  const minValue = Math.min(...allValues);\n  const maxValue = Math.max(...allValues);\n  const range = maxValue - minValue;\n  const margin = range * 0.05;\n  const result = minValue - margin;\n  return parseFloat(result.toFixed(4));\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Nombres características\n\nSELECT DISTINCT \n  f.id, f.name AS feature_name, f.is_target\nFROM \n  grafana_ml_model_index mi\nJOIN \n  grafana_ml_model_source ms ON mi.id_source = ms.id\nJOIN \n  grafana_ml_model_feature f ON f.id_source = ms.id\nLEFT JOIN \n  grafana_ml_model_point_value pv ON pv.id_feature = f.id AND pv.id_source = f.id_source\nWHERE mi.id = $case AND f.is_target IS FALSE\nORDER BY f.id;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Características por clases\n\nSELECT \n    tfv.numeric_value::INT AS target_class,\n    f.name AS feature_name,\n    array_to_json(array_agg(pv.numeric_value)) AS feature_values\nFROM grafana_ml_model_index mi\nJOIN grafana_ml_model_feature tf ON tf.id_source = mi.id_source AND tf.is_target = TRUE\nJOIN grafana_ml_model_point_value tfv ON tfv.id_feature = tf.id AND tfv.id_source = mi.id_source\nJOIN grafana_ml_model_point_value pv ON pv.id_point = tfv.id_point AND pv.id_source = mi.id_source\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature AND f.id_source = mi.id_source AND f.is_target = FALSE\nWHERE mi.id = $case AND pv.numeric_value IS NOT NULL\nGROUP BY tfv.numeric_value::INT, f.name\nORDER BY f.name, tfv.numeric_value::INT;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Matriz de confusión con verdaderos positivos (VP), falsos positivos (FP), falsos negativos (FN) y verdaderos negativos (VN). Presenta además las siguientes métricas de evaluación: exactitud (proporción de aciertos totales), precisión (capacidad para evitar FP), sensibilidad (detección de casos positivos) y puntuación F1 (equilibrio entre precisión y sensibilidad).",
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "id": 11,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data.series[1].fields.length > 0) {\n  const fieldsValues = context.panel.data.series[0].fields;\n  const fieldsCoeff = context.panel.data.series[1].fields;\n  const fieldsConst = context.panel.data.series[2].fields;\n  const fieldsTarget = context.panel.data.series[3].fields;\n\n  let values = (fieldsValues.find(fields => fields.name == 'feature_values')).values;\n  let coeff = (fieldsCoeff.find(fields => fields.name == 'coefficient')).values;\n  let cconst = (fieldsConst.find(fields => fields.name == 'const')).values[0];\n  let target = (fieldsTarget.find(fields => fields.name == 'target')).values;\n\n  let parsedValues = values.map(value => JSON.parse(value));\n\n  let confusionMatrix = {\n    TP: 0,  // Verdaderos positivos\n    FP: 0,  // Falsos positivos\n    TN: 0,  // Verdaderos negativos\n    FN: 0   // Falsos negativos\n  };\n\n  // Umbral de decisión para clasificación binaria (por lo general se usa 0.5)\n  const threshold = 0.5;\n\n  for (let i = 0; i < values.length; i++) {\n    let features = parsedValues[i];  // Características del punto\n    let realTarget = target[i];  // Valor real de la variable dependiente para este punto\n\n    // Calcular el valor ajustado (probabilidad) con la fórmula de regresión logística\n    let z = 0;\n    for (let j = 0; j < features.length - 1; j++) {\n      z += features[j] * coeff[j];  // Multiplicar característica por coeficiente\n    }\n\n    z += cconst;  // Sumamos la constante (intercepto)\n\n    // Función sigmoide para obtener la probabilidad\n    let probability = 1 / (1 + Math.exp(-z));  // Sigmoid: 1 / (1 + exp(-z))\n\n    // Clasificación basada en el umbral\n    let predictedClass = probability >= threshold ? 1 : 0;\n\n    // Actualizar la matriz de confusión\n    if (predictedClass === 1 && realTarget === 1) {\n      confusionMatrix.TP++;  // Verdaderos positivos\n    } else if (predictedClass === 1 && realTarget === 0) {\n      confusionMatrix.FP++;  // Falsos positivos\n    } else if (predictedClass === 0 && realTarget === 0) {\n      confusionMatrix.TN++;  // Verdaderos negativos\n    } else if (predictedClass === 0 && realTarget === 1) {\n      confusionMatrix.FN++;  // Falsos negativos\n    }\n  }\n\n  const { TP, FP, TN, FN } = confusionMatrix;\n  console.log(confusionMatrix)\n  const accuracy = (TP + TN) / (TP + TN + FP + FN);\n  const precision = TP + FP === 0 ? 0 : TP / (TP + FP);\n  const recall = TP + FN === 0 ? 0 : TP / (TP + FN);\n  const f1 = (precision + recall) === 0 ? 0 : 2 * (precision * recall) / (precision + recall);\n\n  // Definir los ejes y los datos para el heatmap\n  const ejeX = ['Positivo', 'Negativo'];\n  const ejeY = ['Negativo', 'Positivo'];\n  const data1 = [\n    [0, 0, confusionMatrix.FN], [0, 1, confusionMatrix.TP],\n    [1, 0, confusionMatrix.TN], [1, 1, confusionMatrix.FP]\n  ];\n\n  // Colores para celdas (rojo para FP y FN, verde para TP y TN)\n  const cellColors = {\n    FP: '#F19292',  // Rojo para Falsos Positivos\n    FN: '#F19292',  // Rojo para Falsos Negativos\n    TP: '#9FE6A0',  // Verde para Verdaderos Positivos\n    TN: '#9FE6A0'   // Verde para Verdaderos Negativos\n  };\n\n  option = {\n    title: {\n      text: 'Matriz de confusión',\n      top: \"2%\",\n      left: \"2%\",\n      textStyle: {\n        fontSize: 22,\n      },\n    },\n    grid: {\n      height: '64%',\n      top: '15%',\n      right: '10%'\n    },\n    xAxis: {\n      type: 'category',\n      data: ejeX,\n      name: 'Valores reales',\n      nameLocation: 'middle',\n      nameGap: 15,\n      splitArea: {\n        show: true\n      },\n      nameTextStyle: {\n        fontSize: 19,\n        color: ' #333333'\n      },\n      axisLabel: {\n        fontSize: 16,\n        color: ' #333333'\n      },\n    },\n    yAxis: {\n      type: 'category',\n      data: ejeY,\n      name: 'Valores predichos',\n      nameLocation: 'middle',\n      nameGap: 30,\n      splitArea: {\n        show: true\n      },\n      nameTextStyle: {\n        fontSize: 19,\n        color: ' #333333'\n      },\n      axisLabel: {\n        fontSize: 16,\n        color: ' #333333',\n        rotate: 90,\n      },\n    },\n    series: [\n      {\n        name: 'Matriz de Confusión',\n        type: 'heatmap',\n        data: [\n          [0, 0, confusionMatrix.FN],\n          [0, 1, confusionMatrix.TP],\n          [1, 0, confusionMatrix.TN],\n          [1, 1, confusionMatrix.FP]\n        ],\n        label: {\n          show: true,\n          formatter: function (params) {\n            const value = params.value[2]; // Obtiene el valor numérico\n            const x = params.value[0]; // Posición X (real)\n            const y = params.value[1]; // Posición Y (predicción)\n\n            let label = '';\n            // Definir el formato de la etiqueta, separando el número y el texto\n            if (x === 0 && y === 0) {\n              label = `{num|${value}}\\n{txt|Falsos negativos}`;\n            } else if (x === 0 && y === 1) {\n              label = `{num|${value}}\\n{txt|Verdaderos positivos}`;\n            } else if (x === 1 && y === 0) {\n              label = `{num|${value}}\\n{txt|Verdaderos negativos}`;\n            } else if (x === 1 && y === 1) {\n              label = `{num|${value}}\\n{txt|Falsos positivos}`;\n            }\n\n            return label;\n          },\n          rich: {\n            num: {\n              fontSize: 36,\n              align: 'center',\n              verticalAlign: 'middle'\n            },\n            txt: {\n              fontSize: 20,\n              align: 'center',\n              verticalAlign: 'middle',\n            }\n          }\n        },\n        itemStyle: {\n          normal: {\n            color: function (params) {\n              const value = params.value[2]; // Obtiene el valor de la celda\n              if (params.value[0] === 0 && params.value[1] === 0) {\n                return cellColors.FN;\n              } else if (params.value[0] === 0 && params.value[1] === 1) {\n                return cellColors.TP;\n              } else if (params.value[0] === 1 && params.value[1] === 0) {\n                return cellColors.TN;\n              } else if (params.value[0] === 1 && params.value[1] === 1) {\n                return cellColors.FP;\n              }\n              return '#fff';\n            }\n          }\n        },\n        emphasis: {\n          itemStyle: {\n            shadowBlur: 10,\n            shadowColor: 'rgba(0, 0, 0, 0.5)'\n          }\n        }\n      }\n    ],\n    graphic: {\n      elements: [\n        {\n          type: 'text',\n          left: 'center',\n          top: '92%',\n          style: {\n            text: `Exactitud: ${accuracy.toFixed(3)}  |  Precisión: ${precision.toFixed(3)}  |  Sensibilidad: ${recall.toFixed(3)}  |  Puntuación F1: ${f1.toFixed(3)}`,\n            fontSize: 18,\n            fill: '#333',\n            fontWeight: 'bold'\n          }\n        }\n      ]\n    }\n  };\n\n\n  return option;\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Puntos y sus características\n\nSELECT \n  p.name AS point_name, \n  array_to_json(array_agg(pv.numeric_value ORDER BY pv.id_feature)) AS feature_values\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (\n    SELECT id_source \n    FROM grafana_ml_model_index \n    WHERE id = $case\n) \nAND f.is_target = FALSE \nAND pv.numeric_value IS NOT NULL  -- Solo valores numéricos válidos\nGROUP BY p.id\nORDER BY p.id;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Coeficientes\n\nSELECT \n    f.name,\n    r.coeff AS coefficient\nFROM grafana_ml_model_regression r\nJOIN grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE \n    r.id_model = $case \n    AND f.id IS NOT NULL\nORDER BY f.id",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Constante\n\nSELECT \n    r.coeff AS const\nFROM \n    grafana_ml_model_regression r\nWHERE \n    r.id_feature IS NULL\n    AND r.id_model = $case;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Target\n\nSELECT DISTINCT ON (p.id) \n  p.name AS point_name, \n  pv.numeric_value AS target\nFROM grafana_ml_model_point p\nJOIN grafana_ml_model_point_value pv ON pv.id_point = p.id\nJOIN grafana_ml_model_feature f ON f.id = pv.id_feature\nWHERE p.id_source = (\n    SELECT id_source FROM grafana_ml_model_index WHERE id = $case\n)\n  AND f.is_target = TRUE\nORDER BY p.id;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Ecuación matemática del modelo de regresión logística, que representa la relación entre las variables predictoras y la probabilidad de ocurrencia del evento de interés. ",
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 15,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n  const fieldsConstant = context.panel.data.series[1].fields;\n\n  const featureNames = fields.find(f => f.name === \"feature\").values;\n  const coeffs = fields.find(f => f.name === \"coeff\").values;\n  const constant = fieldsConstant.find(f => f.name === \"const\").values[0];\n\n  const dom = context.panel.chart.getDom();\n  dom.innerHTML = \"\";\n\n  const title = document.createElement(\"h2\");\n  title.innerText = \"Fórmula del modelo\";\n  title.style.marginLeft = \"20px\";\n  title.style.fontWeight = \"bold\";\n  title.style.fontSize = \"22px\";\n  title.style.fontFamily = \"'Arial', sans-serif\";\n  title.style.color = \"#444\";\n  title.style.marginBottom = \"15px\";\n  title.style.marginTop = \"15px\";\n  dom.appendChild(title);\n\n  const formulaDiv = document.createElement(\"div\");\n  formulaDiv.style.marginLeft = \"50px\";\n  formulaDiv.style.marginRight = \"20px\";\n  formulaDiv.style.fontSize = \"18px\";\n  formulaDiv.style.fontFamily = \"'Arial', sans-serif\";\n  formulaDiv.style.color = \"#222\";\n\n  let linearPart = constant.toFixed(3);\n  for (let i = 0; i < featureNames.length; i++) {\n    const sign = coeffs[i] >= 0 ? \" + \" : \" - \";\n    linearPart += sign + Math.abs(coeffs[i]).toFixed(3) + \" x \" + featureNames[i];\n  }\n\n  const formulaText = \"P(y = 1 | x) = 1 / (1 + e ^ ( - (\" + linearPart + \")))\";\n\n  formulaDiv.textContent = formulaText;\n  dom.appendChild(formulaDiv);\n}",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Modelo\n\nSELECT \n    f.name AS feature,\n    f.id,\n    r.coeff,\n    r.std_err,\n    r.value AS \"value\",\n    r.p_value AS \"p\"\nFROM \n    grafana_ml_model_regression r\nJOIN \n    grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE r.id_model=$case",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Constante\n\nSELECT \n    r.coeff AS const\nFROM \n    grafana_ml_model_regression r\nWHERE \n    r.id_feature IS NULL\n    AND r.id_model = $case;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-postgresql-datasource",
+        "uid": "eekejp5ymbv28f"
+      },
+      "description": "Permite introducir manualmente los valores de las características (variables predictoras) para una nueva instancia, y muestra la clase predicha junto con la probabilidad asociada a dicha predicción.",
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 14,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (context.panel.data && context.panel.data.series.length > 0) {\n  const fields = context.panel.data.series[0].fields;\n  const fieldsConstant = context.panel.data.series[1].fields;\n\n  const featureNames = fields.find(f => f.name === \"feature\").values;\n  const coeffs = fields.find(f => f.name === \"coeff\").values;\n  const constant = fieldsConstant.find(f => f.name === \"const\").values[0];\n\n  const dom = context.panel.chart.getDom();\n  dom.innerHTML = \"\";\n\n  const container = document.createElement(\"div\");\n  container.style.display = \"flex\";\n  container.style.flexDirection = \"column\";\n  container.style.gap = \"10px\";\n  container.style.padding = \"20px\";\n  container.style.fontFamily = \"'Arial', sans-serif\";\n\n  const inputValues = {}; // Guardar valores entre páginas\n  const inputsPerPage = 12;\n  let currentPage = 0;\n\n  const title = document.createElement(\"h2\");\n  title.innerText = \"Predicción para una nueva instancia\";\n  title.style.marginLeft = \"10px\";\n  title.style.fontWeight = \"bold\";\n  title.style.fontSize = \"22px\";\n  title.style.fontFamily = \"'Arial', sans-serif\";\n  title.style.color = \"#444\";\n  title.style.marginBottom = \"20px\";\n  container.appendChild(title);\n\n  const inputsWrapper = document.createElement(\"div\");\n  inputsWrapper.style.display = \"flex\";\n  inputsWrapper.style.flexWrap = \"wrap\";\n  inputsWrapper.style.gap = \"12px\";\n  inputsWrapper.style.marginLeft = \"60px\";\n  inputsWrapper.style.maxWidth = \"100%\";\n  inputsWrapper.style.marginBottom = \"20px\";\n\n  function loadInputs(page) {\n    inputsWrapper.innerHTML = \"\";\n\n    const startIdx = page * inputsPerPage;\n    const endIdx = Math.min((page + 1) * inputsPerPage, featureNames.length);\n\n    for (let i = startIdx; i < endIdx; i++) {\n      const name = featureNames[i];\n\n      const inputContainer = document.createElement(\"div\");\n      inputContainer.style.display = \"flex\";\n      inputContainer.style.flexDirection = \"column\";\n      inputContainer.style.minWidth = \"200px\";\n\n      const label = document.createElement(\"label\");\n      label.innerText = name;\n      label.style.fontSize = \"16px\";\n      label.style.marginBottom = \"4px\";\n\n      const input = document.createElement(\"input\");\n      input.type = \"number\";\n      input.value = inputValues[name] ?? \"0\";\n      input.step = \"0.01\";\n      input.style.padding = \"6px\";\n      input.style.borderRadius = \"6px\";\n      input.style.border = \"1px solid #888\";\n      input.style.width = \"170px\";\n\n      input.addEventListener(\"input\", () => {\n        inputValues[name] = parseFloat(input.value) || 0;\n      });\n\n      inputContainer.appendChild(label);\n      inputContainer.appendChild(input);\n      inputsWrapper.appendChild(inputContainer);\n    }\n  }\n\n  loadInputs(currentPage);\n  container.appendChild(inputsWrapper);\n\n  const resultDiv = document.createElement(\"div\");\n  resultDiv.style.fontSize = \"19px\";\n  resultDiv.style.fontWeight = \"bold\";\n  resultDiv.style.fontFamily = \"'Arial', sans-serif\";\n\n  const actionRow = document.createElement(\"div\");\n  actionRow.style.display = \"flex\";\n  actionRow.style.alignItems = \"center\";\n  actionRow.style.gap = \"12px\";\n  actionRow.style.marginTop = \"18px\";\n\n  const predictButton = document.createElement(\"button\");\n  predictButton.innerText = \"Predecir\";\n  predictButton.style.padding = \"5px 10px\";\n  predictButton.style.fontSize = \"18px\";\n  predictButton.style.fontFamily = \"'Arial', sans-serif\";\n  predictButton.style.fontWeight = \"bold\";\n  predictButton.style.borderRadius = \"6px\";\n  predictButton.style.border = \"none\";\n  predictButton.style.backgroundColor = '#5783db';\n  predictButton.style.color = \"white\";\n  predictButton.style.cursor = \"pointer\";\n  predictButton.style.width = \"130px\";\n  predictButton.style.marginLeft = \"60px\";\n\n  predictButton.addEventListener(\"click\", () => {\n    let z = constant;\n\n    for (let i = 0; i < featureNames.length; i++) {\n      const name = featureNames[i];\n      const coeff = coeffs[i];\n      const value = inputValues[name] ?? 0;\n      z += coeff * value;\n    }\n\n    const probability = 1 / (1 + Math.exp(-z));\n    const predictedClass = probability >= 0.5 ? 1 : 0;\n\n    resultDiv.innerHTML = `Probabilidad: ${probability.toFixed(4)} → Clase: ${predictedClass}`;\n  });\n\n  actionRow.appendChild(predictButton);\n  actionRow.appendChild(resultDiv);\n  container.appendChild(actionRow);\n\n  const paginationContainer = document.createElement(\"div\");\n  paginationContainer.style.position = \"fixed\";\n  paginationContainer.style.bottom = \"20px\";\n  paginationContainer.style.right = \"20px\";\n  paginationContainer.style.display = \"flex\";\n  paginationContainer.style.gap = \"10px\";\n\n  const prevButton = document.createElement(\"button\");\n  prevButton.innerText = \"<\";\n  prevButton.style.padding = \"5px 10px\";\n  prevButton.style.fontSize = \"14px\";\n  prevButton.style.fontFamily = \"'Arial', sans-serif\";\n  prevButton.style.borderRadius = \"50%\";\n  prevButton.style.border = \"none\";\n  prevButton.style.backgroundColor = \"#ccc\";\n  prevButton.style.color = \"white\";\n  prevButton.style.cursor = \"pointer\";\n  prevButton.disabled = currentPage === 0;\n\n  prevButton.addEventListener(\"click\", () => {\n    if (currentPage > 0) {\n      currentPage--;\n      loadInputs(currentPage);\n      nextButton.disabled = false;\n      prevButton.disabled = currentPage === 0;\n    }\n  });\n\n  const nextButton = document.createElement(\"button\");\n  nextButton.innerText = \">\";\n  nextButton.style.padding = \"5px 10px\";\n  nextButton.style.fontSize = \"14px\";\n  nextButton.style.fontFamily = \"'Arial', sans-serif\";\n  nextButton.style.borderRadius = \"50%\";\n  nextButton.style.border = \"none\";\n  nextButton.style.backgroundColor = \"#ccc\";\n  nextButton.style.color = \"white\";\n  nextButton.style.cursor = \"pointer\";\n  nextButton.disabled = (currentPage + 1) * inputsPerPage >= featureNames.length;\n\n  nextButton.addEventListener(\"click\", () => {\n    if ((currentPage + 1) * inputsPerPage < featureNames.length) {\n      currentPage++;\n      loadInputs(currentPage);\n      prevButton.disabled = false;\n      nextButton.disabled = (currentPage + 1) * inputsPerPage >= featureNames.length;\n    }\n  });\n\n  paginationContainer.appendChild(prevButton);\n  paginationContainer.appendChild(nextButton);\n\n  container.appendChild(paginationContainer);\n  dom.appendChild(container);\n}\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "6.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Modelo\n\nSELECT \n    f.name AS feature,\n    f.id,\n    r.coeff,\n    r.std_err,\n    r.value AS \"value\",\n    r.p_value AS \"p\"\nFROM \n    grafana_ml_model_regression r\nJOIN \n    grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE r.id_model=$case",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eekejp5ymbv28f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "-- Constante\n\nSELECT \n    r.coeff AS const\nFROM \n    grafana_ml_model_regression r\nWHERE \n    r.id_feature IS NULL\n    AND r.id_model = $case;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Todos",
+          "value": "Todos"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Fecha",
+        "multi": false,
+        "name": "date",
+        "options": [],
+        "query": "SELECT unnest(\n    ARRAY[\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date::DATE = CURRENT_DATE\n        ) THEN 'Hoy' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date::DATE = CURRENT_DATE - INTERVAL '1 day'\n        ) THEN 'Ayer' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= CURRENT_DATE - INTERVAL '6 days'\n        ) THEN 'Últimos 7 días' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Este mes' END,\n        CASE WHEN EXISTS (\n            SELECT 1 FROM grafana_ml_model_index \n            WHERE algorithm IN ('r_logistica') \n              AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') \n              AND date < DATE_TRUNC('month', CURRENT_DATE)\n        ) THEN 'Mes pasado' END,\n        'Todos'\n    ]\n) AS opciones_filtro;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "52",
+          "value": "52"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('r_logistica')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Modelo",
+        "multi": false,
+        "name": "case",
+        "options": [],
+        "query": "SELECT id\nFROM grafana_ml_model_index\nWHERE \n    algorithm IN ('r_logistica')\n    AND (\n        ('$date' = 'Hoy' AND date::DATE = CURRENT_DATE) OR\n        ('$date' = 'Ayer' AND date::DATE = CURRENT_DATE - INTERVAL '1 day') OR\n        ('$date' = 'Últimos 7 días' AND date >= CURRENT_DATE - INTERVAL '6 days' AND date <= CURRENT_DATE) OR\n        ('$date' = 'Este mes' AND date >= DATE_TRUNC('month', CURRENT_DATE) AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month') OR\n        ('$date' = 'Mes pasado' AND date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND date < DATE_TRUNC('month', CURRENT_DATE)) OR\n        ('$date' = 'Todos')\n    )\nORDER BY id;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "eekejp5ymbv28f"
+        },
+        "definition": "SELECT \n    f.name\nFROM grafana_ml_model_regression r\nJOIN grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE \n    r.id_model = $case \n    AND f.id IS NOT NULL\nORDER BY f.id",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Características",
+        "multi": true,
+        "name": "features",
+        "options": [],
+        "query": "SELECT \n    f.name\nFROM grafana_ml_model_regression r\nJOIN grafana_ml_model_feature f ON r.id_feature = f.id\nWHERE \n    r.id_model = $case \n    AND f.id IS NOT NULL\nORDER BY f.id",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Azul",
+          "value": "Azul"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Color ",
+        "multi": false,
+        "name": "color",
+        "options": [
+          {
+            "selected": true,
+            "text": "Azul",
+            "value": "Azul"
+          },
+          {
+            "selected": false,
+            "text": "Verde",
+            "value": "Verde"
+          },
+          {
+            "selected": false,
+            "text": "Naranja",
+            "value": "Naranja"
+          },
+          {
+            "selected": false,
+            "text": "Rosado",
+            "value": "Rosado"
+          },
+          {
+            "selected": false,
+            "text": "Amarillo",
+            "value": "Amarillo"
+          }
+        ],
+        "query": "Azul, Verde, Naranja, Rosado, Amarillo",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Círculo",
+          "value": "Círculo"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Símbolo",
+        "multi": false,
+        "name": "shape",
+        "options": [
+          {
+            "selected": true,
+            "text": "Círculo",
+            "value": "Círculo"
+          },
+          {
+            "selected": false,
+            "text": "Triángulo",
+            "value": "Triángulo"
+          },
+          {
+            "selected": false,
+            "text": "Rectángulo",
+            "value": "Rectángulo"
+          },
+          {
+            "selected": false,
+            "text": "Pin",
+            "value": "Pin"
+          }
+        ],
+        "query": "Círculo, Triángulo, Rectángulo, Pin",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "10",
+          "value": "10"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Tamaño símbolo",
+        "multi": false,
+        "name": "sizeS",
+        "options": [
+          {
+            "selected": true,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "15",
+            "value": "15"
+          },
+          {
+            "selected": false,
+            "text": "20",
+            "value": "20"
+          }
+        ],
+        "query": "10, 15, 20",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "regression logistic",
+  "uid": "dekfpc0vruigwb",
+  "version": 182,
+  "weekStart": ""
+}
