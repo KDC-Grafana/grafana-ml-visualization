@@ -19,22 +19,23 @@ Los modelos son entrenados en Python, se almacenan en una base de datos relacion
 
 ## 📦 Instalación
 
-1. Clonar el repositorio del proyecto 
+1\. Clonar el repositorio del proyecto 
 ```bash
 git clone https://github.com/KDC-Grafana/grafana-ml-visualization.git
 ```
 
-2. Acceder a la carpeta del proyecto
+2\. Acceder a la carpeta del proyecto
 ```bash
 cd grafana-ml-visualization
 ```
 
-3. Crear un entorno virtual de Python (recomendado)
+3\. Crear un entorno virtual de Python (recomendado)
 ```bash
 python -m venv venv
 ```
 
-4. Activar el entorno virtual
+4\. Activar el entorno virtual
+
 Linux:
 ```bash
 source venv/bin/activate
@@ -44,12 +45,12 @@ Windows:
 .\venv\Scripts\activate
 ```
 
-5. Instalar todas las dependencias necesarias
+5\. Instalar todas las dependencias necesarias
 ```bash
 pip install -r requirements.txt
 ```
 
-6. Cargar los paneles en Grafana
+6\. Cargar los paneles en Grafana
 
 Para importar los paneles debe:
 - Acceder a tu instancia de Grafana (por defecto: http://localhost:3000).
@@ -291,8 +292,7 @@ VALUES (113);
 
 Para eliminar un modelo, se debe insertar una tarea en la tabla `grafana_ml_model_source_delete`, indicando el id de la fuente de datos que desea eliminar. 
 
-> ⚠️ **Importante**:  
-> La eliminación solo se realiza si la fuente **no está asociada a ningún modelo existente**.
+> ⚠️ La eliminación solo se realiza si la fuente **no está asociada a ningún modelo existente**.
 
 ```sql
 INSERT INTO grafana_ml_model_source_delete (id_source)
